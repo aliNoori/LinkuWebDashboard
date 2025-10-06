@@ -1,0 +1,155 @@
+import { defineStore } from 'pinia'
+import { ref, getCurrentInstance } from 'vue'
+import { useUserStore } from '@/stores/user'
+import type {Product} from "@/types/product.ts";
+
+export const useProductStore = defineStore('product', () => {
+    const userStore = useUserStore()
+        const products = ref<Product[]>([])
+    const loading = ref(false)
+
+    // ✅ axios از پلاگین global
+    const {appContext} = getCurrentInstance()!
+    const axios = appContext.config.globalProperties.$axios
+
+    // 📦 دریافت لیست محصولات
+    const fetchProducts = async () => {
+        loading.value = true
+        try {
+            const res = await axios.get('user/admin/cardProducts')
+            products.value = res.data?.data || res.data || []
+        } catch (error) {
+            console.error('❌ خطا در دریافت محصولات:', error)
+        } finally {
+            loading.value = false
+        }
+    }
+
+    // ➕ افزودن محصول جدید
+    const addProduct = async (form: any) => {
+        try {
+            const payload = { ...form }
+            const imageBase64 = payload.image
+
+            // اگر image یک URL بود، فقط payload بفرست
+            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                delete payload.image
+            }
+
+            const res = await axios.post('user/admin/cardProducts', payload)
+            const product = res.data?.data || res.data
+
+            // اگر image یک فایل بود، آپلودش کن
+            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                await uploadProductImage(product.id, 'cardproduct', imageBase64, 'imageCardProduct')
+                product.image = imageBase64 // یا URL جدید بعد از آپلود
+            }
+
+            products.value.push(product)
+            return product
+        } catch (error) {
+            console.error('❌ خطا در افزودن محصول:', error)
+            throw error
+        }
+    }
+
+    // ✏️ ویرایش محصول
+    const updateProduct = async (id: string, form: any) => {
+
+        try {
+            const payload = { ...form }
+            const imageBase64 = payload.image
+
+            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                delete payload.image
+            }
+
+            await axios.put(`user/admin/cardProducts/${id}`, payload)
+            const index = products.value.findIndex(p => p.id === id)
+
+            if (index !== -1) products.value[index] = { ...products.value[index], ...payload }
+
+            // اگر image یک فایل بود، آپلودش کن
+            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                await uploadProductImage(id, 'cardproduct', imageBase64, 'imageCardProduct')
+                products.value[index].image = imageBase64 // یا URL بعد از آپلود
+            }
+        } catch (error) {
+            console.error('❌ خطا در به‌روزرسانی محصول:', error)
+            throw error
+        }
+    }
+    // ❌ حذف محصول
+    const deleteProduct = async (id: string) => {
+        try {
+            await axios.delete(`user/admin/cardProducts/${id}`)
+            products.value = products.value.filter(p => p.id !== id)
+
+            try {
+                await axios.delete(`file-manager/${id}/delete`,{
+                    params: {
+                        fieldName: 'imageCardProduct',
+                        modelType: 'cardproduct',
+                        modelId: id
+                    }
+                })
+                console.log('تصویر محصول با موفقیت حذف شد')
+            } catch (imgError) {
+                console.warn('❌ خطا در حذف تصویر محصول:', imgError)
+            }
+        } catch (error) {
+            console.error('❌ خطا در حذف محصول:', error)
+            throw error
+        }
+    }
+
+    // 🔁 تغییر وضعیت فعال/غیرفعال
+    const toggleStatus = async (id: string) => {
+        const product = products.value.find(p => p.id === id)
+        if (!product) return
+        const newStatus = product.status === 'active' ? 'inactive' : 'active'
+        try {
+            await axios.patch(`user/admin/cardProducts/${id}/status`, { status: newStatus })
+            product.status = newStatus
+        } catch (error) {
+            console.error('❌ خطا در تغییر وضعیت محصول:', error)
+            throw error
+        }
+    }
+
+    async function uploadProductImage(productId:string, modelType:string, base64Icon:string, fieldName:string) {
+        const formData = new FormData()
+        formData.append('modelType', modelType)
+        formData.append('modelId', productId)
+        // تبدیل base64 به Blob
+        const byteString = atob(base64Icon.split(',')[1])
+        const arrayBuffer = new ArrayBuffer(byteString.length)
+        const intArray = new Uint8Array(arrayBuffer)
+        for (let i = 0; i < byteString.length; i++) {
+            intArray[i] = byteString.charCodeAt(i)
+        }
+        const blob = new Blob([intArray], { type: 'image/png' })
+
+        // append با نام دقیقا همان چیزی که API انتظار دارد
+        formData.append(fieldName, blob, 'image.png')
+
+        try {
+            const uploadResponse = await axios.post(`file-manager/${productId}/upload`, formData)
+            console.log('Upload response:', uploadResponse.data)
+            return uploadResponse
+        } catch (error) {
+            console.error('❌ خطا در آپلود آیکون سفارشی', error)
+        }
+    }
+
+
+    return {
+        products,
+        loading,
+        fetchProducts,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        toggleStatus
+    }
+})
