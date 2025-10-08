@@ -164,7 +164,7 @@ const switchTab = (tab:any) => {
   passwordError.value = false
 }
 const submitPhone = async () => {
-  const cleaned = phone.value.replace(/^0/, '')
+  const cleaned = toEnglishDigits(phone.value).replace(/^0/, '')
   const regex = /^9\d{9}$/
   phoneError.value = !regex.test(cleaned)
 
@@ -217,7 +217,8 @@ function startTimer() {
 
 const router = useRouter()
 const handleInput = async (index: any, event: any) => {
-  const value = event.target.value
+  const target = event.target as HTMLInputElement;
+  const value = target.value
   if (!/^\d$/.test(value)) {
     otp.value[index] = ''
     return
