@@ -24,9 +24,9 @@
       </button>
 
       <!-- Reports -->
-      <router-link to="/reports" class="flex items-center hover:bg-gray-100 dark:hover:bg-slate-700 gap-2 px-3 lg:px-4 py-2 rounded-lg transition-colors duration-300 group" :class="{ 'bg-blue-600 hover:bg-blue-700 text-white': $route.path === '/reports' }">
-        <i class="ti ti-chart-bar text-xl text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" :class="{ 'text-white': $route.path === '/reports' }"></i>
-        <span class="text-sm font-medium hidden lg:block text-gray-700 dark:text-gray-300" :class="{ 'text-white': $route.path === '/reports' }">گزارشات</span>
+      <router-link to="/reports" class="flex items-center hover:bg-gray-100 dark:hover:bg-slate-700 gap-2 px-3 lg:px-4 py-2 rounded-lg transition-colors duration-300 group" :class="{ 'bg-blue-600 hover:bg-blue-700 text-white': route.path === '/reports' }">
+        <i class="ti ti-chart-bar text-xl text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" :class="{ 'text-white': route.path === '/reports' }"></i>
+        <span class="text-sm font-medium hidden lg:block text-gray-700 dark:text-gray-300" :class="{ 'text-white': route.path === '/reports' }">گزارشات</span>
       </router-link>
 
       <!-- Notifications -->
@@ -167,10 +167,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed,getCurrentInstance } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useDarkMode } from '@/composables/useDarkMode'
 import {useAuthStore} from "@/stores/auth.ts";
 import {useUserStore} from "@/stores/user.ts";
+
 
 interface Notification {
   id: number
@@ -204,6 +205,7 @@ const emit = defineEmits<{
 const {appContext} = getCurrentInstance()!
 const axios = appContext.config.globalProperties.$axios
 const router = useRouter()
+const route = useRoute()
 const { isDarkMode, toggleDarkMode, initDarkMode } = useDarkMode()
 const formattedPhone = computed(() => {
   let phone = userStore.user.phone || ''

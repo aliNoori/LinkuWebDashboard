@@ -462,10 +462,23 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import QRCode from 'qrcode'
 import {useCardsStore} from "@/stores/cards.ts";
-
 defineOptions({
   name: 'CardsManagement'
 })
+interface Card {
+  id: string
+
+  ownerName: string
+  mobile?: string
+  description?: string
+  cardType?: string
+  license: string
+  qrLink: string
+  image?: string | null
+  status: 'active' | 'inactive'
+  createdAt: string
+  identifier:string
+}
 
 // Router
 const route = useRoute()
@@ -610,7 +623,7 @@ const inactiveCardsCount = computed(() => {
 const filteredCards = computed(() => {
   return cards.value.filter(card => {
     const matchesSearch = card.ownerName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                         card.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                         card.description?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                          card.id.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                          card.qrLink.toLowerCase().includes(searchQuery.value.toLowerCase())
 

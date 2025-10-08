@@ -23,6 +23,12 @@ jobs:
         run: |
           cd /var/www/dash.linku.im/admin-dashboard
           npm install
+          
+
+      - name: Install dependencies on server
+        run: |
+          cd /var/www/dash.linku.im/admin-dashboard
+          npm run build
 
       - name: Check application health
         run : |

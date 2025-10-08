@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia'
 import {useRouter} from "vue-router";
 import {getCurrentInstance} from "vue";
-//import type {CardItem} from "~/stores/form";
 
 export interface User {
     id: number
@@ -17,7 +16,6 @@ export interface User {
     location: string
     avatar: string
     removeBranding:boolean
-    //cardsDataList?: CardItem[]
     createdAt: typeof Date
     updatedAt: typeof Date
 }
@@ -25,13 +23,12 @@ export interface User {
 export const useUserStore = defineStore('userStore', {
     state: () => ({
         user: {} as User,
-        //cards: [] as CardItem[],
         fetched: false
     }),
 
     getters: {
         isUserPro: (state): boolean => !!state.user?.isPro,
-        //cardCount: (state): number => state.cards.length,
+
     },
 
     actions: {
@@ -44,9 +41,6 @@ export const useUserStore = defineStore('userStore', {
                 const {data} = await axios.get('/user')
 
                 this.user = data.data
-                //this.cards = this.user?.cardsDataList || []
-                /*this.activeCard = this.cards.find((c:CardItem) => c.isDefault) || null*/
-                //formStore.cards = this.cards
 
                 this.fetched = true
             } catch (error) {
@@ -56,14 +50,9 @@ export const useUserStore = defineStore('userStore', {
                 console.error('❌ خطا در دریافت پروفایل:', error)
             }
         },
-        setActiveCard(cardId: string) {
-            /*this.activeCard = this.cards.find((c:CardItem) => c.id === cardId) || null*/
-        },
 
         clearProfile() {
             this.user = {} as User
-            //this.cards = []
-            /*this.activeCard = null*/
         },
     },
 })

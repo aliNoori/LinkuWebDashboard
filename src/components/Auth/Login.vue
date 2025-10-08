@@ -97,8 +97,8 @@
               placeholder="-"
               class="w-14 h-14 text-xl font-semibold text-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-300"
               @input="handleInput(index, $event)"
-              @keydown.backspace="handleBackspace(index, $event)"
-              :ref="el => otpRefs[index] = el"
+              @keydown.backspace="handleBackspace(index)"
+              :ref="el => otpRefs[index]?el:0"
           />
         </div>
 
@@ -149,7 +149,7 @@ const showInfoToast = (message: string, icon = 'ti-lock') => {
   setTimeout(() => showToast.value = false, 3000) // بعد از ۳ ثانیه بسته می‌شه
 }
 const otp = ref(['', '', '', ''])
-const otpRefs = []
+const otpRefs: (HTMLInputElement | null)[] = []
 const countdown = ref(120)
 
 const formattedPhone = computed(() => {
@@ -157,7 +157,7 @@ const formattedPhone = computed(() => {
   return `+98${cleaned}`
 })
 
-const switchTab = (tab) => {
+const switchTab = (tab:any) => {
   activeTab.value = tab
   // reset errors when switching tabs
   phoneError.value = false
@@ -224,7 +224,7 @@ const handleInput = async (index: any, event: any) => {
   }
   otp.value[index] = value
   if (index < otp.value.length - 1 && otpRefs[index + 1]) {
-    otpRefs[index + 1].focus()
+    otpRefs[index + 1]?.focus()
   }
 
   if (otp.value.every(d => d !== '')) {
@@ -241,7 +241,7 @@ const handleInput = async (index: any, event: any) => {
 
 const handleBackspace = (index:any) => {
   if (!otp.value[index] && index > 0) {
-    otpRefs[index - 1].focus()
+    otpRefs[index - 1]?.focus()
   }
 }
 

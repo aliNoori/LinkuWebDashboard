@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia'
-import { getCurrentInstance, ref } from 'vue'
-import { useUserStore } from '@/stores/user'
+import {defineStore} from 'pinia'
+import {getCurrentInstance, ref} from 'vue'
+import {useUserStore} from '@/stores/user'
 
 export const useCardsStore = defineStore('card', () => {
     const userStore = useUserStore()
@@ -10,6 +10,7 @@ export const useCardsStore = defineStore('card', () => {
 
     interface Card {
         id: string
+        identifier: string
         ownerName: string
         mobile?: string
         description?: string
@@ -22,7 +23,7 @@ export const useCardsStore = defineStore('card', () => {
     }
 
     // ✅ axios از پلاگین global
-    const { appContext } = getCurrentInstance()!
+    const {appContext} = getCurrentInstance()!
     const axios = appContext.config.globalProperties.$axios
 
     // 📦 دریافت لیست کارت‌ها
@@ -81,7 +82,7 @@ export const useCardsStore = defineStore('card', () => {
     // 🗑️ حذف گروهی کارت‌ها
     const deleteSelectedCards = async (ids: string[]) => {
         try {
-            await axios.post('v1/cards/bulkDelete', { ids })
+            await axios.post('v1/cards/bulkDelete', {ids})
             cards.value = cards.value.filter(card => !ids.includes(card.id))
         } catch (err) {
             console.error('❌ خطا در حذف گروهی کارت‌ها:', err)
