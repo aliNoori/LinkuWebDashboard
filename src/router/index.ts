@@ -16,8 +16,7 @@ import TransactionsView from '../views/transactions/TransactionsView.vue'
 import PagesView from '../views/pages/PagesView.vue'
 import CreatePageView from '../views/pages/CreatePageView.vue'
 import CreateSubscriptionView from '../views/subscriptions/CreateSubscriptionView.vue'
-import {useUserStore} from "@/stores/user.ts";
-import {useAuthStore} from "@/stores/auth.ts";
+import {useAuthStore} from "@/stores/auth.ts"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

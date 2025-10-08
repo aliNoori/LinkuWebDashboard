@@ -6,7 +6,7 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions: {
         isAuthenticated() {
-            return !!this.token && !!this.user
+            return !!this.token
         },
         setToken(token: string) {
             this.token = token

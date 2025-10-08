@@ -12,6 +12,13 @@ export default defineConfig({
     vue(),
     // vueDevTools(),
   ],
+  server: {
+    host: '0.0.0.0', // برای دسترسی از بیرون
+    allowedHosts: [
+      'dash.linku.im', // ← دامنه خودت
+    ],
+    port: 5173, // یا پورتی که استفاده می‌کنی
+  },
   css: {
     postcss: {
       plugins: [

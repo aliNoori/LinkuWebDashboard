@@ -152,7 +152,7 @@
                 شناسه محصول <span class="text-red-500">*</span>
               </label>
               <input
-                  v-model="form.id"
+                  v-model="form.identifier"
                   type="text"
                   required
                   :disabled="!!editingProduct"
@@ -324,18 +324,11 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted, computed} from 'vue'
 import {useProductStore} from "@/stores/product.ts";
+import type {Product} from "@/types/product.ts";
 
 defineOptions({
   name: 'CardManagementComponent'
 })
-
-interface Product {
-  id: string
-  name: string
-  description?: string
-  image?: string
-  status: 'active' | 'inactive'
-}
 
 // State
 const showModal = ref(false)
@@ -347,6 +340,7 @@ const fileInput = ref<HTMLInputElement>()
 // Form data
 const form = reactive({
   id: '',
+  identifier:'',
   name: '',
   description: '',
   image: '',
@@ -367,6 +361,7 @@ const openAddModal = () => {
 const editProduct = (product: Product) => {
   editingProduct.value = product
   form.id = product.id
+  form.identifier = product.identifier
   form.name = product.name
   form.description = product.description || ''
   form.image = product.image || ''
@@ -419,6 +414,7 @@ const productStore = useProductStore()
 
 const saveProduct = async () => {
   if (editingProduct.value) {
+    console.log(form)
     await productStore.updateProduct(form.id, form)
   } else {
     await productStore.addProduct(form)

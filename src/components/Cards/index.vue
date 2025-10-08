@@ -237,7 +237,7 @@
                 <h3 class="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {{ card.ownerName }}
                 </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ card.id }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ card.identifier }}</p>
               </div>
             </div>
 
@@ -461,17 +461,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import QRCode from 'qrcode'
-
-// Types
-interface Card {
-  id: string
-  ownerName: string
-  description: string
-  qrLink: string
-  image: string | null
-  status: 'active' | 'inactive'
-  createdAt: string
-}
+import {useCardsStore} from "@/stores/cards.ts";
 
 defineOptions({
   name: 'CardsManagement'
@@ -500,9 +490,13 @@ const successMessage = ref('')
 
 // Selection State
 const selectedCards = ref<string[]>([])
-
+const cardStore = useCardsStore()
+const cards = computed(() => cardStore.cards)
+onMounted(() => {
+  cardStore.fetchCards()
+})
 // Sample data
-const cards = ref<Card[]>([
+/*const cards = ref<Card[]>([
   {
     id: 'VZT001',
     ownerName: 'محمد حسین زاده',
@@ -602,7 +596,7 @@ const cards = ref<Card[]>([
     status: 'inactive',
     createdAt: '1403/03/12'
   }
-])
+])*/
 
 // Computed Properties
 const activeCardsCount = computed(() => {
@@ -713,8 +707,9 @@ watch([searchQuery, statusFilter], () => {
   currentPage.value = 1
 })
 
-const deleteCard = (cardId: string) => {
+const deleteCard = async (cardId: string) => {
   if (confirm('آیا از حذف این کارت اطمینان دارید؟')) {
+    await cardStore.deleteCard(cardId)
     const index = cards.value.findIndex(c => c.id === cardId)
     if (index !== -1) {
       cards.value.splice(index, 1)

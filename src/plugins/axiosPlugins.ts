@@ -13,6 +13,7 @@ export default {
     install: (app: App) => {
         const instance = axios.create({
             baseURL: 'http://127.0.0.1:8000/api',
+            //baseURL: 'https://api.linku.im/api',
             /*headers: {
                 'Content-Type': 'application/json'
             }*/

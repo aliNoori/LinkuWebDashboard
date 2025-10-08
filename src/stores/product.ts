@@ -1,11 +1,11 @@
-import { defineStore } from 'pinia'
-import { ref, getCurrentInstance } from 'vue'
-import { useUserStore } from '@/stores/user'
+import {defineStore} from 'pinia'
+import {ref, getCurrentInstance} from 'vue'
+import {useUserStore} from '@/stores/user'
 import type {Product} from "@/types/product.ts";
 
 export const useProductStore = defineStore('product', () => {
     const userStore = useUserStore()
-        const products = ref<Product[]>([])
+    const products = ref<Product[]>([])
     const loading = ref(false)
 
     // ✅ axios از پلاگین global
@@ -28,13 +28,15 @@ export const useProductStore = defineStore('product', () => {
     // ➕ افزودن محصول جدید
     const addProduct = async (form: any) => {
         try {
-            const payload = { ...form }
+            const payload = {...form}
             const imageBase64 = payload.image
 
             // اگر image یک URL بود، فقط payload بفرست
             if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
                 delete payload.image
             }
+
+            payload.quantity = 1
 
             const res = await axios.post('user/admin/cardProducts', payload)
             const product = res.data?.data || res.data
@@ -57,17 +59,17 @@ export const useProductStore = defineStore('product', () => {
     const updateProduct = async (id: string, form: any) => {
 
         try {
-            const payload = { ...form }
+            const payload = {...form}
             const imageBase64 = payload.image
 
             if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
                 delete payload.image
             }
-
+            payload.quantity = 1
             await axios.put(`user/admin/cardProducts/${id}`, payload)
             const index = products.value.findIndex(p => p.id === id)
 
-            if (index !== -1) products.value[index] = { ...products.value[index], ...payload }
+            if (index !== -1) products.value[index] = {...products.value[index], ...payload}
 
             // اگر image یک فایل بود، آپلودش کن
             if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
@@ -82,26 +84,29 @@ export const useProductStore = defineStore('product', () => {
     // ❌ حذف محصول
     const deleteProduct = async (id: string) => {
         try {
-            await axios.delete(`user/admin/cardProducts/${id}`)
-            products.value = products.value.filter(p => p.id !== id)
+            // حذف تصویر محصول
+            const imageDeleteRes = await axios.delete(`file-manager/${id}/delete`, {
+                params: {
+                    fieldName: 'imageCardProduct',
+                    modelType: 'cardproduct',
+                    modelId: id
+                }
+            })
 
-            try {
-                await axios.delete(`file-manager/${id}/delete`,{
-                    params: {
-                        fieldName: 'imageCardProduct',
-                        modelType: 'cardproduct',
-                        modelId: id
-                    }
-                })
-                console.log('تصویر محصول با موفقیت حذف شد')
-            } catch (imgError) {
-                console.warn('❌ خطا در حذف تصویر محصول:', imgError)
-            }
+            console.log('✅ تصویر محصول با موفقیت حذف شد')
+
+            // فقط اگر تصویر حذف شد، محصول رو حذف کن
+            await axios.delete(`user/admin/cardProducts/${id}`)
+            console.log('✅ محصول با موفقیت حذف شد')
+
+            products.value = products.value.filter(p => p.id !== id)
+            return true
         } catch (error) {
-            console.error('❌ خطا در حذف محصول:', error)
+            console.error('❌ خطا در حذف تصویر یا محصول:', error)
             throw error
         }
     }
+
 
     // 🔁 تغییر وضعیت فعال/غیرفعال
     const toggleStatus = async (id: string) => {
@@ -109,7 +114,7 @@ export const useProductStore = defineStore('product', () => {
         if (!product) return
         const newStatus = product.status === 'active' ? 'inactive' : 'active'
         try {
-            await axios.patch(`user/admin/cardProducts/${id}/status`, { status: newStatus })
+            await axios.patch(`user/admin/cardProducts/${id}/status`, {status: newStatus})
             product.status = newStatus
         } catch (error) {
             console.error('❌ خطا در تغییر وضعیت محصول:', error)
@@ -117,7 +122,7 @@ export const useProductStore = defineStore('product', () => {
         }
     }
 
-    async function uploadProductImage(productId:string, modelType:string, base64Icon:string, fieldName:string) {
+    async function uploadProductImage(productId: string, modelType: string, base64Icon: string, fieldName: string) {
         const formData = new FormData()
         formData.append('modelType', modelType)
         formData.append('modelId', productId)
@@ -128,7 +133,7 @@ export const useProductStore = defineStore('product', () => {
         for (let i = 0; i < byteString.length; i++) {
             intArray[i] = byteString.charCodeAt(i)
         }
-        const blob = new Blob([intArray], { type: 'image/png' })
+        const blob = new Blob([intArray], {type: 'image/png'})
 
         // append با نام دقیقا همان چیزی که API انتظار دارد
         formData.append(fieldName, blob, 'image.png')

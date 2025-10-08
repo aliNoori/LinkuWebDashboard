@@ -53,6 +53,7 @@
                   v-model="cardForm.ownerName"
                   type="text"
                   required
+                  readonly
                   placeholder="نام صاحب کارت را وارد کنید..."
                   class="w-full px-4 py-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400"
                 >
@@ -63,7 +64,7 @@
                 <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-3">نوع کارت</label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label
-                    v-for="cardType in cardTypes"
+                    v-for="cardType in products"
                     :key="cardType.id"
                     class="relative flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-md"
                     :class="cardForm.cardType === cardType.id
@@ -74,6 +75,8 @@
                       v-model="cardForm.cardType"
                       type="radio"
                       :value="cardType.id"
+                      readonly
+                      disabled
                       class="sr-only"
                     >
                     <div class="flex items-center gap-3">
@@ -100,6 +103,7 @@
                   pattern="09[0-9]{9}"
                   maxlength="11"
                   placeholder="مثال: 09123456789"
+                  readonly
                   class="w-full px-4 py-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400 font-mono ltr"
                 >
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-1">
@@ -122,7 +126,8 @@
                   <button
                     type="button"
                     @click="generateLicense"
-                    class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-4 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    disabled
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-4 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                     title="تولید شناسه جدید"
                   >
                     <i class="ti ti-key text-lg"></i>
@@ -149,6 +154,7 @@
                   <input
                     v-model="cardForm.qrLink"
                     type="url"
+                    readonly
                     required
                     placeholder="https://linku.im/04E1F322E81490/pqqr"
                     class="flex-1 px-4 py-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400"
@@ -156,7 +162,8 @@
                   <button
                     type="button"
                     @click="generateRandomLink"
-                    class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-4 rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    disabled
+                    class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-4 rounded-xl opacity-50 cursor-not-allowed"
                     title="تولید لینک تصادفی"
                   >
                     <i class="ti ti-refresh text-lg"></i>
@@ -298,33 +305,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import {computed, getCurrentInstance, onMounted, reactive, ref, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import QRCode from 'qrcode'
-
-// Types
-interface Card {
-  id: string
-  ownerName: string
-  mobile?: string
-  cardType?: string
-  qrLink: string
-  license: string
-  status: 'active' | 'inactive'
-  createdAt: string
-}
+import {useCardsStore} from "@/stores/cards.ts";
+import {useProductStore} from "@/stores/product.ts";
 
 // Router and Route
 const router = useRouter()
 const route = useRoute()
-
+const isGeneratingLicense = ref(false)
 // State
 const loading = ref(true)
 const saving = ref(false)
 const error = ref('')
 const cardId = ref(route.params.id as string)
 const qrCodeDataURL = ref<string>('')
-
 // Form data
 const cardForm = reactive({
   ownerName: '',
@@ -334,52 +330,12 @@ const cardForm = reactive({
   license: '',
   status: 'active' as 'active' | 'inactive'
 })
-
-// انواع محصولات موجود
-const cardTypes = [
-  { id: 'card', name: 'کارت', image: '/devices/card.png' },
-  { id: 'stand', name: 'پایه', image: '/devices/stand.png' },
-  { id: 'minicard', name: 'مینی کارت', image: '/devices/minicard.png' },
-  { id: 'sticky', name: 'استیکی', image: '/devices/sticky.png' },
-  { id: 'bigsticky', name: 'استیکی بزرگ', image: '/devices/bigsticky.png' },
-  { id: 'bracelet', name: 'دستبند', image: '/devices/bracelet.png' },
-  { id: 'goldcard', name: 'کارت طلایی', image: '/devices/goldcard.png' },
-  { id: 'titanium', name: 'کارت تیتانیوم فلزی', image: '/devices/Titanium.png' }
-]
-
+const productStore=useProductStore()
+const products = productStore.products
+console.log('products',products)
 // Sample data (در پروژه واقعی از API دریافت می‌شود)
-const sampleCards: Card[] = [
-  {
-    id: 'VZT001',
-    ownerName: 'محبوب حسین زاده',
-    mobile: '09123456789',
-    cardType: 'goldcard',
-    qrLink: 'https://linku.im/04E1F322E81490/pqqr',
-    license: '04E1F322E81490',
-    status: 'active',
-    createdAt: '1403/04/15'
-  },
-  {
-    id: 'VZT002',
-    ownerName: 'فاطمه احمدی',
-    mobile: '09351234567',
-    cardType: 'card',
-    qrLink: 'https://linku.im/A7B3C9D2F4E8127/xyzw',
-    license: 'A7B3C9D2F4E8127',
-    status: 'active',
-    createdAt: '1403/04/10'
-  },
-  {
-    id: 'VZT003',
-    ownerName: 'علی رضایی',
-    mobile: '',
-    cardType: 'titanium',
-    qrLink: 'https://linku.im/B2F8A1C7E4D9350/mnop',
-    license: 'B2F8A1C7E4D9350',
-    status: 'inactive',
-    createdAt: '1403/04/05'
-  }
-]
+const cardStore = useCardsStore()
+const cards = cardStore.cards
 
 // Watch for qrLink changes to auto-generate QR code
 watch(() => cardForm.qrLink, async (newLink) => {
@@ -394,11 +350,8 @@ const loadCard = async () => {
   error.value = ''
 
   try {
-    // شبیه‌سازی فراخوانی API
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
     // پیدا کردن کارت بر اساس ID
-    const card = sampleCards.find(c => c.id === cardId.value)
+    const card = cards.find(c => Number(c.id) === Number(cardId.value))
 
     if (!card) {
       throw new Error('کارت مورد نظر یافت نشد')
@@ -423,28 +376,31 @@ const loadCard = async () => {
 }
 
 const generateRandomLink = () => {
-  // تولید شناسه لایسنس 14 کاراکتری hex
-  const licenseId = Array.from({length: 14}, () => Math.floor(Math.random() * 16).toString(16).toUpperCase()).join('')
-
-  // تولید مدل کارت 4 کاراکتری
-  const cardModel = Math.random().toString(36).substr(2, 4).toLowerCase()
-
-  cardForm.qrLink = `https://linku.im/${licenseId}/${cardModel}`
-  cardForm.license = licenseId
+  //cardForm.qrLink = `https://linku.im/${licenseId}/${cardModel}`
+  //cardForm.license = licenseId
 }
+const { appContext } = getCurrentInstance()!
+const axios = appContext.config.globalProperties.$axios
 
-const generateLicense = () => {
-  // تولید شناسه لایسنس 14 کاراکتری hex
-  const licenseId = Array.from({length: 14}, () => Math.floor(Math.random() * 16).toString(16).toUpperCase()).join('')
+const generateLicense = async () => {
+  if (cardForm.status == 'active') {
+    isGeneratingLicense.value = false
 
-  cardForm.license = licenseId
+    const selectedCardType = products.find(p => String(p.id) === String(cardForm.cardType))
 
-  // اگر قبلاً QR Link داشته، آن را هم به‌روزرسانی کن
-  if (cardForm.qrLink) {
-    const parts = cardForm.qrLink.split('/')
-    const cardModel = parts[parts.length - 1] || Math.random().toString(36).substr(2, 4).toLowerCase()
-    cardForm.qrLink = `https://linku.im/${licenseId}/${cardModel}`
+    const res = await axios.post(`user/admin/generateLicense/${cardId.value}`)
+    isGeneratingLicense.value = true
+    const licenseId=res.data.licenseId
+    cardForm.license = licenseId
+
+    // اگر قبلاً QR Link داشته، آن را هم به‌روزرسانی کن
+    if (cardForm.qrLink) {
+      const parts = cardForm.qrLink.split('/')
+      const cardModel = parts[parts.length - 1] || Math.random().toString(36).substr(2, 4).toLowerCase()
+      cardForm.qrLink = `https://linku.im/${licenseId}/${cardModel}`
+    }
   }
+
 }
 
 const generateQRCode = async () => {
@@ -452,7 +408,7 @@ const generateQRCode = async () => {
 
   try {
     // Generate QR code without logo
-    const qrCodeUrl = await QRCode.toDataURL(cardForm.qrLink, {
+    qrCodeDataURL.value = await QRCode.toDataURL(cardForm.qrLink, {
       width: 512,
       margin: 2,
       color: {
@@ -461,7 +417,6 @@ const generateQRCode = async () => {
       },
       errorCorrectionLevel: 'M'
     })
-    qrCodeDataURL.value = qrCodeUrl
   } catch (error) {
     console.error('Error generating QR code:', error)
     qrCodeDataURL.value = ''
@@ -481,14 +436,13 @@ const saveCard = async () => {
   saving.value = true
 
   try {
-    // شبیه‌سازی فراخوانی API برای ذخیره
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const cardform = { ...cardForm }
 
-    // در پروژه واقعی اینجا API call انجام می‌شود
-    console.log('Card saved:', { id: cardId.value, ...cardForm })
+    // فراخوانی API برای ویرایش کارت
+    await cardStore.updateCard(cardId.value, cardform)
 
     // بازگشت به صفحه کارت‌ها با پیام موفقیت
-    router.push({
+    await router.push({
       name: 'cards',
       query: {
         success: 'کارت با موفقیت ویرایش شد'
@@ -518,8 +472,9 @@ const copyToClipboard = (text: string) => {
 };
 
 // Lifecycle
-onMounted(() => {
-  loadCard()
+onMounted(async () => {
+  await loadCard()
+  await productStore.fetchProducts()
 })
 </script>
 
