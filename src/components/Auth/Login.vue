@@ -164,8 +164,6 @@ const switchTab = (tab:any) => {
   passwordError.value = false
 }
 const submitPhone = async () => {
-  step.value = 'otp'
-  return
   const cleaned = toEnglishDigits(phone.value).replace(/^0/, '')
   const regex = /^9\d{9}$/
   phoneError.value = !regex.test(cleaned)
@@ -264,7 +262,6 @@ function toEnglishDigits(str: string): string {
 
 async function sendOtpCode(normalized: string): Promise<boolean> {
   authStore.setToken('')
-  localStorage.setItem('auth_token', '')
 
   try {
     const response = await axios.post('auth/sendOtpCode', {
