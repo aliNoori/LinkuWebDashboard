@@ -397,7 +397,7 @@ const generateLicense = async () => {
     if (cardForm.qrLink) {
       const parts = cardForm.qrLink.split('/')
       const cardModel = parts[parts.length - 1] || Math.random().toString(36).substr(2, 4).toLowerCase()
-      cardForm.qrLink = `https://linku.im/${licenseId}/${cardModel}`
+      cardForm.qrLink = `https://linku.im/profile/${licenseId}/${cardModel}`
     }
   }
 

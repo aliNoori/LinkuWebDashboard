@@ -652,7 +652,7 @@ const generateRandomLink = async () => {
 
       const licenseId = res.data.license.license_code
 
-      cardForm.qrLink = `https://linku.im/${licenseId}/${selectedCardType?.identifier}`
+      cardForm.qrLink = `https://linku.im/profile/${licenseId}/${selectedCardType?.identifier}`
 
       isGeneratingLicense.value = false
     }
