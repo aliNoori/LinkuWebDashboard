@@ -267,18 +267,22 @@
                 {{ card.qrLink.split('/').pop() }}
               </div>
             </div>
-
             <!-- Full Link -->
             <div>
-              <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">لینک کامل</label>
+              <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                لینک کامل
+              </label>
               <div class="mt-1 flex items-center gap-2">
-                <div class="flex-1 font-mono text-xs bg-gray-100 dark:bg-slate-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 truncate">
+                <div
+                    class="flex-1 font-mono text-xs bg-gray-100 dark:bg-slate-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 break-all"
+                    :title="card.qrLink"
+                >
                   {{ card.qrLink }}
                 </div>
                 <button
-                  @click="copyToClipboard(card.qrLink)"
-                  class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-300"
-                  title="کپی لینک"
+                    @click="copyToClipboard(card.qrLink)"
+                    class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all duration-300"
+                    title="کپی لینک"
                 >
                   <i class="ti ti-copy text-sm"></i>
                 </button>
@@ -505,6 +509,7 @@ const successMessage = ref('')
 const selectedCards = ref<string[]>([])
 const cardStore = useCardsStore()
 const cards = computed(() => cardStore.cards)
+console.log('link',cards.value)
 onMounted(() => {
   cardStore.fetchCards()
 })
@@ -778,7 +783,7 @@ const viewQR = async (card: Card) => {
     // Create QR code canvas
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-
+console.log('card.qrLink,',card.qrLink)
     // Generate basic QR code with higher resolution for modal
     await QRCode.toCanvas(canvas, card.qrLink, {
       width: 512,
@@ -851,6 +856,7 @@ const downloadQRCode = () => {
 }
 
 const copyToClipboard = async (text: string) => {
+  console.log(text);
   try {
     await navigator.clipboard.writeText(text)
     successMessage.value = 'لینک با موفقیت کپی شد'
