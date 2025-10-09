@@ -98,7 +98,7 @@
               class="w-14 h-14 text-xl font-semibold text-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-300"
               @input="handleInput(index, $event)"
               @keydown.backspace="handleBackspace(index)"
-              :ref="el => otpRefs[index]?el:0"
+              :ref="el => otpRefs[index] = el as HTMLInputElement"
           />
         </div>
 
@@ -149,7 +149,7 @@ const showInfoToast = (message: string, icon = 'ti-lock') => {
   setTimeout(() => showToast.value = false, 3000) // بعد از ۳ ثانیه بسته می‌شه
 }
 const otp = ref(['', '', '', ''])
-const otpRefs: (HTMLInputElement | null)[] = []
+const otpRefs = ref<Array<HTMLInputElement | null>>([])
 const countdown = ref(120)
 
 const formattedPhone = computed(() => {
@@ -164,6 +164,8 @@ const switchTab = (tab:any) => {
   passwordError.value = false
 }
 const submitPhone = async () => {
+  step.value = 'otp'
+  return
   const cleaned = toEnglishDigits(phone.value).replace(/^0/, '')
   const regex = /^9\d{9}$/
   phoneError.value = !regex.test(cleaned)
@@ -224,8 +226,8 @@ const handleInput = async (index: any, event: any) => {
     return
   }
   otp.value[index] = value
-  if (index < otp.value.length - 1 && otpRefs[index + 1]) {
-    otpRefs[index + 1]?.focus()
+  if (index < otp.value.length - 1 && otpRefs.value[index + 1]) {
+    otpRefs.value[index + 1]?.focus()
   }
 
   if (otp.value.every(d => d !== '')) {
@@ -242,7 +244,7 @@ const handleInput = async (index: any, event: any) => {
 
 const handleBackspace = (index:any) => {
   if (!otp.value[index] && index > 0) {
-    otpRefs[index - 1]?.focus()
+    otpRefs.value[index - 1]?.focus()
   }
 }
 
@@ -298,7 +300,6 @@ async function verifyOtpCode(fullCode: string): Promise<{ success: boolean; user
     const token = response.data.token
     if (typeof token === 'string') {
       authStore.setToken(token)
-      localStorage.setItem('auth_token', token)
     }
 
     if (response.status === 200) {
