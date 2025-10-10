@@ -675,12 +675,12 @@ const deleteSelectedCards = async () => {
     }, 3000)
   } catch (error) {
     console.error('❌ خطا در حذف کارت‌ها:', error)
-    errorMessage.value = 'خطا در حذف کارت‌ها. لطفاً دوباره تلاش کنید.'
-    showErrorMessage.value = true
+    //errorMessage.value = 'خطا در حذف کارت‌ها. لطفاً دوباره تلاش کنید.'
+    //showErrorMessage.value = true
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       showErrorMessage.value = false
-    }, 3000)
+    }, 3000)*/
   }
 }
 
