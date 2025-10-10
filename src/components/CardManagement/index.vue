@@ -277,9 +277,19 @@
             </button>
             <button
                 type="submit"
-                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                :disabled="isSaving"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
             >
-              {{ editingProduct ? 'به‌روزرسانی' : 'افزودن محصول' }}
+              <i v-if="!isSaving" class="ti ti-check text-sm"></i>
+              <svg v-else class="w-4 h-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+              <span>
+                    {{ isSaving ? (editingProduct ? 'در حال به‌روزرسانی...' : 'در حال افزودن...') :
+                     (editingProduct ? 'به‌روزرسانی' : 'افزودن محصول') }}
+              </span>
             </button>
           </div>
         </form>
@@ -319,16 +329,27 @@
       </div>
     </div>
   </div>
+  <InfoToast :visible="showToast" :message="toastMessage" :icon="toastIcon"/>
 </template>
 
 <script setup lang="ts">
 import {ref, reactive, onMounted, computed} from 'vue'
 import {useProductStore} from "@/stores/product.ts";
-import type {Product} from "@/types/product.ts";
+import type {Product, ProductResult} from "@/types/product.ts";
+import InfoToast from "@/components/InfoToast.vue";
 
 defineOptions({
   name: 'CardManagementComponent'
 })
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastIcon = ref('ti-alert-triangle') // یا 'ti-lock', 'ti-check', هر چی خواستی
+const showInfoToast = (message: string, icon = 'ti-lock') => {
+  toastMessage.value = message
+  toastIcon.value = icon
+  showToast.value = true
+  setTimeout(() => showToast.value = false, 3000) // بعد از ۳ ثانیه بسته می‌شه
+}
 
 // State
 const showModal = ref(false)
@@ -336,11 +357,12 @@ const showDeleteModal = ref(false)
 const editingProduct = ref<Product | null>(null)
 const productToDelete = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement>()
+const isSaving = ref(false)
 
 // Form data
 const form = reactive({
   id: '',
-  identifier:'',
+  identifier: '',
   name: '',
   description: '',
   image: '',
@@ -413,14 +435,33 @@ const handleFileUpload = (event: Event) => {
 const productStore = useProductStore()
 
 const saveProduct = async () => {
-  if (editingProduct.value) {
-    console.log(form)
-    await productStore.updateProduct(form.id, form)
-  } else {
-    await productStore.addProduct(form)
+
+  try {
+    isSaving.value = true
+    let response:ProductResult
+    if (editingProduct.value) {
+      response = await productStore.updateProduct(form.id, form)
+
+    } else {
+      response = await productStore.addProduct(form)
+
+    }
+    if(response.success){
+
+      showModal.value = false
+      showInfoToast(response.message,toastIcon.value);
+
+    }else{
+      showInfoToast(response.message,toastIcon.value);
+    }
+
+  } catch (error) {
+    console.error('❌ خطا در ذخیره محصول:', error)
+  } finally {
+    isSaving.value = false
   }
-  showModal.value = false
 }
+
 
 const closeModal = () => {
   showModal.value = false

@@ -8,3 +8,10 @@ export interface Product {
   disabled:boolean
   status: 'active' | 'inactive'
 }
+
+export interface ProductResult{
+  success: boolean
+  message: string
+  data?: any
+}
+

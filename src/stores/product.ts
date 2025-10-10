@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {ref, getCurrentInstance} from 'vue'
 import {useUserStore} from '@/stores/user'
-import type {Product} from "@/types/product.ts";
+import type {Product, ProductResult} from "@/types/product.ts";
 
 export const useProductStore = defineStore('product', () => {
     const userStore = useUserStore()
@@ -26,12 +26,11 @@ export const useProductStore = defineStore('product', () => {
     }
 
     // ➕ افزودن محصول جدید
-    const addProduct = async (form: any) => {
+    const addProduct = async (form: any):Promise<ProductResult> => {
         try {
             const payload = {...form}
             const imageBase64 = payload.image
 
-            // اگر image یک URL بود، فقط payload بفرست
             if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
                 delete payload.image
             }
@@ -39,24 +38,29 @@ export const useProductStore = defineStore('product', () => {
             payload.quantity = 1
 
             const res = await axios.post('user/admin/cardProducts', payload)
-            const product = res.data?.data || res.data
 
-            // اگر image یک فایل بود، آپلودش کن
-            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
-                await uploadProductImage(product.id, 'cardproduct', imageBase64, 'imageCardProduct')
-                product.image = imageBase64 // یا URL جدید بعد از آپلود
+            if (res.data.success) {
+                const product = res.data?.data || res.data
+
+                if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                    await uploadProductImage(product.id, 'cardproduct', imageBase64, 'imageCardProduct')
+                    product.image = imageBase64
+                }
+
+                products.value.push(product)
+                return { success: true, message: res.data.message || 'محصول با موفقیت افزوده شد', data: product }
+            } else {
+                return { success: false, message: res.data.message || 'خطا در افزودن محصول' , data: res }
             }
 
-            products.value.push(product)
-            return product
-        } catch (error) {
+        } catch (error: any) {
             console.error('❌ خطا در افزودن محصول:', error)
-            throw error
+            return { success: false, message: error.response?.data?.message || 'خطا در برقراری ارتباط با سرور' }
         }
     }
 
     // ✏️ ویرایش محصول
-    const updateProduct = async (id: string, form: any) => {
+    const updateProduct = async (id: string, form: any):Promise<ProductResult> => {
 
         try {
             const payload = {...form}
@@ -66,19 +70,27 @@ export const useProductStore = defineStore('product', () => {
                 delete payload.image
             }
             payload.quantity = 1
-            await axios.put(`user/admin/cardProducts/${id}`, payload)
-            const index = products.value.findIndex(p => p.id === id)
+            const res= await axios.put(`user/admin/cardProducts/${id}`, payload)
 
-            if (index !== -1) products.value[index] = {...products.value[index], ...payload}
+            if(res.data.success){
+                const product = res.data?.data || res.data
+                const index = products.value.findIndex(p => p.id === id)
 
-            // اگر image یک فایل بود، آپلودش کن
-            if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
-                await uploadProductImage(id, 'cardproduct', imageBase64, 'imageCardProduct')
-                products.value[index].image = imageBase64 // یا URL بعد از آپلود
+                if (index !== -1) products.value[index] = {...products.value[index], ...payload}
+
+                // اگر image یک فایل بود، آپلودش کن
+                if (imageBase64 && !/^https?:\/\//.test(imageBase64)) {
+                    await uploadProductImage(id, 'cardproduct', imageBase64, 'imageCardProduct')
+                    products.value[index].image = imageBase64 // یا URL بعد از آپلود
+                }
+                return { success: true, message: res.data.message || 'محصول با موفقیت ویزایش شد', data: product }
+            }else{
+                return { success: false, message: res.data.message || 'خطا در ویرایض محصول' }
             }
-        } catch (error) {
-            console.error('❌ خطا در به‌روزرسانی محصول:', error)
-            throw error
+
+        } catch (error:any) {
+            console.error('❌ خطا در ویرایش محصول:', error)
+            return { success: false, message: error.response?.data?.message || 'خطا در برقراری ارتباط با سرور' }
         }
     }
     // ❌ حذف محصول
