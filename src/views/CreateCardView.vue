@@ -360,10 +360,19 @@
             <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200 dark:border-slate-700 mt-8">
               <button
                   type="submit"
-                  class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold flex items-center justify-center gap-2"
+                  :disabled="isSaving"
+                  class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
+                  text-white px-6 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl
+                  font-semibold flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <i class="ti ti-plus text-lg"></i>
-                ایجاد کارت ویزیت
+                <template v-if="!isSaving">
+                  <i class="ti ti-plus text-lg"></i>
+                  ایجاد کارت ویزیت
+                </template>
+                <template v-else>
+                  <i class="ti ti-loader animate-spin text-lg"></i>
+                  در حال افزودن...
+                </template>
               </button>
               <button
                   type="button"
@@ -532,10 +541,18 @@
             <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-slate-700 mt-8">
               <button
                   type="submit"
-                  class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg flex items-center justify-center gap-2"
+                  :disabled="isBulkSaving"
+                  class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <i class="ti ti-copy text-lg"></i>
-                ایجاد {{ bulkForm.count }} کارت ویزیت
+                <template v-if="!isBulkSaving">
+                  <i class="ti ti-copy text-lg"></i>
+                  ایجاد {{ bulkForm.count }} کارت ویزیت
+                </template>
+
+                <template v-else>
+                  <i class="ti ti-loader animate-spin text-lg"></i>
+                  در حال ایجاد...
+                </template>
               </button>
               <router-link
                   :to="{ name: 'cards' }"
@@ -564,7 +581,8 @@ import {useCardsStore} from "@/stores/cards.ts";
 defineOptions({
   name: 'CreateCardView'
 })
-
+const isSaving=ref(false)
+const isBulkSaving = ref(false)
 const router = useRouter()
 const {showSuccess, showError} = useAlert()
 
@@ -658,7 +676,6 @@ const generateRandomLink = async () => {
     }
   }
 
-
 }
 
 // Generate QR Code
@@ -716,18 +733,22 @@ const cardStore = useCardsStore()
 const saveCard = async () => {
   try {
     console.log('Creating card:', cardForm)
+    isSaving.value = true;
     // Here you would typically send the data to your API
     await cardStore.createCard(cardForm)
     // Navigate back to cards page
     await router.push('/cards')
   } catch (error) {
     console.error('Error creating card:', error)
+  }finally {
+    isSaving.value = false;
   }
 }
 
 // Create bulk cards
 const createBulkCards = async () => {
   try {
+    isBulkSaving.value = true
     // Here you would typically send the data to your API
     const selectedCardType = products.find((p: any) => String(p.id) === String(bulkForm.cardType))
 
@@ -740,6 +761,8 @@ const createBulkCards = async () => {
     await router.push('/cards')
   } catch (error) {
     console.error('Error creating bulk cards:', error)
+  }finally{
+    isBulkSaving.value = false
   }
 }
 
