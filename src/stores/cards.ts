@@ -82,7 +82,7 @@ export const useCardsStore = defineStore('card', () => {
     // 🗑️ حذف گروهی کارت‌ها
     const deleteSelectedCards = async (ids: string[]) => {
         try {
-            await axios.post('v1/cards/bulkDelete', {ids})
+            await axios.delete('user/admin/cardVisit/bulkDelete', {data: {ids}})
             cards.value = cards.value.filter(card => !ids.includes(card.id))
         } catch (err) {
             console.error('❌ خطا در حذف گروهی کارت‌ها:', err)

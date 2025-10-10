@@ -747,9 +747,11 @@ const toggleCardSelection = (cardId: string) => {
 
 const toggleSelectAll = () => {
   if (isAllSelected.value) {
+
     selectedCards.value = []
   } else {
     selectedCards.value = paginatedCards.value.map(card => card.id)
+
   }
 }
 
@@ -757,24 +759,35 @@ const clearSelection = () => {
   selectedCards.value = []
 }
 
-const deleteSelectedCards = () => {
+const deleteSelectedCards = async () => {
   if (selectedCards.value.length === 0) return
+  console.log('deleteSelectedCards',selectedCards.value)
+  const confirmed = confirm(`آیا از حذف ${selectedCards.value.length} کارت انتخاب شده اطمینان دارید؟`)
+  if (!confirmed) return
 
-  if (confirm(`آیا از حذف ${selectedCards.value.length} کارت انتخاب شده اطمینان دارید؟`)) {
-    selectedCards.value.forEach(cardId => {
-      const index = cards.value.findIndex(c => c.id === cardId)
-      if (index !== -1) {
-        cards.value.splice(index, 1)
-      }
-    })
+  try {
+    // فراخوانی متد حذف از store
+    await cardStore.deleteSelectedCards(selectedCards.value)
+
+    // پاک‌سازی انتخاب‌ها و نمایش پیام موفقیت
     selectedCards.value = []
     successMessage.value = 'کارت‌های انتخاب شده با موفقیت حذف شدند'
     showSuccessMessage.value = true
+
     setTimeout(() => {
       showSuccessMessage.value = false
     }, 3000)
+  } catch (error) {
+    console.error('❌ خطا در حذف کارت‌ها:', error)
+    errorMessage.value = 'خطا در حذف کارت‌ها. لطفاً دوباره تلاش کنید.'
+    showErrorMessage.value = true
+
+    setTimeout(() => {
+      showErrorMessage.value = false
+    }, 3000)
   }
 }
+
 
 const viewQR = async (card: Card) => {
   selectedCard.value = card
