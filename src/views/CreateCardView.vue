@@ -588,53 +588,7 @@ const {showSuccess, showError} = useAlert()
 
 const activeTab = ref<'single' | 'bulk'>('single')
 const productStore = useProductStore();
-const products = productStore.products;
-// Available card types
-/*const cardTypes = [
-  {
-    id: 'business-card',
-    name: 'کارت ویزیت',
-    image: '/devices/card.png',
-    stock: 50
-  },
-  {
-    id: 'mini-card',
-    name: 'مینی کارت',
-    image: '/devices/minicard.png',
-    stock: 30
-  },
-  {
-    id: 'gold-card',
-    name: 'کارت طلایی',
-    image: '/devices/goldcard.png',
-    stock: 20
-  },
-  {
-    id: 'bracelet',
-    name: 'دستبند',
-    image: '/devices/bracelet.png',
-    stock: 15
-  },
-  {
-    id: 'sticky',
-    name: 'استیکر',
-    image: '/devices/sticky.png',
-    stock: 100
-  },
-  {
-    id: 'stand',
-    name: 'استند',
-    image: '/devices/stand.png',
-    stock: 25
-  },
-  {
-    id: 'titanium-card',
-    name: 'کارت ویزیت تیتانیوم',
-    image: '/devices/Titanium.png',
-    stock: 10
-  }
-]*/
-
+const products = computed(()=>productStore.products);
 // Form data
 const cardForm = reactive({
   ownerName: '',
@@ -660,7 +614,7 @@ const axios = appContext.config.globalProperties.$axios
 // Generate random link with new format
 const generateRandomLink = async () => {
 
-  const selectedCardType = products.find((p: any) => String(p.id) === String(cardForm.cardType))
+  const selectedCardType = products.value.find((p: any) => String(p.id) === String(cardForm.cardType))
 
   if (isGeneratingLicense.value) {
 
@@ -750,7 +704,7 @@ const createBulkCards = async () => {
   try {
     isBulkSaving.value = true
     // Here you would typically send the data to your API
-    const selectedCardType = products.find((p: any) => String(p.id) === String(bulkForm.cardType))
+    const selectedCardType = products.value.find((p: any) => String(p.id) === String(bulkForm.cardType))
 
       if (selectedCardType) {
 
