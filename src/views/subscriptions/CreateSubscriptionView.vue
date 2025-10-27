@@ -36,21 +36,20 @@
     </div>
 
     <!-- Form -->
-    <div class="space-y-6">
+    <div v-if="plan" class="space-y-6">
       <!-- اطلاعات کلی -->
       <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <i class="ti ti-info-circle text-blue-600"></i>
           اطلاعات کلی
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div  class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               نام طرح *
             </label>
             <input
               v-model="plan.title"
-              @input="generateSlug"
               type="text"
               class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="مثال: طرح پایه"
@@ -93,54 +92,70 @@
           ></textarea>
         </div>
       </div>
-
       <!-- قیمت‌گذاری -->
       <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <i class="ti ti-currency-rial text-green-600"></i>
           قیمت‌گذاری
         </h3>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- قیمت اصلی -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              قیمت (تومان) *
+              قیمت اصلی (تومان) *
             </label>
             <input
-              v-model.number="plan.price"
-              type="number"
-              min="0"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="99000"
+                v-model.number="plan.price"
+                type="number"
+                min="0"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="مثال: 99000"
             />
           </div>
+
+          <!-- تخفیف -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              تخفیف (درصد)
+            </label>
+            <input
+                v-model.number="plan.discount"
+                type="number"
+                min="0"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="مثال: 10000"
+            />
+          </div>
+
+          <!-- دوره زمانی -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               دوره زمانی *
             </label>
             <select
-              v-model="plan.duration"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                v-model="plan.duration"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="ماه">ماهانه</option>
-              <option value="3ماه">3 ماهه</option>
-              <option value="6ماه">6 ماهه</option>
+              <option value="3ماه">سه ماهه</option>
+              <option value="6ماه">شش ماهه</option>
               <option value="سال">سالانه</option>
             </select>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              قیمت با تخفیف
-            </label>
-            <input
-              v-model.number="plan.discountedPrice"
-              type="number"
-              min="0"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="79000"
-            />
-          </div>
+        </div>
+
+        <!-- قیمت نهایی نمایش -->
+        <div class="mt-4 text-right">
+          <p class="text-gray-700 dark:text-gray-300 text-sm">
+            قیمت نهایی:
+            <span class="font-semibold text-green-600 dark:text-green-400 text-base">
+        {{ formatCurrency(finalPrice) }}
+      </span>
+          </p>
         </div>
       </div>
+
 
       <!-- ویژگی‌ها -->
       <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
@@ -160,7 +175,7 @@
 
         <div class="space-y-3">
           <div
-            v-for="(feature, index) in plan.features"
+            v-for="(feature, index) in planStore.features"
             :key="index"
             class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg"
           >
@@ -181,7 +196,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="plan.features.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+        <div v-if="planStore.features.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
           <i class="ti ti-list-check text-3xl mb-2"></i>
           <p>هنوز ویژگی‌ای اضافه نشده</p>
         </div>
@@ -199,7 +214,7 @@
               وضعیت
             </label>
             <select
-              v-model="plan.status"
+              v-model="plan.active"
               class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="draft">پیش‌نویس</option>
@@ -244,14 +259,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlert } from '@/composables/useAlert'
+import {usePlanStore} from "@/stores/plan.ts";
 
 defineOptions({
   name: 'CreateSubscriptionView'
 })
-
 const { showAlert } = useAlert()
 const route = useRoute()
 const router = useRouter()
@@ -259,40 +274,20 @@ const router = useRouter()
 // Check if editing existing plan
 const isEdit = ref(false)
 const planId = ref<string | null>(null)
-
 interface Feature {
   id: number
   title: string
   description: string
 }
-
-const plan = ref({
-  title: '',
-  slug: '',
-  subtitle: '',
-  description: '',
-  price: 0,
-  discountedPrice: 0,
-  duration: 'ماه',
-  features: [] as Feature[],
-  status: 'draft',
-  popularity: 'normal'
+const planStore=usePlanStore()
+const plan = computed(() => {
+  return planStore.selectedPlan
 })
-
-// Generate slug from title
-const generateSlug = () => {
-  if (plan.value.title && !isEdit.value) {
-    plan.value.slug = plan.value.title
-      .toLowerCase()
-      .replace(/[^\w\u0600-\u06FF\s-]/g, '') // Keep Persian characters
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-  }
-}
+console.log('Selected plan duration:',plan.value?.duration)
 
 // Feature management
 const addFeature = () => {
-  plan.value.features.push({
+  planStore.features.push({
     id: Date.now(),
     title: '',
     description: ''
@@ -300,46 +295,64 @@ const addFeature = () => {
 }
 
 const removeFeature = (index: number) => {
-  plan.value.features.splice(index, 1)
+  planStore.features.splice(index, 1)
 }
 
 // Save as draft
 const saveDraft = () => {
-  plan.value.status = 'draft'
+  if(plan.value){
+    plan.value.active = 'draft'
+  }
+
   savePlan()
 }
 
 // Publish plan
 const publish = () => {
-  plan.value.status = 'active'
-  savePlan()
+  if(plan.value){
+    savePlan()
+  }
 }
 
 // Save plan
-const savePlan = () => {
-  if (!plan.value.title.trim()) {
-    showAlert({ title: 'خطا', message: 'لطفا نام طرح را وارد کنید', type: 'error' })
+const savePlan = async () => {
+  if (!plan.value?.title.trim()) {
+    await showAlert({title: 'خطا', message: 'لطفا نام طرح را وارد کنید', type: 'error'})
     return
   }
 
-  if (!plan.value.slug.trim()) {
-    showAlert({ title: 'خطا', message: 'لطفا شناسه طرح را وارد کنید', type: 'error' })
+  if (!plan.value?.slug.trim()) {
+    await showAlert({title: 'خطا', message: 'لطفا شناسه طرح را وارد کنید', type: 'error'})
     return
   }
 
-  if (plan.value.price <= 0) {
-    showAlert({ title: 'خطا', message: 'لطفا قیمت معتبری وارد کنید', type: 'error' })
+  if (plan.value?.price <= 0) {
+    await showAlert({title: 'خطا', message: 'لطفا قیمت معتبری وارد کنید', type: 'error'})
     return
   }
 
-  if (plan.value.features.length === 0) {
-    showAlert({ title: 'خطا', message: 'لطفا حداقل یک ویژگی اضافه کنید', type: 'error' })
+  if (planStore.features.length === 0) {
+    await showAlert({title: 'خطا', message: 'لطفا حداقل یک ویژگی اضافه کنید', type: 'error'})
     return
   }
 
   // Save logic here...
   const action = isEdit.value ? 'بروزرسانی' : 'ایجاد'
-  showAlert({
+
+  const payload = {
+    ...plan.value,
+    price: plan.value?.price || 0,
+    duration: plan.value?.duration,
+    active: plan.value?.active,
+    popularity: plan.value?.popularity,
+    features:planStore.features.map(f => ({
+          title: f.title.trim(),
+          description: f.description?f.description.trim():''
+        }))
+  }
+  if(action==="بروزرسانی") await planStore.updatePlan(plan.value?.id, payload)
+  if(action==="ایجاد") await planStore.createPlan(payload)
+  await showAlert({
     title: 'موفقیت',
     message: `طرح اشتراک با موفقیت ${action} شد`,
     type: 'success'
@@ -353,7 +366,7 @@ const savePlan = () => {
 
 // Preview plan
 const preview = () => {
-  const formatCurrency = (amount: number): string => {
+  const formatCurrency = (amount: number|any): string => {
     return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان'
   }
 
@@ -364,7 +377,7 @@ const preview = () => {
       <html dir="rtl" lang="fa">
       <head>
         <meta charset="UTF-8">
-        <title>پیش‌نمایش طرح ${plan.value.title}</title>
+        <title>پیش‌نمایش طرح ${plan.value?.title}</title>
         <style>
           body {
             font-family: 'Shabnam', Arial, sans-serif;
@@ -429,20 +442,20 @@ const preview = () => {
       </head>
       <body>
         <div class="plan-card">
-          <h1 class="plan-title">${plan.value.title}</h1>
-          <p class="plan-subtitle">${plan.value.subtitle}</p>
+          <h1 class="plan-title">${plan.value?.title}</h1>
+          <p class="plan-subtitle">${plan.value?.subtitle}</p>
           <div class="plan-price">
-            ${formatCurrency(plan.value.price)}
-            <small>/ ${plan.value.duration}</small>
+            ${formatCurrency(plan.value?.price)}
+            <small>/ ${plan.value?.duration}</small>
           </div>
-          ${plan.value.description ? `<p style="margin-bottom: 20px; color: #4b5563;">${plan.value.description}</p>` : ''}
+          ${plan.value?.description ? `<p style="margin-bottom: 20px; color: #4b5563;">${plan.value?.description}</p>` : ''}
           <ul class="features">
-            ${plan.value.features.map(feature =>
+            ${planStore.features.map(feature =>
               `<li><span class="check-icon">✓</span> ${feature.title}</li>`
             ).join('')}
           </ul>
-          <span class="status ${plan.value.status}">
-            ${plan.value.status === 'active' ? 'فعال' : plan.value.status === 'draft' ? 'پیش‌نویس' : 'غیرفعال'}
+          <span class="status ${plan.value?.active}">
+            ${plan.value?.active === 'active' ? 'فعال' : plan.value?.active === 'draft' ? 'پیش‌نویس' : 'غیرفعال'}
           </span>
         </div>
       </body>
@@ -452,11 +465,31 @@ const preview = () => {
     previewWindow.document.close()
   }
 }
+// 💰 محاسبه قیمت نهایی
+const finalPrice = computed(() => {
+  const base = plan.value?.price || 0
+  const discount = plan.value?.discount || 0
+  return Math.max(base - discount, 0)
+})
 
-// Initialize
-if (route.params.id) {
-  isEdit.value = true
-  planId.value = route.params.id as string
-  // Load existing plan data here...
+// 💸 فرمت نمایش تومان
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان'
 }
+
+onMounted(async () => {
+  await planStore.fetchPlans()
+  // Initialize
+  if (route.params.id) {
+    isEdit.value = true
+    planId.value = route.params.id as string
+    planStore.selectPlan(Number(planId.value))
+    planStore.featurePlan(Number(planId.value))
+
+    // Load existing plan data here...
+  }else {
+    // 👇 برای حالت ایجاد پلن جدید
+    planStore.resetPlan()
+  }
+})
 </script>

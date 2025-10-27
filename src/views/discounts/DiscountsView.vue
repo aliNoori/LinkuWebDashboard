@@ -52,14 +52,16 @@
           </div>
           <div class="mr-3 sm:mr-4 min-w-0">
             <p class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">صرفه‌جویی</p>
-            <p class="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{{ formatCurrency(totalSavings) }}</p>
+            <p class="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{{
+                formatCurrency(totalSavings)
+              }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Main Content -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+    <div  class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
       <!-- Header -->
       <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -67,7 +69,8 @@
             <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-1">لیست کدهای تخفیف</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400">مجموع {{ filteredDiscounts.length }} کد تخفیف</p>
           </div>
-          <button @click="showAddModal = true" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+          <button @click="showAddModal = true"
+                  class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <i class="ti ti-plus"></i>
             <span>کد تخفیف جدید</span>
           </button>
@@ -85,20 +88,25 @@
 
           <div class="relative dropdown-container">
             <button
-              @click="showTypeDropdown = !showTypeDropdown"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
+                @click="showTypeDropdown = !showTypeDropdown"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
             >
               <span>{{ getTypeDisplayName(filterType) }}</span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showTypeDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showTypeDropdown }"></i>
             </button>
-            <ul v-if="showTypeDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
-              <li @click="selectType('')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+            <ul v-if="showTypeDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
+              <li @click="selectType('')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 همه انواع
               </li>
-              <li @click="selectType('percentage')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectType('percentage')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 درصدی
               </li>
-              <li @click="selectType('fixed')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectType('fixed')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 مقدار ثابت
               </li>
             </ul>
@@ -106,23 +114,29 @@
 
           <div class="relative dropdown-container">
             <button
-              @click="showStatusDropdown = !showStatusDropdown"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
+                @click="showStatusDropdown = !showStatusDropdown"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
             >
               <span>{{ getStatusDisplayName(filterStatus) }}</span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showStatusDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showStatusDropdown }"></i>
             </button>
-            <ul v-if="showStatusDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
-              <li @click="selectStatus('')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+            <ul v-if="showStatusDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
+              <li @click="selectStatus('')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 همه وضعیت‌ها
               </li>
-              <li @click="selectStatus('active')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectStatus('active')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 فعال
               </li>
-              <li @click="selectStatus('inactive')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectStatus('inactive')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 غیرفعال
               </li>
-              <li @click="selectStatus('expired')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectStatus('expired')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 منقضی شده
               </li>
             </ul>
@@ -130,23 +144,29 @@
 
           <div class="relative dropdown-container">
             <button
-              @click="showSortDropdown = !showSortDropdown"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
+                @click="showSortDropdown = !showSortDropdown"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
             >
               <span>{{ getSortDisplayName(sortBy) }}</span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showSortDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showSortDropdown }"></i>
             </button>
-            <ul v-if="showSortDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
-              <li @click="selectSort('created_desc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+            <ul v-if="showSortDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-20 max-h-60 overflow-y-auto">
+              <li @click="selectSort('created_desc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 جدیدترین
               </li>
-              <li @click="selectSort('created_asc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectSort('created_asc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 قدیمی‌ترین
               </li>
-              <li @click="selectSort('usage_desc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectSort('usage_desc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 پراستفاده‌ترین
               </li>
-              <li @click="selectSort('expiry_asc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <li @click="selectSort('expiry_asc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                 زودتر منقضی
               </li>
             </ul>
@@ -160,66 +180,88 @@
         <div class="hidden lg:block overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
-              <tr>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">کد تخفیف</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">عنوان</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">نوع تخفیف</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">میزان تخفیف</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">استفاده</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">انقضا</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">وضعیت</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">عملیات</th>
-              </tr>
+            <tr>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                کد تخفیف
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                عنوان
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                نوع تخفیف
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                میزان تخفیف
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                استفاده
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                انقضا
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                وضعیت
+              </th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                عملیات
+              </th>
+            </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr v-for="discount in paginatedDiscounts" :key="discount.id" class="hover:bg-gray-50 dark:hover:bg-gray-900">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <code class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-mono text-sm">
-                      {{ discount.code }}
-                    </code>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div>
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ discount.title }}</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ discount.description }}</div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+            <tr v-for="discount in paginatedDiscounts" :key="discount.id"
+                class="hover:bg-gray-50 dark:hover:bg-gray-900">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <code
+                      class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-mono text-sm">
+                    {{ discount.code }}
+                  </code>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ discount.title }}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{{ discount.description }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
                   <span :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full',
                     discount.type === 'percentage' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200']">
                     {{ discount.type === 'percentage' ? 'درصدی' : 'مقدار ثابت' }}
                   </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  {{ discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value) }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  {{ discount.usedCount }} / {{ discount.maxUsage || '∞' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  {{ discount.expiryDate || 'بدون انقضا' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full', getStatusClasses(discount)]">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                {{ discount.type === 'percentage' ? `${discount.value}%` : formatCurrency(discount.value) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                {{ discount.usedCount }} / {{ discount.maxUsage || '∞' }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                {{ formatDate(discount.expiryDate) || 'بدون انقضا' }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                      :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full', getStatusClasses(discount)]">
                     {{ getStatusText(discount) }}
                   </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div class="flex items-center gap-2">
-                    <button @click="editDiscount(discount)" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
-                      <i class="ti ti-edit"></i>
-                    </button>
-                    <button @click="toggleDiscountStatus(discount)" class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
-                      <i class="ti ti-power"></i>
-                    </button>
-                    <button @click="deleteDiscount(discount)" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                      <i class="ti ti-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center gap-2">
+                  <button @click="editDiscount(discount)"
+                          class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                    <i class="ti ti-edit"></i>
+                  </button>
+                  <button @click="toggleDiscountStatus(discount)"
+                          class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
+                    <i class="ti ti-power"></i>
+                  </button>
+                  <button @click="deleteDiscount(discount)"
+                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                    <i class="ti ti-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -230,7 +272,8 @@
                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3">
             <!-- Header with Code and Status -->
             <div class="flex items-center justify-between">
-              <code class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-mono text-sm">
+              <code
+                  class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-mono text-sm">
                 {{ discount.code }}
               </code>
               <span :class="['inline-flex px-2 py-1 text-xs font-semibold rounded-full', getStatusClasses(discount)]">
@@ -268,7 +311,7 @@
               <div>
                 <span class="text-gray-500 dark:text-gray-400">انقضا:</span>
                 <span class="text-gray-900 dark:text-white font-medium mr-2">
-                  {{ discount.expiryDate || 'بدون انقضا' }}
+                  {{ formatDate(discount.expiryDate) || 'بدون انقضا' }}
                 </span>
               </div>
             </div>
@@ -295,28 +338,30 @@
         </div>
 
         <!-- Enhanced Pagination -->
-        <div v-if="totalPages > 1" class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+        <div v-if="totalPages > 1"
+             class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700 pt-6">
           <!-- Page Info -->
           <div class="text-sm text-gray-500 dark:text-gray-400 order-2 sm:order-1">
-            نمایش {{ ((currentPage - 1) * itemsPerPage) + 1 }} تا {{ Math.min(currentPage * itemsPerPage, filteredDiscounts.length) }} از {{ filteredDiscounts.length }} مورد
+            نمایش {{ ((currentPage - 1) * itemsPerPage) + 1 }} تا
+            {{ Math.min(currentPage * itemsPerPage, filteredDiscounts.length) }} از {{ filteredDiscounts.length }} مورد
           </div>
 
           <!-- Pagination Controls -->
           <div class="flex items-center gap-2 order-1 sm:order-2">
             <!-- First Page -->
             <button
-              @click="currentPage = 1"
-              :disabled="currentPage === 1"
-              class="hidden sm:flex px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                @click="currentPage = 1"
+                :disabled="currentPage === 1"
+                class="hidden sm:flex px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <i class="ti ti-chevrons-right"></i>
             </button>
 
             <!-- Previous Page -->
             <button
-              @click="currentPage = Math.max(1, currentPage - 1)"
-              :disabled="currentPage === 1"
-              class="flex items-center px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                @click="currentPage = Math.max(1, currentPage - 1)"
+                :disabled="currentPage === 1"
+                class="flex items-center px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <i class="ti ti-chevron-right ml-1"></i>
               <span class="hidden sm:inline">قبلی</span>
@@ -326,9 +371,9 @@
             <div class="hidden sm:flex items-center gap-1">
               <template v-for="page in visiblePages" :key="page">
                 <button
-                  v-if="page !== '...'"
-                  @click="currentPage = Number(page)"
-                  :class="[
+                    v-if="page !== '...'"
+                    @click="currentPage = Number(page)"
+                    :class="[
                     'px-3 py-2 text-sm rounded-lg transition-colors',
                     page === currentPage
                       ? 'bg-blue-600 text-white'
@@ -348,9 +393,9 @@
 
             <!-- Next Page -->
             <button
-              @click="currentPage = Math.min(totalPages, currentPage + 1)"
-              :disabled="currentPage === totalPages"
-              class="flex items-center px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                @click="currentPage = Math.min(totalPages, currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                class="flex items-center px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span class="hidden sm:inline">بعدی</span>
               <i class="ti ti-chevron-left mr-1"></i>
@@ -358,9 +403,9 @@
 
             <!-- Last Page -->
             <button
-              @click="currentPage = totalPages"
-              :disabled="currentPage === totalPages"
-              class="hidden sm:flex px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                @click="currentPage = totalPages"
+                :disabled="currentPage === totalPages"
+                class="hidden sm:flex px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <i class="ti ti-chevrons-left"></i>
             </button>
@@ -371,13 +416,15 @@
             <span class="hidden sm:inline">تعداد در صفحه:</span>
             <div class="relative dropdown-container">
               <button
-                @click="showItemsPerPageDropdown = !showItemsPerPageDropdown"
-                class="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  @click="showItemsPerPageDropdown = !showItemsPerPageDropdown"
+                  class="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 <span>{{ itemsPerPage }}</span>
-                <i class="ti ti-chevron-down text-xs transition-transform duration-200" :class="{ 'rotate-180': showItemsPerPageDropdown }"></i>
+                <i class="ti ti-chevron-down text-xs transition-transform duration-200"
+                   :class="{ 'rotate-180': showItemsPerPageDropdown }"></i>
               </button>
-              <ul v-if="showItemsPerPageDropdown" class="absolute bottom-full left-0 mb-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-20 min-w-[80px]">
+              <ul v-if="showItemsPerPageDropdown"
+                  class="absolute bottom-full left-0 mb-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-20 min-w-[80px]">
                 <li v-for="size in [5, 10, 25, 50]" :key="size"
                     @click="changeItemsPerPage(size)"
                     class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white text-center"
@@ -393,8 +440,10 @@
     </div>
 
     <!-- Add/Edit Modal -->
-    <div v-if="showAddModal || showEditModal" @click="closeModals" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div @click.stop class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div v-if="showAddModal || showEditModal" @click="closeModals"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div @click.stop
+           class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
             {{ editingDiscount ? 'ویرایش کد تخفیف' : 'افزودن کد تخفیف جدید' }}
@@ -424,18 +473,22 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع تخفیف *</label>
             <div class="relative dropdown-container">
               <button
-                @click="showModalTypeDropdown = !showModalTypeDropdown"
-                type="button"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
+                  @click="showModalTypeDropdown = !showModalTypeDropdown"
+                  type="button"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-right flex items-center justify-between"
               >
                 <span>{{ formData.type === 'percentage' ? 'درصدی' : 'مقدار ثابت' }}</span>
-                <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showModalTypeDropdown }"></i>
+                <i class="ti ti-chevron-down transition-transform duration-200"
+                   :class="{ 'rotate-180': showModalTypeDropdown }"></i>
               </button>
-              <ul v-if="showModalTypeDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-30 max-h-60 overflow-y-auto">
-                <li @click="selectModalType('percentage')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+              <ul v-if="showModalTypeDropdown"
+                  class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-30 max-h-60 overflow-y-auto">
+                <li @click="selectModalType('percentage')"
+                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                   درصدی
                 </li>
-                <li @click="selectModalType('fixed')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
+                <li @click="selectModalType('fixed')"
+                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-gray-900 dark:text-white">
                   مقدار ثابت
                 </li>
               </ul>
@@ -446,7 +499,8 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               میزان تخفیف * {{ formData.type === 'percentage' ? '(%)' : '(تومان)' }}
             </label>
-            <input v-model.number="formData.value" type="number" required :min="0" :max="formData.type === 'percentage' ? 100 : undefined"
+            <input v-model.number="formData.value" type="number" required :min="0"
+                   :max="formData.type === 'percentage' ? 100 : undefined"
                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
           </div>
 
@@ -460,11 +514,11 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تاریخ انقضا</label>
             <date-picker
-              v-model="formData.expiryDate"
-              format="jYYYY/jMM/jDD"
-              display-format="jYYYY/jMM/jDD"
-              placeholder="تاریخ انقضا"
-              class="dark-datepicker w-full"
+                v-model="formData.expiryDate"
+                format="jYYYY/jMM/jDD"
+                display-format="jYYYY/jMM/jDD"
+                placeholder="تاریخ انقضا"
+                class="dark-datepicker w-full"
             />
           </div>
 
@@ -485,15 +539,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useAlert } from '@/composables/useAlert'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
+import {useAlert} from '@/composables/useAlert'
 import DatePicker from 'vue3-persian-datetime-picker'
+import {useDiscountStore} from "@/stores/discount.ts";
+import jalaali from 'jalaali-js';
 
 defineOptions({
   name: 'DiscountsView'
 })
 
-const { showSuccess, showDeleteConfirm } = useAlert()
+const {showSuccess, showDeleteConfirm} = useAlert()
 
 interface DiscountCode {
   id: number
@@ -524,6 +580,7 @@ const showSortDropdown = ref(false)
 const showModalTypeDropdown = ref(false)
 const showItemsPerPageDropdown = ref(false)
 const editingDiscount = ref<DiscountCode | null>(null)
+const discountStore = useDiscountStore()
 
 const formData = ref({
   code: '',
@@ -536,45 +593,7 @@ const formData = ref({
 })
 
 // Sample data
-const discountCodes = ref<DiscountCode[]>([
-  {
-    id: 1,
-    code: 'WELCOME20',
-    title: 'تخفیف خوش‌آمدگویی',
-    description: 'تخفیف 20 درصدی برای کاربران جدید',
-    type: 'percentage',
-    value: 20,
-    maxUsage: 100,
-    usedCount: 45,
-    expiryDate: '1403/12/29',
-    active: true,
-    createdAt: '1403/04/15'
-  },
-  {
-    id: 2,
-    code: 'SUMMER30',
-    title: 'تخفیف تابستانه',
-    description: 'تخفیف 30 درصدی ویژه تابستان',
-    type: 'percentage',
-    value: 30,
-    maxUsage: 50,
-    usedCount: 12,
-    expiryDate: '1403/07/31',
-    active: true,
-    createdAt: '1403/04/10'
-  },
-  {
-    id: 3,
-    code: 'FIXED50K',
-    title: 'تخفیف 50 هزار تومانی',
-    description: 'تخفیف مقدار ثابت 50 هزار تومان',
-    type: 'fixed',
-    value: 50000,
-    usedCount: 8,
-    active: false,
-    createdAt: '1403/03/20'
-  }
-])
+const discountCodes = computed(()=>discountStore.discounts)
 
 // Computed properties
 const activeDiscounts = computed(() => discountCodes.value.filter(d => d.active && !isExpired(d)).length)
@@ -594,8 +613,8 @@ const filteredDiscounts = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(d =>
-      d.code.toLowerCase().includes(query) ||
-      d.title.toLowerCase().includes(query)
+        d.code.toLowerCase().includes(query) ||
+        d.title.toLowerCase().includes(query)
     )
   }
 
@@ -708,7 +727,7 @@ const getStatusText = (discount: DiscountCode): string => {
   return 'غیرفعال'
 }
 
-const editDiscount = (discount: DiscountCode) => {
+const editDiscount = async (discount: DiscountCode) => {
   editingDiscount.value = discount
   formData.value = {
     code: discount.code,
@@ -721,12 +740,52 @@ const editDiscount = (discount: DiscountCode) => {
   }
   showEditModal.value = true
 }
+const normalizePersianDigits = (str: string): string => {
+  return str.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+}
 
-const saveDiscount = () => {
+const toGregorian = (shamsiDate: string): string => {
+  if (!shamsiDate || typeof shamsiDate !== 'string') return ''
+
+  const normalized = normalizePersianDigits(shamsiDate)
+  const parts = normalized.split('/')
+  if (parts.length !== 3) return ''
+
+  const [jy, jm, jd] = parts.map(Number)
+  if (!jy || !jm || !jd) return ''
+
+  const { gy, gm, gd } = jalaali.toGregorian(jy, jm, jd)
+  return `${gy}-${String(gm).padStart(2, '0')}-${String(gd).padStart(2, '0')}`
+}
+
+const toJalaali = (gregorianDate: string | Date): string => {
+  const dateStr = typeof gregorianDate === 'string'
+      ? gregorianDate
+      : gregorianDate.toISOString().split('T')[0] // "YYYY-MM-DD"
+
+  const [gy, gm, gd] = dateStr.split('-').map(Number)
+  const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd)
+  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`
+}
+
+const formatDate = (date: string | null | undefined): string => {
+  if (!date || typeof date !== 'string' || date.trim() === '') return 'بدون انقضا'
+
+  const normalized = normalizePersianDigits(date)
+
+  if (/^(13|14)\d{2}\/\d{1,2}\/\d{1,2}$/.test(normalized)) {
+    return date
+  }
+
+  return toJalaali(date)
+}
+// مثال استفاده
+const saveDiscount = async () => {
   if (editingDiscount.value) {
     // Update existing
+    await discountStore.updateDiscount(editingDiscount.value.id, formData.value)
     Object.assign(editingDiscount.value, formData.value)
-    showSuccess('ویرایش موفق', 'کد تخفیف با موفقیت ویرایش شد')
+    await showSuccess('ویرایش موفق', 'کد تخفیف با موفقیت ویرایش شد')
   } else {
     // Add new
     const newDiscount: DiscountCode = {
@@ -734,32 +793,36 @@ const saveDiscount = () => {
       ...formData.value,
       usedCount: 0,
       active: true,
-      createdAt: new Date().toLocaleDateString('fa-IR')
+      createdAt: new Date().toISOString().split('T')[0] ,// "2025-10-25"
+      expiryDate: toGregorian(formData.value.expiryDate)
     }
-    discountCodes.value.unshift(newDiscount)
-    showSuccess('افزودن موفق', 'کد تخفیف با موفقیت اضافه شد')
+    await discountStore.createDiscount(newDiscount)
+    await showSuccess('افزودن موفق', 'کد تخفیف با موفقیت اضافه شد')
   }
+
   closeModals()
 }
 
 const toggleDiscountStatus = (discount: DiscountCode) => {
   discount.active = !discount.active
+  discountStore.toggleDiscountStatus(discount.id,discount.active)
   showSuccess('تغییر وضعیت', `کد تخفیف ${discount.active ? 'فعال' : 'غیرفعال'} شد`)
 }
 
 const deleteDiscount = async (discount: DiscountCode) => {
   try {
     const confirmed = await showDeleteConfirm(
-      'حذف کد تخفیف',
-      `آیا از حذف کد تخفیف "${discount.code}" اطمینان دارید؟`,
-      discount.title
+        'حذف کد تخفیف',
+        `آیا از حذف کد تخفیف "${discount.code}" اطمینان دارید؟`,
+        discount.title
     )
 
     if (confirmed) {
+      await discountStore.deleteDiscount(discount.id)
       const index = discountCodes.value.findIndex(d => d.id === discount.id)
       if (index > -1) {
         discountCodes.value.splice(index, 1)
-        showSuccess('حذف موفق', 'کد تخفیف با موفقیت حذف شد')
+        await showSuccess('حذف موفق', 'کد تخفیف با موفقیت حذف شد')
       }
     }
   } catch (error) {
@@ -771,23 +834,28 @@ const closeModals = () => {
   showAddModal.value = false
   showEditModal.value = false
   editingDiscount.value = null
-  formData.value = {
-    code: '',
-    title: '',
-    description: '',
-    type: 'percentage',
-    value: 0,
-    maxUsage: undefined,
-    expiryDate: ''
+  if (showAddModal.value === false) {
+    /*formData.value = {
+      code: '',
+      title: '',
+      description: '',
+      type: 'percentage',
+      value: 0,
+      maxUsage: undefined,
+      expiryDate: ''
+    }*/
   }
 }
 
 // Dropdown helper functions
 const getTypeDisplayName = (type: string): string => {
   switch (type) {
-    case 'percentage': return 'درصدی'
-    case 'fixed': return 'مقدار ثابت'
-    default: return 'همه انواع'
+    case 'percentage':
+      return 'درصدی'
+    case 'fixed':
+      return 'مقدار ثابت'
+    default:
+      return 'همه انواع'
   }
 }
 
@@ -808,20 +876,29 @@ const selectSort = (sort: string) => {
 
 const getStatusDisplayName = (status: string): string => {
   switch (status) {
-    case 'active': return 'فعال'
-    case 'inactive': return 'غیرفعال'
-    case 'expired': return 'منقضی شده'
-    default: return 'همه وضعیت‌ها'
+    case 'active':
+      return 'فعال'
+    case 'inactive':
+      return 'غیرفعال'
+    case 'expired':
+      return 'منقضی شده'
+    default:
+      return 'همه وضعیت‌ها'
   }
 }
 
 const getSortDisplayName = (sort: string): string => {
   switch (sort) {
-    case 'created_desc': return 'جدیدترین'
-    case 'created_asc': return 'قدیمی‌ترین'
-    case 'usage_desc': return 'پراستفاده‌ترین'
-    case 'expiry_asc': return 'زودتر منقضی'
-    default: return 'جدیدترین'
+    case 'created_desc':
+      return 'جدیدترین'
+    case 'created_asc':
+      return 'قدیمی‌ترین'
+    case 'usage_desc':
+      return 'پراستفاده‌ترین'
+    case 'expiry_asc':
+      return 'زودتر منقضی'
+    default:
+      return 'جدیدترین'
   }
 }
 
@@ -849,8 +926,9 @@ const handleOutsideClick = (event: Event) => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
+  await discountStore.fetchDiscounts()
 })
 
 onUnmounted(() => {

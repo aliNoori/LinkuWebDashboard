@@ -50,7 +50,7 @@
           </div>
           <div class="mr-4">
             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">طرح‌های فعال</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ subscriptionPlans.length }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ plans.length }}</p>
           </div>
         </div>
       </div>
@@ -62,8 +62,8 @@
         <div class="flex justify-between items-center">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">طرح‌های اشتراک</h2>
           <router-link
-            to="/subscriptions/create"
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+              to="/subscriptions/create"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
           >
             <i class="ti ti-plus"></i>
             طرح جدید
@@ -74,9 +74,9 @@
       <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div
-            v-for="plan in subscriptionPlans"
-            :key="plan.id"
-            class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 relative group hover:shadow-md transition-all"
+              v-for="plan in plans"
+              :key="plan.id"
+              class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 relative group hover:shadow-md transition-all"
           >
             <div class="flex justify-between items-start mb-4">
               <div>
@@ -85,14 +85,14 @@
               </div>
               <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <router-link
-                  :to="`/subscriptions/${plan.id}/edit`"
-                  class="p-1 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors"
+                    :to="`/subscriptions/${plan.id}/edit`"
+                    class="p-1 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors"
                 >
                   <i class="ti ti-edit text-sm"></i>
                 </router-link>
                 <button
-                  @click="deletePlan(plan)"
-                  class="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
+                    @click="deletePlan(plan)"
+                    class="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
                 >
                   <i class="ti ti-trash text-sm"></i>
                 </button>
@@ -108,9 +108,9 @@
 
             <div class="space-y-2 mb-4">
               <div
-                v-for="feature in plan.features"
-                :key="feature.id"
-                class="flex items-center text-sm text-gray-700 dark:text-gray-300"
+                  v-for="feature in planStore.featurePlan(plan.id)"
+                  :key="feature.id"
+                  class="flex items-center text-sm text-gray-700 dark:text-gray-300"
               >
                 <i class="ti ti-check text-green-600 dark:text-green-400 ml-2"></i>
                 {{ feature.title }}
@@ -120,14 +120,24 @@
             <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="flex items-center gap-2">
                 <span
-                  :class="[
-                    'px-2 py-1 text-xs rounded-full',
-                    plan.active
-                      ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
-                      : 'bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-400'
-                  ]"
+                    :class="[
+        'px-2 py-1 text-xs rounded-full',
+        plan.active === 'active'
+          ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
+          : plan.active === 'inactive'
+          ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400'
+          : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400'
+      ]"
                 >
-                  {{ plan.active ? 'فعال' : 'غیرفعال' }}
+                 {{
+                    plan.active === 'active'
+                        ? 'فعال'
+                        : plan.active === 'inactive'
+                            ? 'غیرفعال'
+                            : plan.active === 'draft'
+                                ? 'پیش‌نویس'
+                                : 'نامشخص'
+                  }}
                 </span>
               </div>
               <span class="text-sm text-gray-500 dark:text-gray-400">
@@ -138,13 +148,13 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="subscriptionPlans.length === 0" class="text-center py-12">
+        <div v-if="plans.length === 0" class="text-center py-12">
           <i class="ti ti-package text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
           <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">هنوز طرحی ایجاد نشده</h3>
           <p class="text-gray-600 dark:text-gray-400 mb-4">اولین طرح اشتراک خود را ایجاد کنید</p>
           <router-link
-            to="/subscriptions/create"
-            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+              to="/subscriptions/create"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
           >
             <i class="ti ti-plus"></i>
             ایجاد طرح جدید
@@ -156,10 +166,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useAlert } from '@/composables/useAlert'
+import {ref, reactive, computed, onMounted, watch} from 'vue'
+import {useAlert} from '@/composables/useAlert'
+import {usePlanStore} from "@/stores/plan.ts";
+import type {Plan} from "@/stores/plan.ts";
 
-const { showAlert } = useAlert()
+const {showAlert} = useAlert()
 
 // Stats
 interface Stats {
@@ -176,84 +188,33 @@ const stats = reactive<Stats>({
   activeDiscounts: 8
 })
 
-// Plans
-interface Feature {
-  id: number
-  title: string
-  description: string
-}
-
-interface SubscriptionPlan {
-  id: number
-  title: string
-  subtitle: string
-  price: number
-  duration: string
-  features: Feature[]
-  active: boolean
-}
-
-const subscriptionPlans = ref<SubscriptionPlan[]>([
-  {
-    id: 1,
-    title: 'پایه',
-    subtitle: 'برای شروع کار',
-    price: 99000,
-    duration: 'ماه',
-    features: [
-      { id: 1, title: '5 پروفایل NFC', description: '' },
-      { id: 2, title: 'آمار بازدید', description: '' },
-      { id: 3, title: 'پشتیبانی ایمیل', description: '' }
-    ],
-    active: true
-  },
-  {
-    id: 2,
-    title: 'حرفه‌ای',
-    subtitle: 'برای کسب‌وکارها',
-    price: 199000,
-    duration: 'ماه',
-    features: [
-      { id: 1, title: '15 پروفایل NFC', description: '' },
-      { id: 2, title: 'آمار پیشرفته', description: '' },
-      { id: 3, title: 'صفحات شخصی‌سازی', description: '' },
-      { id: 4, title: 'پشتیبانی تلفنی', description: '' }
-    ],
-    active: true
-  },
-  {
-    id: 3,
-    title: 'سازمانی',
-    subtitle: 'برای سازمان‌ها',
-    price: 399000,
-    duration: 'ماه',
-    features: [
-      { id: 1, title: 'پروفایل نامحدود', description: '' },
-      { id: 2, title: 'داشبورد تیمی', description: '' },
-      { id: 3, title: 'API دسترسی', description: '' },
-      { id: 4, title: 'پشتیبانی اختصاصی', description: '' },
-      { id: 5, title: 'گزارش‌گیری پیشرفته', description: '' }
-    ],
-    active: true
-  }
-])
-
+const planStore = usePlanStore()
+const plans = computed(() => planStore.plans)
 // Functions
 const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان'
 }
 
-const deletePlan = (plan: SubscriptionPlan) => {
+const deletePlan = async (plan:Plan) => {
   if (confirm(`آیا از حذف طرح "${plan.title}" اطمینان دارید؟`)) {
-    const index = subscriptionPlans.value.findIndex(p => p.id === plan.id)
+    const index = plans.value.findIndex(p => p.id === plan.id)
     if (index !== -1) {
-      subscriptionPlans.value.splice(index, 1)
-      showAlert({
-        title: 'موفقیت',
-        message: 'طرح با موفقیت حذف شد',
-        type: 'success'
-      })
+      const res = await planStore.deletePlan(plan.id)
+      if (res) {
+        //plans.value.splice(index, 1)
+
+        await showAlert({
+          title: 'موفقیت',
+          message: 'طرح با موفقیت حذف شد',
+          type: 'success'
+        })
+      }
     }
   }
 }
+
+onMounted(async () => {
+  await planStore.fetchPlans()
+
+})
 </script>
