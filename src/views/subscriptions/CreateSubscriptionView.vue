@@ -4,8 +4,8 @@
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center gap-3">
         <router-link
-          to="/subscriptions"
-          class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            to="/subscriptions"
+            class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
         >
           <i class="ti ti-arrow-right text-gray-600 dark:text-gray-400 text-xl"></i>
         </router-link>
@@ -20,14 +20,14 @@
       </div>
       <div class="flex gap-3">
         <button
-          @click="saveDraft"
-          class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+            @click="saveDraft"
+            class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
         >
           ذخیره پیش‌نویس
         </button>
         <button
-          @click="publish"
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+            @click="publish"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
         >
           <i class="ti ti-check"></i>
           {{ isEdit ? 'بروزرسانی' : 'انتشار طرح' }}
@@ -43,16 +43,16 @@
           <i class="ti ti-info-circle text-blue-600"></i>
           اطلاعات کلی
         </h3>
-        <div  class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               نام طرح *
             </label>
             <input
-              v-model="plan.title"
-              type="text"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="مثال: طرح پایه"
+                v-model="plan.title"
+                type="text"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="مثال: طرح پایه"
             />
           </div>
           <div>
@@ -60,10 +60,10 @@
               شناسه طرح (Slug) *
             </label>
             <input
-              v-model="plan.slug"
-              type="text"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="basic-plan"
+                v-model="plan.slug"
+                type="text"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="basic-plan"
             />
           </div>
         </div>
@@ -73,10 +73,10 @@
             توضیحات کوتاه
           </label>
           <input
-            v-model="plan.subtitle"
-            type="text"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="مثال: مناسب برای شروع کار"
+              v-model="plan.subtitle"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="مثال: مناسب برای شروع کار"
           />
         </div>
 
@@ -85,10 +85,10 @@
             توضیحات کامل
           </label>
           <textarea
-            v-model="plan.description"
-            rows="3"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="توضیحات کامل از این طرح اشتراک"
+              v-model="plan.description"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="توضیحات کامل از این طرح اشتراک"
           ></textarea>
         </div>
       </div>
@@ -165,8 +165,8 @@
             ویژگی‌های طرح
           </h3>
           <button
-            @click="addFeature"
-            class="bg-purple-600 text-white px-3 py-1 rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
+              @click="addFeature"
+              class="bg-purple-600 text-white px-3 py-1 rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
           >
             <i class="ti ti-plus"></i>
             افزودن ویژگی
@@ -175,20 +175,20 @@
 
         <div class="space-y-3">
           <div
-            v-for="(feature, index) in planStore.features"
-            :key="index"
-            class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg"
+              v-for="(feature, index) in planStore.features"
+              :key="index"
+              class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg"
           >
             <i class="ti ti-check text-green-600 dark:text-green-400"></i>
             <input
-              v-model="feature.title"
-              type="text"
-              class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="عنوان ویژگی"
+                v-model="feature.title"
+                type="text"
+                class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="عنوان ویژگی"
             />
             <button
-              @click="removeFeature(index)"
-              class="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
+                @click="removeFeature(index)"
+                class="p-1 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
             >
               <i class="ti ti-trash text-sm"></i>
             </button>
@@ -214,8 +214,8 @@
               وضعیت
             </label>
             <select
-              v-model="plan.active"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                v-model="plan.active"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="draft">پیش‌نویس</option>
               <option value="active">فعال</option>
@@ -227,8 +227,8 @@
               محبوبیت
             </label>
             <select
-              v-model="plan.popularity"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                v-model="plan.popularity"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="normal">عادی</option>
               <option value="recommended">پیشنهادی</option>
@@ -245,8 +245,8 @@
               <p class="text-sm text-gray-600 dark:text-gray-400">مشاهده طرح قبل از انتشار</p>
             </div>
             <button
-              @click="preview"
-              class="px-4 py-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors flex items-center gap-2"
+                @click="preview"
+                class="px-4 py-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors flex items-center gap-2"
             >
               <i class="ti ti-eye"></i>
               پیش‌نمایش
@@ -260,30 +260,32 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAlert } from '@/composables/useAlert'
+import {useRoute, useRouter} from 'vue-router'
+import {useAlert} from '@/composables/useAlert'
 import {usePlanStore} from "@/stores/plan.ts";
 
 defineOptions({
   name: 'CreateSubscriptionView'
 })
-const { showAlert } = useAlert()
+const {showAlert} = useAlert()
 const route = useRoute()
 const router = useRouter()
 
 // Check if editing existing plan
 const isEdit = ref(false)
 const planId = ref<string | null>(null)
+
 interface Feature {
   id: number
   title: string
   description: string
 }
-const planStore=usePlanStore()
+
+const planStore = usePlanStore()
 const plan = computed(() => {
   return planStore.selectedPlan
 })
-console.log('Selected plan duration:',plan.value?.duration)
+console.log('Selected plan duration:', plan.value?.duration)
 
 // Feature management
 const addFeature = () => {
@@ -300,7 +302,7 @@ const removeFeature = (index: number) => {
 
 // Save as draft
 const saveDraft = () => {
-  if(plan.value){
+  if (plan.value) {
     plan.value.active = 'draft'
   }
 
@@ -309,7 +311,7 @@ const saveDraft = () => {
 
 // Publish plan
 const publish = () => {
-  if(plan.value){
+  if (plan.value) {
     savePlan()
   }
 }
@@ -345,13 +347,14 @@ const savePlan = async () => {
     duration: plan.value?.duration,
     active: plan.value?.active,
     popularity: plan.value?.popularity,
-    features:planStore.features.map(f => ({
-          title: f.title.trim(),
-          description: f.description?f.description.trim():''
-        }))
+    features: planStore.features.map(f => ({
+      id: f.id,
+      title: f.title.trim(),
+      description: f.description ? f.description.trim() : ''
+    }))
   }
-  if(action==="بروزرسانی") await planStore.updatePlan(plan.value?.id, payload)
-  if(action==="ایجاد") await planStore.createPlan(payload)
+  if (action === "بروزرسانی") await planStore.updatePlan(plan.value?.id, payload)
+  if (action === "ایجاد") await planStore.createPlan(payload)
   await showAlert({
     title: 'موفقیت',
     message: `طرح اشتراک با موفقیت ${action} شد`,
@@ -366,7 +369,7 @@ const savePlan = async () => {
 
 // Preview plan
 const preview = () => {
-  const formatCurrency = (amount: number|any): string => {
+  const formatCurrency = (amount: number | any): string => {
     return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان'
   }
 
@@ -451,8 +454,8 @@ const preview = () => {
           ${plan.value?.description ? `<p style="margin-bottom: 20px; color: #4b5563;">${plan.value?.description}</p>` : ''}
           <ul class="features">
             ${planStore.features.map(feature =>
-              `<li><span class="check-icon">✓</span> ${feature.title}</li>`
-            ).join('')}
+        `<li><span class="check-icon">✓</span> ${feature.title}</li>`
+    ).join('')}
           </ul>
           <span class="status ${plan.value?.active}">
             ${plan.value?.active === 'active' ? 'فعال' : plan.value?.active === 'draft' ? 'پیش‌نویس' : 'غیرفعال'}
@@ -487,7 +490,7 @@ onMounted(async () => {
     planStore.featurePlan(Number(planId.value))
 
     // Load existing plan data here...
-  }else {
+  } else {
     // 👇 برای حالت ایجاد پلن جدید
     planStore.resetPlan()
   }

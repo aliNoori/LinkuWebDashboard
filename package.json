@@ -30,6 +30,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
     "@types/axios": "^0.9.36",
+    "@types/jalaali-js": "^1.2.0",
     "@types/node": "^22.15.32",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/eslint-config-prettier": "^10.2.0",
