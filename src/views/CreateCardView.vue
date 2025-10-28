@@ -595,7 +595,8 @@ const cardForm = reactive({
   qrLink: '',
   cardType: 'business-card',
   status: 'active' as 'active' | 'inactive',
-  mobile: ''
+  mobile: '',
+  licenseId: ''
 })
 
 // Bulk creation form
@@ -623,6 +624,8 @@ const generateRandomLink = async () => {
       const res = await axios.post(`user/admin/generateLicense/${selectedCardType?.id}`)
 
       const licenseId = res.data.license.license_code
+
+      cardForm.licenseId = licenseId
 
       cardForm.qrLink = `https://linku.im/profile/${licenseId}/${selectedCardType?.identifier}`
 
@@ -686,7 +689,6 @@ const cardStore = useCardsStore()
 // Save single card
 const saveCard = async () => {
   try {
-    console.log('Creating card:', cardForm)
     isSaving.value = true;
     // Here you would typically send the data to your API
     await cardStore.createCard(cardForm)

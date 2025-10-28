@@ -143,7 +143,7 @@
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-1">
                   <i class="ti ti-shield-check text-green-500"></i>
-                  شناسه منحصر به فرد 14 کاراکتری برای این کارت
+                  شناسه منحصر به فرد 8 کاراکتری برای این کارت
                 </p>
               </div>
 

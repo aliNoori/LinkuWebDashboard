@@ -1,6 +1,6 @@
 // stores/plan.ts
 import { defineStore } from 'pinia'
-import { getCurrentInstance, ref } from 'vue'
+import {computed, getCurrentInstance, ref} from 'vue'
 import type { AxiosInstance } from 'axios'
 
 export interface Feature {
@@ -82,6 +82,12 @@ export const usePlanStore = defineStore('plan', () => {
             return false
         }
     }
+
+    const activePlansCount = computed(() => {
+        return plans.value.filter(p => p.active === 'active').length
+    })
+
+
     // ✅ انتخاب پلن
     const selectPlan = (id: number) => {
         selectedPlanId.value = id
@@ -128,6 +134,7 @@ export const usePlanStore = defineStore('plan', () => {
 
         // getters
         selectedPlan,
+        activePlansCount,
 
         // actions
         fetchPlans,

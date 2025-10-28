@@ -50,7 +50,7 @@
           </div>
           <div class="mr-4">
             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">طرح‌های فعال</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ plans.length }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ planStore.activePlansCount }}</p>
           </div>
         </div>
       </div>
@@ -170,6 +170,7 @@ import {ref, reactive, computed, onMounted, watch} from 'vue'
 import {useAlert} from '@/composables/useAlert'
 import {usePlanStore} from "@/stores/plan.ts";
 import type {Plan} from "@/stores/plan.ts";
+import {useSubscriptionStatsStore} from "@/stores/subscriptionStats.ts";
 
 const {showAlert} = useAlert()
 
@@ -181,12 +182,12 @@ interface Stats {
   activeDiscounts: number
 }
 
-const stats = reactive<Stats>({
+/*const stats = reactive<Stats>({
   premiumMembers: 124,
   monthlyRevenue: 15420000,
   monthlyPurchases: 45,
   activeDiscounts: 8
-})
+})*/
 
 const planStore = usePlanStore()
 const plans = computed(() => planStore.plans)
@@ -212,9 +213,10 @@ const deletePlan = async (plan:Plan) => {
     }
   }
 }
-
+const stats=useSubscriptionStatsStore()
 onMounted(async () => {
   await planStore.fetchPlans()
+  await stats.fetchStats()
 
 })
 </script>
