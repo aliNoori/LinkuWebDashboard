@@ -116,7 +116,7 @@
                 <i class="ti ti-list ml-2 text-gray-500 text-sm"></i>
                 <span class="text-sm">همه وضعیت‌ها</span>
               </li>
-              <li @click="selectStatus('success')" class="px-3 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white transition-colors">
+              <li @click="selectStatus('paid')" class="px-3 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white transition-colors">
                 <i class="ti ti-check ml-2 text-green-500 text-sm"></i>
                 <span class="text-sm">موفق</span>
               </li>
@@ -300,10 +300,10 @@
               همه
             </button>
             <button
-              @click="filterStatus = 'success'"
+              @click="filterStatus = 'paid'"
               :class="[
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1',
-                filterStatus === 'success' ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
+                filterStatus === 'paid' ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
               ]"
             >
               <i class="ti ti-check text-xs"></i>
@@ -492,7 +492,7 @@
         <div class="flex items-center justify-between pt-3 mt-4 border-t border-gray-200 dark:border-slate-600">
           <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
             <i class="ti ti-calendar text-sm"></i>
-            {{ transaction.createdAt }}
+            {{ formatDate(transaction.createdAt) }}
           </span>
           <div class="flex items-center gap-1">
             <button
@@ -503,7 +503,7 @@
               <i class="ti ti-eye text-lg"></i>
             </button>
             <button
-              v-if="transaction.status === 'success'"
+              v-if="transaction.status === 'paid'"
               @click="refundTransaction(transaction)"
               class="p-2 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all duration-300"
               title="بازگشت مبلغ"
@@ -606,7 +606,7 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تاریخ تراکنش</label>
               <p class="text-sm text-gray-900 dark:text-white flex items-center gap-1">
                 <i class="ti ti-calendar text-gray-400"></i>
-                {{ selectedTransaction.createdAt }}
+                {{ formatDate(selectedTransaction.createdAt) }}
               </p>
             </div>
           </div>
@@ -638,7 +638,7 @@
             بستن
           </button>
           <button
-            v-if="selectedTransaction && selectedTransaction.status === 'success'"
+            v-if="selectedTransaction && selectedTransaction.status === 'paid'"
             @click="refundTransaction(selectedTransaction); showDetailModal = false"
             class="px-5 py-2.5 bg-orange-600/90 hover:bg-orange-700/90 text-white rounded-xl transition-all backdrop-blur-sm shadow-lg flex items-center gap-2"
           >
@@ -696,6 +696,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAlert } from '@/composables/useAlert'
 import DatePicker from 'vue3-persian-datetime-picker'
 import '@/assets/vue3-persian-datetime-picker-dark.css'
+import {useTransactionStore} from "@/stores/transactions.ts";
+import jalaali from "jalaali-js";
 
 defineOptions({
   name: 'TransactionsView'
@@ -715,7 +717,7 @@ interface Transaction {
   discountCode?: string
   discountAmount?: number
   paymentMethod: 'zarinpal' | 'mellat' | 'pasargad'
-  status: 'success' | 'failed' | 'pending' | 'refunded'
+  status: 'paid' | 'failed' | 'pending' | 'refunded'
   createdAt: string
 }
 
@@ -735,124 +737,40 @@ const selectedTransaction = ref<Transaction | null>(null)
 const showStatusDropdown = ref(false)
 const showPaymentDropdown = ref(false)
 const showQuickFilter = ref(false)
+const transactionsStore=useTransactionStore()
+const stats = computed(() => ({
+  totalRevenue: transactionsStore.totalRevenue,
+  totalTransactions: transactionsStore.totalTransactions,
+  monthlyRevenue: transactionsStore.monthlyRevenue,
+  successRate: transactionsStore.successRate
+}))
+console.log('stats',stats)
+const toJalaali = (gregorianDate: string | Date): string => {
+  const dateStr = typeof gregorianDate === 'string'
+      ? gregorianDate
+      : gregorianDate.toISOString().split('T')[0] // "YYYY-MM-DD"
 
-// Stats
-const stats = {
-  totalRevenue: 45000000,
-  totalTransactions: 234,
-  monthlyRevenue: 12500000,
-  successRate: 94.2
+  const [gy, gm, gd] = dateStr.split('-').map(Number)
+  const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd)
+  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`
+}
+const formatDate = (date: string | null | undefined): string => {
+  if (!date || typeof date !== 'string' || date.trim() === '') return ''
+
+  const normalized = normalizePersianDigits(date)
+
+  if (/^(13|14)\d{2}\/\d{1,2}\/\d{1,2}$/.test(normalized)) {
+    return date
+  }
+
+  return toJalaali(date)
+}
+const normalizePersianDigits = (str: string): string => {
+  return str.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
 }
 
 // Sample transactions data
-const transactions = ref<Transaction[]>([
-  {
-    id: 1,
-    transactionId: 'TXN-001',
-    userName: 'علی احمدی',
-    userEmail: 'ali@example.com',
-    planTitle: 'طرح یک‌ماهه ویژه',
-    planDuration: '1 ماه',
-    amount: 79200,
-    originalAmount: 99000,
-    discountCode: 'WELCOME20',
-    discountAmount: 19800,
-    paymentMethod: 'zarinpal',
-    status: 'success',
-    createdAt: '1403/04/25 14:30'
-  },
-  {
-    id: 2,
-    transactionId: 'TXN-002',
-    userName: 'فاطمه محمدی',
-    userEmail: 'fateme@example.com',
-    planTitle: 'طرح سه‌ماهه پرمیوم',
-    planDuration: '3 ماه',
-    amount: 237600,
-    paymentMethod: 'mellat',
-    status: 'success',
-    createdAt: '1403/04/22 12:15'
-  },
-  {
-    id: 3,
-    transactionId: 'TXN-003',
-    userName: 'محمد رضایی',
-    userEmail: 'mohammad@example.com',
-    planTitle: 'طرح یک‌ماهه پایه',
-    planDuration: '1 ماه',
-    amount: 99000,
-    paymentMethod: 'zarinpal',
-    status: 'failed',
-    createdAt: '1403/04/20 10:45'
-  },
-  {
-    id: 4,
-    transactionId: 'TXN-004',
-    userName: 'زهرا کریمی',
-    userEmail: 'zahra@example.com',
-    planTitle: 'طرح شش‌ماهه طلایی',
-    planDuration: '6 ماه',
-    amount: 450000,
-    paymentMethod: 'pasargad',
-    status: 'pending',
-    createdAt: '1403/04/18 16:20'
-  },
-  {
-    id: 5,
-    transactionId: 'TXN-005',
-    userName: 'حسین احمدی',
-    userEmail: 'hossein@example.com',
-    planTitle: 'طرح یک‌ماهه ویژه',
-    planDuration: '1 ماه',
-    amount: 79200,
-    originalAmount: 99000,
-    discountCode: 'STUDENT15',
-    discountAmount: 19800,
-    paymentMethod: 'zarinpal',
-    status: 'refunded',
-    createdAt: '1403/04/15 09:30'
-  },
-  {
-    id: 6,
-    transactionId: 'TXN-006',
-    userName: 'مریم حسینی',
-    userEmail: 'maryam@example.com',
-    planTitle: 'طرح دو‌ماهه استاندارد',
-    planDuration: '2 ماه',
-    amount: 158400,
-    paymentMethod: 'mellat',
-    status: 'success',
-    createdAt: '1403/04/10 11:45'
-  },
-  {
-    id: 7,
-    transactionId: 'TXN-007',
-    userName: 'رضا موسوی',
-    userEmail: 'reza@example.com',
-    planTitle: 'طرح سالانه VIP',
-    planDuration: '12 ماه',
-    amount: 950400,
-    originalAmount: 1188000,
-    discountCode: 'ANNUAL20',
-    discountAmount: 237600,
-    paymentMethod: 'zarinpal',
-    status: 'success',
-    createdAt: '1403/03/28 15:20'
-  },
-  {
-    id: 8,
-    transactionId: 'TXN-008',
-    userName: 'نگار عبدی',
-    userEmail: 'negar@example.com',
-    planTitle: 'طرح یک‌ماهه پایه',
-    planDuration: '1 ماه',
-    amount: 99000,
-    paymentMethod: 'pasargad',
-    status: 'failed',
-    createdAt: '1403/03/15 13:10'
-  }
-])
-
+const transactions=computed(()=>transactionsStore.transactions)
 // Computed properties
 const filteredTransactions = computed(() => {
   let filtered = [...transactions.value]
@@ -1122,8 +1040,9 @@ const handleOutsideClick = (event: Event) => {
     showQuickFilter.value = false
   }
 }
+onMounted(async () => {
+  await transactionsStore.fetchTransactions()
 
-onMounted(() => {
   document.addEventListener('click', handleOutsideClick)
 })
 

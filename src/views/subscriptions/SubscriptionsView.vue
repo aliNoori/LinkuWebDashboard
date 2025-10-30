@@ -181,14 +181,6 @@ interface Stats {
   monthlyPurchases: number
   activeDiscounts: number
 }
-
-/*const stats = reactive<Stats>({
-  premiumMembers: 124,
-  monthlyRevenue: 15420000,
-  monthlyPurchases: 45,
-  activeDiscounts: 8
-})*/
-
 const planStore = usePlanStore()
 const plans = computed(() => planStore.plans)
 // Functions

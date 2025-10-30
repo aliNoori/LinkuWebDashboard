@@ -21,28 +21,6 @@
 
     <Toast/>
     <div class="w-full max-w-md rtl:text-right ltr:text-left">
-      <!-- تب انتخاب روش ورود -->
-      <div class="flex justify-center mb-6 bg-gray-100 dark:bg-slate-800 rounded-lg p-1">
-        <button
-            class="flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            :class="activeTab === 'password'
-        ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow'
-        : 'text-gray-600 dark:text-gray-400'"
-            @click="switchTab('password')"
-        >
-          ورود با رمز عبور
-        </button>
-        <button
-            class="flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            :class="activeTab === 'otp'
-        ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow'
-        : 'text-gray-600 dark:text-gray-400'"
-            @click="switchTab('otp')"
-        >
-          ورود با کد یک‌بار مصرف
-        </button>
-      </div>
-
       <!-- مرحله ورود شماره -->
       <template v-if="step === 'phone'">
         <div class="text-center mb-8">
@@ -85,25 +63,6 @@
                      peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2
                      peer-focus:top-1 peer-focus:text-xs peer-focus:-translate-y-1/2 peer-focus:text-blue-500">
             شماره موبایل
-          </label>
-        </div>
-
-        <!-- رمز عبور -->
-        <div v-if="activeTab === 'password'" class="w-full mb-6 relative">
-          <input
-              id="passwordInput"
-              type="password"
-              placeholder=" "
-              v-model="password"
-              class="peer w-full px-4 py-4 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none transition-colors duration-300"
-              :class="[passwordError ? 'border-red-500' : '', password && !passwordError ? 'focus:border-blue-500' : '']"
-          />
-          <label
-              for="passwordInput"
-              class="absolute rtl:right-4 ltr:left-4 top-3 text-sm text-gray-500 dark:text-gray-500 bg-white dark:bg-slate-800 px-1 z-10 transition-colors duration-300 cursor-pointer
-             peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2
-             peer-focus:top-1 peer-focus:text-xs peer-focus:-translate-y-1/2 peer-focus:text-blue-500">
-            رمز عبور
           </label>
         </div>
 
@@ -151,7 +110,6 @@
           </div>
         </div>
       </template>
-
     </div>
   </div>
   <InfoToast :visible="showToast" :message="toastMessage" :icon="toastIcon"/>
@@ -175,7 +133,7 @@ const phone = ref('')
 const phoneError = ref(false)
 const password = ref('')
 const passwordError = ref(false)
-const activeTab = ref('password') // 'otp' برای کد یکبار مصرف، 'password' برای رمز عبور
+const activeTab = ref('otp') // 'otp' برای کد یکبار مصرف، 'password' برای رمز عبور
 const {appContext} = getCurrentInstance()!
 const axios = appContext.config.globalProperties.$axios
 const authStore = useAuthStore()
@@ -232,49 +190,30 @@ const submitPhone = async () => {
       phoneError.value = false
       //errors.phone = 'خطایی رخ داد. لطفاً بعداً دوباره تلاش کنید.'
     }
-  } else if (activeTab.value === 'password') {
+  } else {
+    // ورود با رمز عبور
     if (!password.value.trim()) {
       passwordError.value = true
-      showInfoToast('رمز عبور را وارد کنید.', 'ti-lock')
       return
     }
-
-    try {
-      const response = await axios.post('/auth/login', {
-        phone: toEnglishDigits(phone.value).replace(/^0/, ''),
-        password: password.value,
-      })
-
-      if (response.data?.token) {
-        authStore.setToken(response.data.token)
-        await router.push('/')
-      } else {
-        showInfoToast(response.data.message || 'ورود ناموفق بود.', 'ti-alert-triangle')
-      }
-    } catch (error: any) {
-      showInfoToast(
-          error.response?.data?.message || 'خطایی در ورود رخ داده است.',
-          'ti-alert-triangle'
-      )
-    }
+    // اینجا می‌توانید منطق ورود با رمز عبور را پیاده‌سازی کنید
+    console.log('Login with password:', {phone: phone.value, password: password.value})
   }
-
 }
 
 function startTimer() {
-  countdown.value = 120
+  timer.value = 120
   isResendEnabled.value = false
-
   const interval = setInterval(() => {
-    if (countdown.value > 0) {
-      countdown.value--
+    if (timer.value > 0) {
+      timer.value--
     } else {
       isResendEnabled.value = true
       clearInterval(interval)
+      step.value = 'otp'
     }
   }, 1000)
 }
-
 
 const router = useRouter()
 const handleInput = async (index: any, event: any) => {
@@ -309,6 +248,11 @@ const handleBackspace = (index:any) => {
 
 onMounted(() => {
   initDarkMode()
+
+  const timer = setInterval(() => {
+    if (countdown.value > 0) countdown.value--
+    else clearInterval(timer)
+  }, 1000)
 })
 
 

@@ -285,7 +285,6 @@ const planStore = usePlanStore()
 const plan = computed(() => {
   return planStore.selectedPlan
 })
-console.log('Selected plan duration:', plan.value?.duration)
 
 // Feature management
 const addFeature = () => {

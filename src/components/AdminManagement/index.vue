@@ -46,7 +46,7 @@
     </div>
 
     <!-- Admins Grid -->
-    <div class="p-6">
+    <div v-if="paginatedAdmins.length>0" class="p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="admin in paginatedAdmins" :key="admin.id"
              class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 group relative">
@@ -58,7 +58,7 @@
               </div>
               <div>
                 <h3 class="font-semibold text-gray-900 dark:text-white">{{ admin.fullName }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">@{{ admin.username }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ admin.username }}@</p>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="flex items-center gap-2">
               <i class="ti ti-calendar text-gray-400 text-sm"></i>
-              <span class="text-xs text-gray-500 dark:text-gray-400">{{ admin.createdAt }}</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatDate(admin.createdAt) }}</span>
             </div>
           </div>
 
@@ -149,8 +149,22 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">شماره موبایل *</label>
-          <input v-model="formData.phone" type="tel" required
-                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+          <div class="flex flex-row-reverse items-center">
+            <input
+                type="text"
+                v-model="formData.countryCode"
+                readonly
+                class="w-20 px-2 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-center"
+            />
+            <input
+                v-model="formData.phone"
+                type="tel"
+                required
+                placeholder="9123456789"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                @input="formData.phone.startsWith('0') ?formData.phone.slice(1) : formData.phone"
+            />
+          </div>
         </div>
 
         <div>
@@ -264,8 +278,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import { useAlert } from '@/composables/useAlert'
+import {useUserStore} from "@/stores/user.ts";
+import jalaali from "jalaali-js";
 
 defineOptions({
   name: 'AdminManagement'
@@ -276,8 +292,11 @@ const { showSuccess, showDeleteConfirm } = useAlert()
 interface Admin {
   id: number
   fullName: string
+  firstName:string
+  lastName:string
   username: string
   phone: string
+  countryCode:string
   email: string
   password?: string
   status: 'active' | 'inactive'
@@ -296,61 +315,49 @@ const showPasswordModal = ref(false)
 const editingAdmin = ref<Admin | null>(null)
 const selectedAdminForPassword = ref('')
 const generatedPassword = ref('')
-
+const userStore=useUserStore()
 // Form data for admin
 const formData = ref({
   firstName: '',
   lastName: '',
   phone: '',
+  countryCode:'',
   email: '',
   username: '',
   password: '',
   status: 'active' as 'active' | 'inactive'
 })
+const toJalaali = (gregorianDate: string | Date): string => {
+  const dateStr = typeof gregorianDate === 'string'
+      ? gregorianDate
+      : gregorianDate.toISOString().split('T')[0] // "YYYY-MM-DD"
+
+  const [gy, gm, gd] = dateStr.split('-').map(Number)
+  const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd)
+  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`
+}
+const formatDate = (date: string | null | undefined): string => {
+  if (!date || typeof date !== 'string' || date.trim() === '') return ''
+
+  const normalized = normalizePersianDigits(date)
+
+  if (/^(13|14)\d{2}\/\d{1,2}\/\d{1,2}$/.test(normalized)) {
+    return date
+  }
+
+  return toJalaali(date)
+}
+const normalizePersianDigits = (str: string): string => {
+  return str.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+}
 
 // Sample admins data
-const admins = ref<Admin[]>([
-  {
-    id: 1,
-    fullName: 'امیرحسین مرادی',
-    username: 'amir_admin',
-    phone: '09121234567',
-    email: 'amir@linku.ir',
-    status: 'active',
-    createdAt: '1403/01/15'
-  },
-  {
-    id: 2,
-    fullName: 'زهرا احمدی',
-    username: 'zahra_admin',
-    phone: '09129876543',
-    email: 'zahra@linku.ir',
-    status: 'active',
-    createdAt: '1403/02/10'
-  },
-  {
-    id: 3,
-    fullName: 'حسین رحمانی',
-    username: 'hossein_mod',
-    phone: '09123456789',
-    email: 'hossein@linku.ir',
-    status: 'active',
-    createdAt: '1403/03/05'
-  },
-  {
-    id: 4,
-    fullName: 'سارا کریمی',
-    username: 'sara_mod',
-    phone: '09187654321',
-    email: 'sara@linku.ir',
-    status: 'inactive',
-    createdAt: '1403/03/20'
-  }
-])
+const admins =computed(()=>userStore.admins)
 
 // Computed properties
 const filteredAdmins = computed(() => {
   let filtered = [...admins.value]
+  console.log('ad',filtered)
 
   // Search filter
   if (searchQuery.value) {
@@ -397,6 +404,7 @@ const totalPages = computed(() => Math.ceil(filteredAdmins.value.length / itemsP
 
 // Helper functions
 const getAdminInitials = (name: string) => {
+  if (!name) return ''
   return name.split(' ').map(n => n[0]).join('').toUpperCase()
 }
 
@@ -424,6 +432,7 @@ const editAdmin = (admin: Admin) => {
     lastName: lastNameParts.join(' '),
     username: admin.username,
     phone: admin.phone,
+    countryCode:'98+',
     email: admin.email,
     password: '',
     status: admin.status
@@ -431,14 +440,17 @@ const editAdmin = (admin: Admin) => {
   showEditModal.value = true
 }
 
-const saveAdmin = () => {
+const saveAdmin = async () => {
   const fullName = `${formData.value.firstName} ${formData.value.lastName}`.trim()
 
   if (editingAdmin.value) {
     // Update existing admin
+    editingAdmin.value.firstName = formData.value.firstName
+    editingAdmin.value.lastName = formData.value.lastName
     editingAdmin.value.fullName = fullName
     editingAdmin.value.username = formData.value.username
     editingAdmin.value.phone = formData.value.phone
+    editingAdmin.value.countryCode = formData.value.countryCode
     editingAdmin.value.email = formData.value.email
     editingAdmin.value.status = formData.value.status
 
@@ -446,21 +458,28 @@ const saveAdmin = () => {
     if (formData.value.password && formData.value.password.trim() !== '') {
       editingAdmin.value.password = formData.value.password
     }
+    console.log('editingAdmin',editingAdmin)
+    await userStore.updateAdminUser(editingAdmin.value.id,editingAdmin.value)
 
-    showSuccess('ویرایش موفق', 'مدیر با موفقیت ویرایش شد')
+    await showSuccess('ویرایش موفق', 'مدیر با موفقیت ویرایش شد')
   } else {
     // Add new admin
     const newAdmin: Admin = {
       id: Date.now(),
       fullName,
+      firstName:formData.value.firstName,
+      lastName:formData.value.lastName,
       username: formData.value.username,
+      password:formData.value.password,
       phone: formData.value.phone,
+      countryCode: formData.value.countryCode,
       email: formData.value.email,
       status: formData.value.status,
       createdAt: new Date().toLocaleDateString('fa-IR')
     }
+    await userStore.createAdminUser(newAdmin)
     admins.value.unshift(newAdmin)
-    showSuccess('افزودن موفق', `مدیر با موفقیت اضافه شد. پسورد موقت: ${formData.value.password}`)
+    await showSuccess('افزودن موفق', `مدیر با موفقیت اضافه شد. پسورد موقت: ${formData.value.password}`)
   }
   closeModals()
 }
@@ -474,10 +493,11 @@ const deleteAdmin = async (admin: Admin) => {
     )
 
     if (confirmed) {
+      await userStore.deleteAdminUser(admin.id)
       const index = admins.value.findIndex(a => a.id === admin.id)
       if (index > -1) {
         admins.value.splice(index, 1)
-        showSuccess('حذف موفق', 'مدیر با موفقیت حذف شد')
+        await showSuccess('حذف موفق', 'مدیر با موفقیت حذف شد')
       }
     }
   } catch (error) {
@@ -499,7 +519,7 @@ const generateNewPassword = () => {
 const copyPassword = async () => {
   try {
     await navigator.clipboard.writeText(generatedPassword.value)
-    showSuccess('کپی موفق', 'پسورد در کلیپبورد کپی شد')
+    await showSuccess('کپی موفق', 'پسورد در کلیپبورد کپی شد')
   } catch (error) {
     console.error('Failed to copy password:', error)
   }
@@ -510,6 +530,7 @@ const resetForm = () => {
     firstName: '',
     lastName: '',
     phone: '',
+    countryCode:'+98',
     email: '',
     username: '',
     password: '',
@@ -524,4 +545,8 @@ const closeModals = () => {
   showPasswordModal.value = false
   resetForm()
 }
+onMounted(async () => {
+  await userStore.fetchAdminUser()
+  console.log('admins',userStore.admins)
+})
 </script>

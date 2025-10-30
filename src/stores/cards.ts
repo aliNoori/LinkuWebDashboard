@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getCurrentInstance, ref} from 'vue'
+import {computed, getCurrentInstance, ref} from 'vue'
 import {useUserStore} from '@/stores/user'
 
 export const useCardsStore = defineStore('card', () => {
@@ -121,6 +121,9 @@ export const useCardsStore = defineStore('card', () => {
     const activeCards = () => cards.value.filter(c => c.status === 'active')
     const inactiveCards = () => cards.value.filter(c => c.status === 'inactive')
 
+    const totalCards = computed(() => cards.value.length)
+    const activeCardsCount = computed(() => cards.value.filter(c => c.status === 'active').length)
+    const inactiveCardsCount = computed(() => cards.value.filter(c => c.status === 'inactive').length)
     return {
         // state
         cards,
@@ -130,6 +133,9 @@ export const useCardsStore = defineStore('card', () => {
         // getters
         activeCards,
         inactiveCards,
+        totalCards,
+        activeCardsCount,
+        inactiveCardsCount,
 
         // actions
         fetchCards,

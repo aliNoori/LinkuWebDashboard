@@ -223,59 +223,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import {ref, computed, onMounted} from "vue"
+import {useCardsStore} from "@/stores/cards.ts";
+import {useProductStore} from "@/stores/product.ts";
+import {useUserStore} from "@/stores/user.ts";
 
 defineOptions({
   name: "DashboardView"
 })
 
-// Mock data based on our components
-const mockUsers = ref([
-  { id: 1, status: "active", role: "admin" },
-  { id: 2, status: "active", role: "user" },
-  { id: 3, status: "suspended", role: "user" },
-  { id: 4, status: "active", role: "user" },
-  { id: 5, status: "inactive", role: "user" },
-  { id: 6, status: "active", role: "admin" },
-  { id: 7, status: "active", role: "user" },
-  { id: 8, status: "suspended", role: "user" }
-])
 
-const mockProducts = ref([
-  { id: "card", status: "active" },
-  { id: "minicard", status: "active" },
-  { id: "goldcard", status: "active" }
-])
+const cardStore=useCardsStore();
+const totalCards = computed(() => cardStore.totalCards)
+const activeCards = computed(() => cardStore.activeCardsCount)
 
-const mockAdmins = ref([
-  { id: 1, status: "active" },
-  { id: 2, status: "active" },
-  { id: 3, status: "active" },
-  { id: 4, status: "inactive" }
-])
+const productStore=useProductStore();
+const totalProducts = computed(() => productStore.totalProducts)
+const activeProducts = computed(() => productStore.activeProducts)
+const inactiveProducts = computed(() => productStore.inactiveProducts)
 
-const mockCards = ref([
-  { id: "VZT001", status: "active" },
-  { id: "VZT002", status: "active" },
-  { id: "VZT003", status: "inactive" },
-  { id: "VZT004", status: "active" },
-  { id: "VZT005", status: "active" },
-  { id: "VZT006", status: "active" }
-])
 
-// Computed properties
-const totalUsers = computed(() => mockUsers.value.length)
-const activeUsers = computed(() => mockUsers.value.filter(u => u.status === "active").length)
-const adminUsers = computed(() => mockUsers.value.filter(u => u.role === "admin").length)
-const suspendedUsers = computed(() => mockUsers.value.filter(u => u.status === "suspended").length)
-const inactiveUsers = computed(() => mockUsers.value.filter(u => u.status === "inactive").length)
+const userStore=useUserStore();
 
-const totalProducts = computed(() => mockProducts.value.length)
-const activeProducts = computed(() => mockProducts.value.filter(p => p.status === "active").length)
 
-const totalAdmins = computed(() => mockAdmins.value.length)
-const activeAdmins = computed(() => mockAdmins.value.filter(a => a.status === "active").length)
+const totalUsers = computed(() => userStore.totalUsers)
+const activeUsers = computed(() => userStore.activeUsers)
+const adminUsers = computed(() => userStore.adminUsers)
+const suspendedUsers = computed(() => userStore.suspendedUsers)
+const inactiveUsers = computed(() => userStore.inactiveUsers)
+const totalAdmins = computed(() => userStore.adminUsers)
+const activeAdmins = computed(() =>userStore.activeAdmins)
 
-const totalCards = computed(() => mockCards.value.length)
-const activeCards = computed(() => mockCards.value.filter(c => c.status === "active").length)
+onMounted((async () => {
+  await userStore.fetchAllUsers()
+  await cardStore.fetchCards()
+  await productStore.fetchProducts()
+}))
+
 </script>

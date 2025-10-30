@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {ref, getCurrentInstance} from 'vue'
+import {ref, getCurrentInstance, computed} from 'vue'
 import {useUserStore} from '@/stores/user'
 import type {Product, ProductResult} from "@/types/product.ts";
 
@@ -167,6 +167,10 @@ export const useProductStore = defineStore('product', () => {
         addProduct,
         updateProduct,
         deleteProduct,
-        toggleStatus
+        toggleStatus,
+
+        totalProducts: computed(() => products.value.length),
+        activeProducts: computed(() => products.value.filter(p => p.status === 'active').length),
+        inactiveProducts: computed(() => products.value.filter(p => p.status === 'inactive').length),
     }
 })
