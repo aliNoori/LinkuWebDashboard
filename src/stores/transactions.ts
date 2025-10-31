@@ -32,7 +32,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         loading.value = true
         error.value = null
         try {
-            const res = await axios.get('/transactions/list')
+            const res = await axios.get('/user/admin/transactions/all')
             transactions.value = Array.isArray(res.data.data) ? res.data.data : []
         } catch (err: any) {
             console.error('❌ خطا در دریافت تراکنش‌ها:', err)
