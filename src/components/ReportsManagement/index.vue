@@ -5,15 +5,15 @@
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">مدیریت گزارش‌ها</h1>
       <div class="flex gap-3">
         <button
-          @click="showExportModal = true"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 flex items-center gap-2"
+            @click="showExportModal = true"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 flex items-center gap-2"
         >
           <i class="ti ti-file-export"></i>
           خروجی اکسل
         </button>
         <button
-          @click="refreshReports"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 flex items-center gap-2"
+            @click="refreshReports"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 flex items-center gap-2"
         >
           <i class="ti ti-refresh"></i>
           بروزرسانی
@@ -62,51 +62,60 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">جستجو</label>
           <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="شناسه گزارش، نام کاربر یا توضیحات..."
-            class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300"
+              v-model="searchQuery"
+              type="text"
+              placeholder="شناسه گزارش، نام کاربر یا توضیحات..."
+              class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300"
           />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع گزارش</label>
           <div class="relative">
             <button
-              @click="showTypeDropdown = !showTypeDropdown"
-              class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
+                @click="showTypeDropdown = !showTypeDropdown"
+                class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
             >
               <span class="flex items-center">
                 <i :class="getTypeIcon(filterType)" class="ml-2"></i>
                 {{ getTypeDisplayName(filterType) }}
               </span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showTypeDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showTypeDropdown }"></i>
             </button>
-            <ul v-if="showTypeDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
-              <li @click="selectType('')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+            <ul v-if="showTypeDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
+              <li @click="selectType('')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-list ml-2 text-gray-500"></i>
                 همه انواع
               </li>
-              <li @click="selectType('spam')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('spam')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-alert-triangle ml-2 text-red-500"></i>
                 اسپم
               </li>
-              <li @click="selectType('inappropriate')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('inappropriate')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-eye-off ml-2 text-orange-500"></i>
                 محتوای نامناسب
               </li>
-              <li @click="selectType('harassment')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('harassment')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-user-x ml-2 text-purple-500"></i>
                 آزار و اذیت
               </li>
-              <li @click="selectType('copyright')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('copyright')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-copyright ml-2 text-blue-500"></i>
                 نقض حق نشر
               </li>
-              <li @click="selectType('fake')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('fake')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-mask ml-2 text-yellow-500"></i>
                 پروفایل جعلی
               </li>
-              <li @click="selectType('other')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectType('other')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-dots ml-2 text-gray-500"></i>
                 سایر
               </li>
@@ -117,33 +126,40 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">وضعیت</label>
           <div class="relative">
             <button
-              @click="showStatusDropdown = !showStatusDropdown"
-              class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
+                @click="showStatusDropdown = !showStatusDropdown"
+                class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
             >
               <span class="flex items-center">
                 <i :class="getStatusIcon(filterStatus)" class="ml-2"></i>
                 {{ getStatusDisplayName(filterStatus) }}
               </span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showStatusDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showStatusDropdown }"></i>
             </button>
-            <ul v-if="showStatusDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
-              <li @click="selectStatus('')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+            <ul v-if="showStatusDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
+              <li @click="selectStatus('')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-list ml-2 text-gray-500"></i>
                 همه وضعیت‌ها
               </li>
-              <li @click="selectStatus('open')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectStatus('open')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-alert-circle ml-2 text-red-500"></i>
                 باز
               </li>
-              <li @click="selectStatus('reviewing')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectStatus('reviewing')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-clock ml-2 text-blue-500"></i>
                 در حال بررسی
               </li>
-              <li @click="selectStatus('resolved')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectStatus('resolved')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-check ml-2 text-green-500"></i>
                 حل شده
               </li>
-              <li @click="selectStatus('rejected')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectStatus('rejected')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-x ml-2 text-gray-500"></i>
                 رد شده
               </li>
@@ -154,29 +170,35 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">مرتب‌سازی</label>
           <div class="relative">
             <button
-              @click="showSortDropdown = !showSortDropdown"
-              class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
+                @click="showSortDropdown = !showSortDropdown"
+                class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 text-right flex items-center justify-between"
             >
               <span class="flex items-center">
                 <i :class="getSortIcon(sortBy)" class="ml-2"></i>
                 {{ getSortDisplayName(sortBy) }}
               </span>
-              <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showSortDropdown }"></i>
+              <i class="ti ti-chevron-down transition-transform duration-200"
+                 :class="{ 'rotate-180': showSortDropdown }"></i>
             </button>
-            <ul v-if="showSortDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
-              <li @click="selectSort('created_desc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+            <ul v-if="showSortDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
+              <li @click="selectSort('created_desc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-sort-descending ml-2 text-blue-500"></i>
                 جدیدترین
               </li>
-              <li @click="selectSort('created_asc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectSort('created_asc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-sort-ascending ml-2 text-blue-500"></i>
                 قدیمی‌ترین
               </li>
-              <li @click="selectSort('priority_desc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectSort('priority_desc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-alert-triangle ml-2 text-red-500"></i>
                 اولویت بالا
               </li>
-              <li @click="selectSort('updated_desc')" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <li @click="selectSort('updated_desc')"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white">
                 <i class="ti ti-refresh ml-2 text-green-500"></i>
                 آخرین بروزرسانی
               </li>
@@ -189,9 +211,9 @@
     <!-- Reports Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       <div
-        v-for="report in filteredReports"
-        :key="report.id"
-        class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition-all duration-300"
+          v-for="report in filteredReports"
+          :key="report.id"
+          class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition-all duration-300"
       >
         <!-- Report Header -->
         <div class="flex items-center justify-between mb-4">
@@ -204,8 +226,8 @@
               <div class="flex items-center gap-2">
                 <h3 class="font-semibold text-gray-900 dark:text-white">گزارش #{{ report.id }}</h3>
                 <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-lg"
-                  :class="getTypeClass(report.type)"
+                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-lg"
+                    :class="getTypeClass(report.type)"
                 >
                   {{ getTypeName(report.type) }}
                 </span>
@@ -215,16 +237,16 @@
           </div>
           <div class="flex items-center gap-1">
             <button
-              @click="resolveReport(report)"
-              class="p-2 text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors duration-300"
-              title="حل کردن"
+                @click="resolveReport(report)"
+                class="p-2 text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors duration-300"
+                title="حل کردن"
             >
               <i class="ti ti-check text-lg"></i>
             </button>
             <button
-              @click="rejectReport(report)"
-              class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors duration-300"
-              title="رد کردن"
+                @click="rejectReport(report)"
+                class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors duration-300"
+                title="رد کردن"
             >
               <i class="ti ti-x text-lg"></i>
             </button>
@@ -246,13 +268,13 @@
         <!-- Report Status & Actions -->
         <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-slate-600">
           <span
-            class="inline-flex px-3 py-1 text-sm font-semibold rounded-lg"
-            :class="getStatusClass(report.status)"
+              class="inline-flex px-3 py-1 text-sm font-semibold rounded-lg"
+              :class="getStatusClass(report.status)"
           >
             {{ getStatusName(report.status) }}
           </span>
           <span class="text-xs text-gray-500 dark:text-gray-400">
-            {{ report.createdAt }}
+            {{ formatDate(report.createdAt) }}
           </span>
         </div>
       </div>
@@ -262,17 +284,17 @@
     <div class="mt-8 flex items-center justify-center">
       <div class="flex items-center gap-2">
         <button
-          @click="currentPage--"
-          :disabled="currentPage === 1"
-          class="px-4 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+            @click="currentPage--"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
         >
           قبلی
         </button>
         <span class="text-sm text-gray-700 dark:text-gray-300 px-4">صفحه {{ currentPage }} از {{ totalPages }}</span>
         <button
-          @click="currentPage++"
-          :disabled="currentPage === totalPages"
-          class="px-4 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+            @click="currentPage++"
+            :disabled="currentPage === totalPages"
+            class="px-4 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
         >
           بعدی
         </button>
@@ -280,12 +302,15 @@
     </div>
 
     <!-- Export Excel Modal -->
-    <div v-if="showExportModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl w-full max-w-md shadow-2xl border border-white/20 dark:border-slate-700/50">
+    <div v-if="showExportModal"
+         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div
+          class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl w-full max-w-md shadow-2xl border border-white/20 dark:border-slate-700/50">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200/50 dark:border-slate-700/50">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white">خروجی اکسل گزارش‌ها</h2>
-          <button @click="showExportModal = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-all">
+          <button @click="showExportModal = false"
+                  class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-all">
             <i class="ti ti-x text-xl"></i>
           </button>
         </div>
@@ -297,33 +322,40 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تعداد رکورد</label>
             <div class="relative">
               <button
-                @click="showCountDropdown = !showCountDropdown"
-                class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all text-right flex items-center justify-between"
+                  @click="showCountDropdown = !showCountDropdown"
+                  class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all text-right flex items-center justify-between"
               >
                 <span class="flex items-center">
                   <i class="ti ti-list-numbers ml-2 text-green-600"></i>
                   {{ getCountDisplayName(exportSettings.count) }}
                 </span>
-                <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showCountDropdown }"></i>
+                <i class="ti ti-chevron-down transition-transform duration-200"
+                   :class="{ 'rotate-180': showCountDropdown }"></i>
               </button>
-              <ul v-if="showCountDropdown" class="absolute top-full left-0 right-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 rounded-xl mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
-                <li @click="selectCount(50)" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <ul v-if="showCountDropdown"
+                  class="absolute top-full left-0 right-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 rounded-xl mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
+                <li @click="selectCount(50)"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-list-numbers ml-2 text-green-600"></i>
                   50 رکورد
                 </li>
-                <li @click="selectCount(100)" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+                <li @click="selectCount(100)"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-list-numbers ml-2 text-green-600"></i>
                   100 رکورد
                 </li>
-                <li @click="selectCount(200)" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+                <li @click="selectCount(200)"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-list-numbers ml-2 text-green-600"></i>
                   200 رکورد
                 </li>
-                <li @click="selectCount(500)" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+                <li @click="selectCount(500)"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-list-numbers ml-2 text-green-600"></i>
                   500 رکورد
                 </li>
-                <li @click="selectCount('all')" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+                <li @click="selectCount('all')"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-infinity ml-2 text-green-600"></i>
                   همه رکوردها
                 </li>
@@ -335,11 +367,11 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">از تاریخ</label>
             <input
-              v-model="exportSettings.startDate"
-              type="text"
-              placeholder="1403/01/01"
-              class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
-              dir="ltr"
+                v-model="exportSettings.startDate"
+                type="text"
+                placeholder="1403/01/01"
+                class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
+                dir="ltr"
             />
           </div>
 
@@ -347,11 +379,11 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تا تاریخ</label>
             <input
-              v-model="exportSettings.endDate"
-              type="text"
-              placeholder="1403/12/29"
-              class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
-              dir="ltr"
+                v-model="exportSettings.endDate"
+                type="text"
+                placeholder="1403/12/29"
+                class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
+                dir="ltr"
             />
           </div>
 
@@ -360,21 +392,25 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فرمت فایل</label>
             <div class="relative">
               <button
-                @click="showFormatDropdown = !showFormatDropdown"
-                class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all text-right flex items-center justify-between"
+                  @click="showFormatDropdown = !showFormatDropdown"
+                  class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all text-right flex items-center justify-between"
               >
                 <span class="flex items-center">
                   <i :class="getFormatIcon(exportSettings.format)" class="ml-2"></i>
                   {{ getFormatDisplayName(exportSettings.format) }}
                 </span>
-                <i class="ti ti-chevron-down transition-transform duration-200" :class="{ 'rotate-180': showFormatDropdown }"></i>
+                <i class="ti ti-chevron-down transition-transform duration-200"
+                   :class="{ 'rotate-180': showFormatDropdown }"></i>
               </button>
-              <ul v-if="showFormatDropdown" class="absolute top-full left-0 right-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 rounded-xl mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
-                <li @click="selectFormat('xlsx')" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+              <ul v-if="showFormatDropdown"
+                  class="absolute top-full left-0 right-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 rounded-xl mt-1 shadow-lg z-10 max-h-60 overflow-y-auto">
+                <li @click="selectFormat('xlsx')"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-file-spreadsheet ml-2 text-green-600"></i>
                   اکسل (.xlsx)
                 </li>
-                <li @click="selectFormat('csv')" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
+                <li @click="selectFormat('csv')"
+                    class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-slate-700/50 cursor-pointer flex items-center text-gray-900 dark:text-white">
                   <i class="ti ti-file-text ml-2 text-blue-600"></i>
                   CSV (.csv)
                 </li>
@@ -386,14 +422,14 @@
         <!-- Modal Footer -->
         <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200/50 dark:border-slate-700/50">
           <button
-            @click="showExportModal = false"
-            class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-slate-700/80 hover:bg-gray-200/80 dark:hover:bg-slate-600/80 rounded-xl transition-all backdrop-blur-sm"
+              @click="showExportModal = false"
+              class="px-5 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-slate-700/80 hover:bg-gray-200/80 dark:hover:bg-slate-600/80 rounded-xl transition-all backdrop-blur-sm"
           >
             انصراف
           </button>
           <button
-            @click="exportToExcel"
-            class="px-5 py-2.5 bg-green-600/90 hover:bg-green-700/90 text-white rounded-xl transition-all backdrop-blur-sm shadow-lg flex items-center gap-2"
+              @click="exportToExcel"
+              class="px-5 py-2.5 bg-green-600/90 hover:bg-green-700/90 text-white rounded-xl transition-all backdrop-blur-sm shadow-lg flex items-center gap-2"
           >
             <i class="ti ti-download"></i>
             دانلود
@@ -405,7 +441,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {ref, computed, onMounted} from 'vue'
+import {useReportStore} from "@/stores/report.ts";
+import jalaali from "jalaali-js";
 
 defineOptions({
   name: 'ReportsManagement'
@@ -437,7 +475,7 @@ const sortBy = ref('created_desc')
 const currentPage = ref(1)
 const itemsPerPage = 6
 const showExportModal = ref(false)
-
+const reportStore = useReportStore()
 // Dropdown states
 const showTypeDropdown = ref(false)
 const showStatusDropdown = ref(false)
@@ -454,7 +492,7 @@ const exportSettings = ref({
 })
 
 // Sample data
-const reports = ref<Report[]>([
+/*const reports = ref<Report[]>([
   {
     id: 1001,
     reporterName: 'احمد محمدی',
@@ -530,13 +568,13 @@ const reports = ref<Report[]>([
     createdAt: '1403/04/16',
     updatedAt: '1403/04/21'
   }
-])
-
+])*/
+const reports = computed(() => reportStore.reports)
 // Computed properties for statistics
-const openReports = computed(() => reports.value.filter(r => r.status === 'open').length)
-const reviewingReports = computed(() => reports.value.filter(r => r.status === 'reviewing').length)
-const resolvedReports = computed(() => reports.value.filter(r => r.status === 'resolved').length)
-const totalReports = computed(() => reports.value.length)
+const openReports = computed(()=>reportStore.openReports)
+const reviewingReports = computed(()=>reportStore.reviewingReports)
+const resolvedReports = computed(()=>reportStore.resolvedReports)
+const totalReports = computed(()=>reportStore.totalReports)
 
 const filteredReports = computed(() => {
   let filtered = [...reports.value]
@@ -544,10 +582,10 @@ const filteredReports = computed(() => {
   // Filter by search query
   if (searchQuery.value) {
     filtered = filtered.filter(report =>
-      report.id.toString().includes(searchQuery.value) ||
-      report.reporterName.includes(searchQuery.value) ||
-      report.targetName.includes(searchQuery.value) ||
-      report.description.includes(searchQuery.value)
+        report.id.toString().includes(searchQuery.value) ||
+        report.reporterName.includes(searchQuery.value) ||
+        report.targetName.includes(searchQuery.value) ||
+        report.description.includes(searchQuery.value)
     )
   }
 
@@ -569,7 +607,7 @@ const filteredReports = computed(() => {
       case 'created_asc':
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       case 'priority_desc':
-        const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 }
+        const priorityOrder = {urgent: 4, high: 3, medium: 2, low: 1}
         return priorityOrder[b.priority] - priorityOrder[a.priority]
       case 'updated_desc':
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
@@ -589,10 +627,10 @@ const totalPages = computed(() => {
 
   if (searchQuery.value) {
     filtered = filtered.filter(report =>
-      report.id.toString().includes(searchQuery.value) ||
-      report.reporterName.includes(searchQuery.value) ||
-      report.targetName.includes(searchQuery.value) ||
-      report.description.includes(searchQuery.value)
+        report.id.toString().includes(searchQuery.value) ||
+        report.reporterName.includes(searchQuery.value) ||
+        report.targetName.includes(searchQuery.value) ||
+        report.description.includes(searchQuery.value)
     )
   }
 
@@ -673,14 +711,16 @@ const getPriorityName = (priority: Report['priority']) => {
 }
 
 // Report actions
-const resolveReport = (report: Report) => {
+const resolveReport =async (report: Report) => {
   report.status = 'resolved'
+  await reportStore.toggleReportStatus(report.id,report.status)
   report.resolvedAt = new Date().toLocaleDateString('fa-IR')
   report.updatedAt = new Date().toLocaleDateString('fa-IR')
 }
 
-const rejectReport = (report: Report) => {
+const rejectReport = async (report: Report) => {
   report.status = 'rejected'
+  await reportStore.toggleReportStatus(report.id,report.status)
   report.updatedAt = new Date().toLocaleDateString('fa-IR')
 }
 
@@ -741,8 +781,8 @@ const exportToExcel = () => {
     // Create and download file with proper timestamp
     const now = new Date()
     const timestamp = now.toLocaleDateString('fa-IR').replace(/\//g, '-') + '_' +
-                     now.getHours().toString().padStart(2, '0') + '-' +
-                     now.getMinutes().toString().padStart(2, '0')
+        now.getHours().toString().padStart(2, '0') + '-' +
+        now.getMinutes().toString().padStart(2, '0')
     const fileName = `گزارش‌ها_${timestamp}.${exportSettings.value.format}`
 
     if (exportSettings.value.format === 'xlsx') {
@@ -780,15 +820,15 @@ const convertToCSV = (data: Record<string, string | number>[]) => {
   // Create CSV with proper Persian support
   const headers = Object.keys(data[0]).join(',')
   const rows = data.map(row =>
-    Object.values(row).map(val =>
-      `"${String(val).replace(/"/g, '""')}"`
-    ).join(',')
+      Object.values(row).map(val =>
+          `"${String(val).replace(/"/g, '""')}"`
+      ).join(',')
   )
   return [headers, ...rows].join('\n')
 }
 
 const downloadCSV = (csv: string, filename: string) => {
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+  const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'})
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
   link.download = filename
@@ -813,9 +853,9 @@ const downloadAsExcel = (csvContent: string, filename: string) => {
       <table border="1" dir="rtl">
         ${csvContent.split('\n').map(row =>
           '<tr>' + row.split(',').map(cell =>
-            `<td class="text">${cell.replace(/"/g, '')}</td>`
+              `<td class="text">${cell.replace(/"/g, '')}</td>`
           ).join('') + '</tr>'
-        ).join('')}
+  ).join('')}
       </table>
     </body>
   </html>`
@@ -943,6 +983,32 @@ const selectFormat = (format: 'xlsx' | 'csv') => {
   exportSettings.value.format = format
   showFormatDropdown.value = false
 }
+const toJalaali = (gregorianDate: string | Date): string => {
+  const dateStr = typeof gregorianDate === 'string'
+      ? gregorianDate
+      : gregorianDate.toISOString().split('T')[0] // "YYYY-MM-DD"
+
+  const [gy, gm, gd] = dateStr.split('-').map(Number)
+  const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd)
+  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`
+}
+const formatDate = (date: string | null | undefined): string => {
+  if (!date || typeof date !== 'string' || date.trim() === '') return ''
+
+  const normalized = normalizePersianDigits(date)
+
+  if (/^(13|14)\d{2}\/\d{1,2}\/\d{1,2}$/.test(normalized)) {
+    return date
+  }
+
+  return toJalaali(date)
+}
+const normalizePersianDigits = (str: string): string => {
+  return str.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+}
+onMounted(async () => {
+  await reportStore.fetchReports()
+})
 </script>
 
 <style scoped>

@@ -90,7 +90,6 @@
                   <input
                       v-model="cardForm.ownerName"
                       type="text"
-                      required
                       placeholder="نام کامل صاحب کارت ویزیت"
                       class="w-full px-4 py-4 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400 border border-gray-200 dark:border-slate-600"
                   >
@@ -688,6 +687,17 @@ const downloadQRCode = async () => {
 const cardStore = useCardsStore()
 // Save single card
 const saveCard = async () => {
+  if (!cardForm.ownerName || cardForm.ownerName.trim().length < 3) {
+    await showError('خطا در ورود نام صاحب کارت',"نام صاحب کارت را صحیح وارد کنید");
+    return;
+  }
+
+  const mobileRegex = /^09[0-9]{9}$/;
+  if (!mobileRegex.test(cardForm.mobile)) {
+    await showError('خطا در ورود شماره موبایل',"شماره موبایل معتبر نیست. مثال: 09123456789");
+    return;
+  }
+
   try {
     isSaving.value = true;
     // Here you would typically send the data to your API

@@ -43,18 +43,31 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
 
     const totalRevenue = computed(() =>
-        transactions.value.reduce((sum, t) => sum + t.amount, 0)
+        transactions.value
+            .filter(t => t.status === 'success')
+            .reduce((sum, t) => sum + t.amount, 0)
     )
+
     const monthlyRevenue = computed(() => {
-        const currentMonth = new Date().getMonth() + 1
+        const now = new Date()
+        const currentMonth = now.getMonth()
+        const currentYear = now.getFullYear()
+
         return transactions.value
-            .filter(t => new Date(t.createdAt).getMonth() + 1 === currentMonth)
+            .filter(t => {
+                const date = new Date(t.createdAt)
+                return (
+                    date.getMonth() === currentMonth &&
+                    date.getFullYear() === currentYear &&
+                    t.status === 'success'
+                )
+            })
             .reduce((sum, t) => sum + t.amount, 0)
     })
 
     const successRate = computed(() => {
         const total = transactions.value.length
-        const success = transactions.value.filter(t => t.status === 'paid').length
+        const success = transactions.value.filter(t => t.status === 'success').length
         return total > 0 ? parseFloat(((success / total) * 100).toFixed(1)) : 0
     })
 

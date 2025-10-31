@@ -744,7 +744,6 @@ const stats = computed(() => ({
   monthlyRevenue: transactionsStore.monthlyRevenue,
   successRate: transactionsStore.successRate
 }))
-console.log('stats',stats)
 const toJalaali = (gregorianDate: string | Date): string => {
   const dateStr = typeof gregorianDate === 'string'
       ? gregorianDate

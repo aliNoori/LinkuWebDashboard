@@ -1,541 +1,601 @@
 <template>
   <div class="w-full p-4 sm:p-6 lg:p-8">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-    <!-- Header -->
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <!-- Title and Stats -->
-        <div>
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">
-            مدیریت پروفایل‌ها
-          </h2>
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            مجموع {{ filteredUsers.length }} پروفایل کاربری
-          </p>
-        </div>
+    <div
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <!-- Header -->
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <!-- Title and Stats -->
+          <div>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">
+              مدیریت پروفایل‌ها
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              مجموع {{ filteredUsers.length }} پروفایل کاربری
+            </p>
+          </div>
 
-        <!-- Actions -->
-        <div class="flex flex-wrap gap-3">
-          <button @click="exportToExcel" class="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors">
-            <i class="ti ti-file-spreadsheet text-sm"></i>
-            خروجی Excel
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <!-- Search -->
-        <div class="relative">
-          <i class="ti ti-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input v-model="searchQuery" type="text" placeholder="جستجو نام، نام کاربری، شماره..."
-                 class="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-        </div>
-
-        <!-- Subscription Filter -->
-        <div class="relative">
-          <button @click="showSubscriptionDropdown = !showSubscriptionDropdown"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
-            <span>{{ filterSubscription ? subscriptionNames[filterSubscription as User['subscriptionType']] : 'همه اشتراک‌ها' }}</span>
-            <i class="ti ti-chevron-down text-sm"></i>
-          </button>
-          <ul v-show="showSubscriptionDropdown" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-            <li @click="filterSubscription = ''; showSubscriptionDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">همه اشتراک‌ها</li>
-            <li @click="filterSubscription = 'premium'; showSubscriptionDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">ویژه</li>
-            <li @click="filterSubscription = 'free'; showSubscriptionDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">رایگان</li>
-          </ul>
-        </div>
-
-        <!-- Status Filter -->
-        <div class="relative">
-          <button @click="showStatusDropdown = !showStatusDropdown"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
-            <span>{{ filterStatus ? statusNames[filterStatus as User['status']] : 'همه وضعیت‌ها' }}</span>
-            <i class="ti ti-chevron-down text-sm"></i>
-          </button>
-          <ul v-show="showStatusDropdown" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-            <li @click="filterStatus = ''; showStatusDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">همه وضعیت‌ها</li>
-            <li @click="filterStatus = 'active'; showStatusDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">فعال</li>
-            <li @click="filterStatus = 'inactive'; showStatusDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">غیرفعال</li>
-            <li @click="filterStatus = 'suspended'; showStatusDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">معلق</li>
-          </ul>
-        </div>
-
-        <!-- Sort -->
-        <div class="relative">
-          <button @click="showSortDropdown = !showSortDropdown"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
-            <span>{{ sortNames[sortBy] }}</span>
-            <i class="ti ti-chevron-down text-sm"></i>
-          </button>
-          <ul v-show="showSortDropdown" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-            <li @click="sortBy = 'created_desc'; showSortDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">جدیدترین</li>
-            <li @click="sortBy = 'created_asc'; showSortDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">قدیمی‌ترین</li>
-            <li @click="sortBy = 'name_asc'; showSortDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">نام (الف - ی)</li>
-            <li @click="sortBy = 'name_desc'; showSortDropdown = false"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">نام (ی - الف)</li>
-          </ul>
+          <!-- Actions -->
+          <div class="flex flex-wrap gap-3">
+            <button @click="exportToExcel"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors">
+              <i class="ti ti-file-spreadsheet text-sm"></i>
+              خروجی Excel
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Results Header -->
-    <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            فهرست کاربران
-          </h3>
-          <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium">
+      <!-- Filters -->
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Search -->
+          <div class="relative">
+            <i class="ti ti-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input v-model="searchQuery" type="text" placeholder="جستجو نام، نام کاربری، شماره..."
+                   class="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+          </div>
+
+          <!-- Subscription Filter -->
+          <div class="relative">
+            <button @click="showSubscriptionDropdown = !showSubscriptionDropdown"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
+              <span>{{
+                  filterSubscription ? subscriptionNames[filterSubscription as User['subscriptionType']] : 'همه اشتراک‌ها'
+                }}</span>
+              <i class="ti ti-chevron-down text-sm"></i>
+            </button>
+            <ul v-show="showSubscriptionDropdown"
+                class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+              <li @click="filterSubscription = ''; showSubscriptionDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">همه اشتراک‌ها
+              </li>
+              <li @click="filterSubscription = 'premium'; showSubscriptionDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">ویژه
+              </li>
+              <li @click="filterSubscription = 'free'; showSubscriptionDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">رایگان
+              </li>
+            </ul>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="relative">
+            <button @click="showStatusDropdown = !showStatusDropdown"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
+              <span>{{ filterStatus ? statusNames[filterStatus as User['status']] : 'همه وضعیت‌ها' }}</span>
+              <i class="ti ti-chevron-down text-sm"></i>
+            </button>
+            <ul v-show="showStatusDropdown"
+                class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+              <li @click="filterStatus = ''; showStatusDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">همه وضعیت‌ها
+              </li>
+              <li @click="filterStatus = 'active'; showStatusDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">فعال
+              </li>
+              <li @click="filterStatus = 'inactive'; showStatusDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">غیرفعال
+              </li>
+              <li @click="filterStatus = 'suspended'; showStatusDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">معلق
+              </li>
+            </ul>
+          </div>
+
+          <!-- Sort -->
+          <div class="relative">
+            <button @click="showSortDropdown = !showSortDropdown"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
+              <span>{{ sortNames[sortBy] }}</span>
+              <i class="ti ti-chevron-down text-sm"></i>
+            </button>
+            <ul v-show="showSortDropdown"
+                class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+              <li @click="sortBy = 'created_desc'; showSortDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">جدیدترین
+              </li>
+              <li @click="sortBy = 'created_asc'; showSortDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">قدیمی‌ترین
+              </li>
+              <li @click="sortBy = 'name_asc'; showSortDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">نام (الف - ی)
+              </li>
+              <li @click="sortBy = 'name_desc'; showSortDropdown = false"
+                  class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">نام (ی - الف)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Header -->
+      <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              فهرست کاربران
+            </h3>
+            <span
+                class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium">
             {{ filteredUsers.length }} کاربر
           </span>
-        </div>
-        <div class="text-sm text-gray-500 dark:text-gray-400">
-          صفحه {{ currentPage }} از {{ totalPages }}
+          </div>
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            صفحه {{ currentPage }} از {{ totalPages }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Modern Users List -->
-    <div class="p-6">
-      <div class="space-y-4">
-        <div v-for="user in paginatedUsers" :key="user.id"
-             class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 group">
+      <!-- Modern Users List -->
+      <div class="p-6">
+        <div class="space-y-4">
+          <div v-for="user in paginatedUsers" :key="user.id"
+               class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 group">
 
-          <!-- List Layout - Horizontal -->
-          <div class="flex items-center gap-6">
-            <!-- User Info Section -->
-            <div class="flex items-center gap-4 flex-1">
-              <!-- Avatar -->
-              <div class="relative">
-                <div v-if="user.profileImage" class="w-14 h-14 rounded-full overflow-hidden">
-                  <img :src="user.profileImage" :alt="user.name" class="w-full h-full object-cover">
+            <!-- List Layout - Horizontal -->
+            <div class="flex items-center gap-6">
+              <!-- User Info Section -->
+              <div class="flex items-center gap-4 flex-1">
+                <!-- Avatar -->
+                <div class="relative">
+                  <div v-if="user.profileImage" class="w-14 h-14 rounded-full overflow-hidden">
+                    <img :src="user.profileImage" :alt="user.name" class="w-full h-full object-cover">
+                  </div>
+                  <div v-else
+                       class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                    {{ getUserInitials(user.name) }}
+                  </div>
+                  <!-- Premium Badge -->
+                  <div v-if="user.subscriptionType === 'premium'"
+                       class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center">
+                    <i class="ti ti-star-filled text-white text-xs"></i>
+                  </div>
                 </div>
-                <div v-else class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                  {{ getUserInitials(user.name) }}
-                </div>
-                <!-- Premium Badge -->
-                <div v-if="user.subscriptionType === 'premium'" class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center">
-                  <i class="ti ti-star-filled text-white text-xs"></i>
-                </div>
-              </div>
 
-              <!-- User Details -->
-              <div class="flex-1">
-                <div class="flex items-center gap-3 mb-1">
-                  <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ user.name }}</h3>
-                  <span :class="['px-2 py-1 rounded-lg text-xs font-medium', statusClasses[user.status]]">
+                <!-- User Details -->
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-1">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ user.name }}</h3>
+                    <span :class="['px-2 py-1 rounded-lg text-xs font-medium', statusClasses[user.status]]">
                     {{ statusNames[user.status] }}
                   </span>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">@{{ user.username }}</p>
-                <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                  <div class="flex items-center gap-1">
-                    <i class="ti ti-phone text-xs"></i>
-                    <span>{{ user.phone }}</span>
                   </div>
-                  <div v-if="user.email" class="flex items-center gap-1">
-                    <i class="ti ti-mail text-xs"></i>
-                    <span>{{ user.email }}</span>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ user.username }}@</p>
+                  <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div class="flex items-center gap-1">
+                      <i class="ti ti-phone text-xs"></i>
+                      <span>{{ user.phone }}</span>
+                    </div>
+                    <div v-if="user.email" class="flex items-center gap-1">
+                      <i class="ti ti-mail text-xs"></i>
+                      <span>{{ user.email }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Links Summary for Premium Users -->
-            <div v-if="user.subscriptionType === 'premium'" class="flex-shrink-0 w-48">
-              <div class="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-1">
-                    <i class="ti ti-link text-amber-600 dark:text-amber-400 text-sm"></i>
-                    <span class="text-sm font-medium text-amber-800 dark:text-amber-300">لینک‌ها</span>
+              <!-- Links Summary for Premium Users -->
+              <div v-if="user.subscriptionType === 'premium'" class="flex-shrink-0 w-48">
+                <div
+                    class="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-1">
+                      <i class="ti ti-link text-amber-600 dark:text-amber-400 text-sm"></i>
+                      <span class="text-sm font-medium text-amber-800 dark:text-amber-300">لینک‌ها</span>
+                    </div>
+                    <span class="text-sm font-bold text-amber-700 dark:text-amber-300">{{
+                        (user.linkCount > 5 ? 5 : user.linkCount) || 0
+                      }}/5</span>
                   </div>
-                  <span class="text-sm font-bold text-amber-700 dark:text-amber-300">{{ user.linkCount || 0 }}/5</span>
-                </div>
 
-                <!-- Progress Bar -->
-                <div class="w-full bg-amber-200 dark:bg-amber-800/50 rounded-full h-1.5">
-                  <div class="bg-amber-500 dark:bg-amber-400 h-1.5 rounded-full transition-all duration-300"
-                       :style="{ width: Math.min(((user.linkCount || 0) / 5) * 100, 100) + '%' }"></div>
+                  <!-- Progress Bar -->
+                  <div class="w-full bg-amber-200 dark:bg-amber-800/50 rounded-full h-1.5">
+                    <div class="bg-amber-500 dark:bg-amber-400 h-1.5 rounded-full transition-all duration-300"
+                         :style="{ width: Math.min(((user.linkCount > 5 ? 5 : user.linkCount || 0) / 5) * 100, 100) + '%' }"></div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Non-Premium Users Link Count -->
-            <div v-else class="flex-shrink-0 w-48">
-              <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-1">
-                    <i class="ti ti-link text-gray-600 dark:text-gray-400 text-sm"></i>
-                    <span class="text-sm font-medium text-gray-800 dark:text-gray-300">لینک‌ها</span>
+              <!-- Non-Premium Users Link Count -->
+              <div v-else class="flex-shrink-0 w-48">
+                <div
+                    class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-1">
+                      <i class="ti ti-link text-gray-600 dark:text-gray-400 text-sm"></i>
+                      <span class="text-sm font-medium text-gray-800 dark:text-gray-300">لینک‌ها</span>
+                    </div>
+                    <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ (user.linkCount > 1 ? 1 : user.linkCount) || 0 }}/1</span>
                   </div>
-                  <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ user.linkCount || 0 }}/1</span>
-                </div>
 
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mb-1">
-                  <div class="bg-gray-500 dark:bg-gray-400 h-1.5 rounded-full transition-all duration-300"
-                       :style="{ width: Math.min(((user.linkCount || 0) / 1) * 100, 100) + '%' }"></div>
-                </div>
+                  <!-- Progress Bar -->
+                  <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mb-1">
+                    <div class="bg-gray-500 dark:bg-gray-400 h-1.5 rounded-full transition-all duration-300"
+                         :style="{ width: Math.min(((user.linkCount > 1 ? 1 : user.linkCount || 0)) * 100, 100) + '%' }"></div>
+                  </div>
 
-                <div class="flex items-center justify-between">
-                  <p class="text-xs text-gray-600 dark:text-gray-400">
-                    <span v-if="(user.linkCount || 0) === 0">می‌توانید 1 لینک اضافه کنید</span>
-                    <span v-else class="font-medium">لینک شما استفاده شده</span>
-                  </p>
-                  <span class="text-xs px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400 rounded">رایگان</span>
+                  <div class="flex items-center justify-between">
+                    <p class="text-xs text-gray-600 dark:text-gray-400">
+                      <span v-if="(user.linkCount || 0) === 0">می‌توانید 1 لینک اضافه کنید</span>
+                      <span v-else class="font-medium">لینک شما استفاده شده</span>
+                    </p>
+                    <span
+                        class="text-xs px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400 rounded">رایگان</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Action Buttons -->
-            <div class="flex gap-2 flex-shrink-0">
-              <!-- View Links Button for All Users -->
-              <button @click.stop="viewUserLinks(user)"
-                      :class="[
+              <!-- Action Buttons -->
+              <div class="flex gap-2 flex-shrink-0">
+                <!-- View Links Button for All Users -->
+                <button @click.stop="viewUserLinks(user)"
+                        :class="[
                         'px-4 py-2 text-white rounded-lg transition-all duration-300 text-sm font-medium flex items-center gap-2',
                         user.subscriptionType === 'premium'
                           ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
                           : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
                       ]"
-                      title="مشاهده لینک‌ها">
-                <i class="ti ti-link text-sm"></i>
-                لینک‌ها
-              </button>
+                        title="مشاهده لینک‌ها">
+                  <i class="ti ti-link text-sm"></i>
+                  لینک‌ها
+                </button>
 
-              <!-- View Profile Button -->
-              <button @click.stop="viewProfile(user)" v-if="user.profileUrl"
-                      class="px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-sm font-medium"
-                      title="مشاهده پروفایل">
-                <i class="ti ti-external-link text-sm"></i>
-              </button>
+                <!-- View Profile Button -->
+                <button @click.stop="viewProfile(user)" v-if="user.profileUrl"
+                        class="px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-sm font-medium"
+                        title="مشاهده پروفایل">
+                  <i class="ti ti-external-link text-sm"></i>
+                </button>
 
-              <!-- Edit Button -->
-              <button @click.stop="editUser(user)"
-                      class="px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-all duration-300 text-sm font-medium"
-                      title="ویرایش">
-                <i class="ti ti-edit text-sm"></i>
-              </button>
+                <!-- Edit Button -->
+                <button :disabled="true" @click.stop="editUser(user)"
+                        class="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                        bg-green-100 text-green-700 hover:bg-green-200
+                        disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+                        title="ویرایش">
+                  <i class="ti ti-edit text-sm"></i>
+                </button>
 
-              <!-- Status Toggle Button -->
-              <button @click.stop="toggleUserStatus(user)"
-                      class="px-3 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-all duration-300 text-sm font-medium"
-                      :title="user.status === 'suspended' ? 'رفع تعلیق' : 'تعلیق کردن'">
-                <i class="ti ti-ban text-sm" v-if="user.status !== 'suspended'"></i>
-                <i class="ti ti-check text-sm" v-else></i>
-              </button>
+                <!-- Status Toggle Button -->
+                <button @click.stop="toggleUserStatus(user)"
+                        class="px-3 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-all duration-300 text-sm font-medium"
+                        :title="user.status === 'suspended' ? 'رفع تعلیق' : 'تعلیق کردن'">
+                  <i class="ti ti-ban text-sm" v-if="user.status !== 'suspended'"></i>
+                  <i class="ti ti-check text-sm" v-else></i>
+                </button>
 
-              <!-- Delete Button -->
-              <button @click.stop="deleteUser(user)"
-                      class="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all duration-300 text-sm font-medium"
-                      title="حذف">
-                <i class="ti ti-trash text-sm"></i>
-              </button>
+                <!-- Delete Button -->
+                <button
+                    :disabled="true"
+                    @click.stop="deleteUser(user)"
+                    class="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                    bg-red-100 text-red-700 hover:bg-red-200
+                    disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+                    title="حذف"
+                >
+                  <i class="ti ti-trash text-sm"></i>
+                </button>
+
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Enhanced Pagination -->
-    <div v-if="totalPages > 1" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <!-- Results Info -->
-        <div class="flex items-center gap-4">
-          <div class="text-sm text-gray-600 dark:text-gray-400">
-            نمایش <span class="font-medium text-gray-900 dark:text-white">{{ ((currentPage - 1) * itemsPerPage) + 1 }}</span> تا
-            <span class="font-medium text-gray-900 dark:text-white">{{ Math.min(currentPage * itemsPerPage, filteredUsers.length) }}</span>
-            از <span class="font-medium text-gray-900 dark:text-white">{{ filteredUsers.length }}</span> کاربر
-          </div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
-            {{ itemsPerPage }} مورد در صفحه
-          </div>
-        </div>
-
-        <!-- Pagination Controls -->
-        <div class="flex items-center gap-1">
-          <!-- First Page -->
-          <button v-if="currentPage > 2" @click="currentPage = 1"
-                  class="px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all duration-300">
-            1
-          </button>
-          <span v-if="currentPage > 3" class="px-2 text-gray-400">...</span>
-
-          <!-- Previous Page -->
-          <button @click="currentPage = Math.max(1, currentPage - 1)"
-                  :disabled="currentPage === 1"
-                  class="px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-600 transition-all duration-300 flex items-center gap-2">
-            <i class="ti ti-chevron-right text-sm"></i>
-            قبلی
-          </button>
-
-          <!-- Current Page -->
-          <div class="px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium shadow-lg">
-            {{ currentPage }}
-          </div>
-
-          <!-- Next Page -->
-          <button @click="currentPage = Math.min(totalPages, currentPage + 1)"
-                  :disabled="currentPage === totalPages"
-                  class="px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-600 transition-all duration-300 flex items-center gap-2">
-            بعدی
-            <i class="ti ti-chevron-left text-sm"></i>
-          </button>
-
-          <!-- Last Page -->
-          <span v-if="currentPage < totalPages - 2" class="px-2 text-gray-400">...</span>
-          <button v-if="currentPage < totalPages - 1" @click="currentPage = totalPages"
-                  class="px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all duration-300">
-            {{ totalPages }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit User Modal -->
-  <div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">ویرایش پروفایل</h3>
-        <button @click="closeEditModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-          <i class="ti ti-x text-xl"></i>
-        </button>
-      </div>
-
-      <form @submit.prevent="saveUser">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام</label>
-            <input v-model="editForm.name" type="text" required
-                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام کاربری</label>
-            <input v-model="editForm.username" type="text" required
-                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">شماره موبایل</label>
-            <input v-model="editForm.phone" type="tel" required
-                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ایمیل</label>
-            <input v-model="editForm.email" type="email"
-                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع اشتراک</label>
-            <div class="relative">
-              <button @click="showModalSubscriptionDropdown = !showModalSubscriptionDropdown" type="button"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
-                <span>{{ subscriptionNames[editForm.subscriptionType] }}</span>
-                <i class="ti ti-chevron-down text-sm"></i>
-              </button>
-              <ul v-show="showModalSubscriptionDropdown" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-                <li @click="editForm.subscriptionType = 'free'; showModalSubscriptionDropdown = false"
-                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">رایگان</li>
-                <li @click="editForm.subscriptionType = 'premium'; showModalSubscriptionDropdown = false"
-                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">ویژه</li>
-              </ul>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">وضعیت</label>
-            <div class="relative">
-              <button @click="showModalStatusDropdown = !showModalStatusDropdown" type="button"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
-                <span>{{ statusNames[editForm.status] }}</span>
-                <i class="ti ti-chevron-down text-sm"></i>
-              </button>
-              <ul v-show="showModalStatusDropdown" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-                <li @click="editForm.status = 'active'; showModalStatusDropdown = false"
-                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">فعال</li>
-                <li @click="editForm.status = 'inactive'; showModalStatusDropdown = false"
-                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">غیرفعال</li>
-                <li @click="editForm.status = 'suspended'; showModalStatusDropdown = false"
-                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">معلق</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex gap-3 mt-6">
-          <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            ذخیره تغییرات
-          </button>
-          <button type="button" @click="closeEditModal" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
-            انصراف
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Role Management Modal - Not needed for customers -->
-  <!-- This section is removed as we're managing customers, not admin roles -->
-
-  <!-- Links Modal -->
-  <div v-if="showLinksModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-      <!-- Modal Header -->
-      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
+      <!-- Enhanced Pagination -->
+      <div v-if="totalPages > 1"
+           class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <!-- Results Info -->
           <div class="flex items-center gap-4">
-            <div v-if="selectedUser?.profileImage" class="w-12 h-12 rounded-full overflow-hidden">
-              <img :src="selectedUser.profileImage" :alt="selectedUser.name" class="w-full h-full object-cover">
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+              نمایش <span class="font-medium text-gray-900 dark:text-white">{{
+                ((currentPage - 1) * itemsPerPage) + 1
+              }}</span> تا
+              <span class="font-medium text-gray-900 dark:text-white">{{
+                  Math.min(currentPage * itemsPerPage, filteredUsers.length)
+                }}</span>
+              از <span class="font-medium text-gray-900 dark:text-white">{{ filteredUsers.length }}</span> کاربر
             </div>
-            <div v-else class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-              {{ selectedUser ? getUserInitials(selectedUser.name) : '' }}
-            </div>
-            <div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">لینک‌های {{ selectedUser?.name }}</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">@{{ selectedUser?.username }}</p>
+            <div class="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
+              {{ itemsPerPage }} مورد در صفحه
             </div>
           </div>
-          <button @click="closeLinksModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-            <i class="ti ti-x text-xl text-gray-500 dark:text-gray-400"></i>
-          </button>
-        </div>
 
-        <!-- Subscription Status -->
-        <div v-if="selectedUser?.subscriptionType === 'premium'" class="mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ti ti-star-filled text-amber-500"></i>
-              <span class="font-medium text-amber-800 dark:text-amber-300">کاربر ویژه</span>
-            </div>
-            <span class="text-sm text-amber-700 dark:text-amber-400">{{ userLinks.length }}/5 لینک استفاده شده</span>
-          </div>
-        </div>
+          <!-- Pagination Controls -->
+          <div class="flex items-center gap-1">
+            <!-- First Page -->
+            <button v-if="currentPage > 2" @click="currentPage = 1"
+                    class="px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all duration-300">
+              1
+            </button>
+            <span v-if="currentPage > 3" class="px-2 text-gray-400">...</span>
 
-        <div v-else class="mt-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ti ti-user text-gray-500 dark:text-gray-400"></i>
-              <span class="font-medium text-gray-800 dark:text-gray-300">کاربر رایگان</span>
+            <!-- Previous Page -->
+            <button @click="currentPage = Math.max(1, currentPage - 1)"
+                    :disabled="currentPage === 1"
+                    class="px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-600 transition-all duration-300 flex items-center gap-2">
+              <i class="ti ti-chevron-right text-sm"></i>
+              قبلی
+            </button>
+
+            <!-- Current Page -->
+            <div
+                class="px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium shadow-lg">
+              {{ currentPage }}
             </div>
-            <span class="text-sm text-gray-700 dark:text-gray-400">{{ userLinks.length }}/1 لینک استفاده شده</span>
+
+            <!-- Next Page -->
+            <button @click="currentPage = Math.min(totalPages, currentPage + 1)"
+                    :disabled="currentPage === totalPages"
+                    class="px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-gray-600 transition-all duration-300 flex items-center gap-2">
+              بعدی
+              <i class="ti ti-chevron-left text-sm"></i>
+            </button>
+
+            <!-- Last Page -->
+            <span v-if="currentPage < totalPages - 2" class="px-2 text-gray-400">...</span>
+            <button v-if="currentPage < totalPages - 1" @click="currentPage = totalPages"
+                    class="px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all duration-300">
+              {{ totalPages }}
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Modal Body -->
-      <div class="p-6 overflow-y-auto max-h-[60vh]">
-        <div v-if="userLinks.length === 0" class="text-center py-12">
-          <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-            <i class="ti ti-link-off text-2xl text-gray-400"></i>
+    <!-- Edit User Modal -->
+    <div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">ویرایش پروفایل</h3>
+          <button @click="closeEditModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <i class="ti ti-x text-xl"></i>
+          </button>
+        </div>
+
+        <form @submit.prevent="saveUser">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام</label>
+              <input v-model="editForm.name" type="text" required
+                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام کاربری</label>
+              <input v-model="editForm.username" type="text" required
+                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">شماره موبایل</label>
+              <input v-model="editForm.phone" type="tel" required
+                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ایمیل</label>
+              <input v-model="editForm.email" type="email"
+                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع اشتراک</label>
+              <div class="relative">
+                <button @click="showModalSubscriptionDropdown = !showModalSubscriptionDropdown" type="button"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
+                  <span>{{ subscriptionNames[editForm.subscriptionType] }}</span>
+                  <i class="ti ti-chevron-down text-sm"></i>
+                </button>
+                <ul v-show="showModalSubscriptionDropdown"
+                    class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+                  <li @click="editForm.subscriptionType = 'free'; showModalSubscriptionDropdown = false"
+                      class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">رایگان
+                  </li>
+                  <li @click="editForm.subscriptionType = 'premium'; showModalSubscriptionDropdown = false"
+                      class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">ویژه
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">وضعیت</label>
+              <div class="relative">
+                <button @click="showModalStatusDropdown = !showModalStatusDropdown" type="button"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-left flex justify-between items-center">
+                  <span>{{ statusNames[editForm.status] }}</span>
+                  <i class="ti ti-chevron-down text-sm"></i>
+                </button>
+                <ul v-show="showModalStatusDropdown"
+                    class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+                  <li @click="editForm.status = 'active'; showModalStatusDropdown = false"
+                      class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">فعال
+                  </li>
+                  <li @click="editForm.status = 'inactive'; showModalStatusDropdown = false"
+                      class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">غیرفعال
+                  </li>
+                  <li @click="editForm.status = 'suspended'; showModalStatusDropdown = false"
+                      class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">معلق
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">هیچ لینکی موجود نیست</h3>
-          <p class="text-gray-500 dark:text-gray-400">
+
+          <div class="flex gap-3 mt-6">
+            <button type="submit"
+                    class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              ذخیره تغییرات
+            </button>
+            <button type="button" @click="closeEditModal"
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
+              انصراف
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Role Management Modal - Not needed for customers -->
+    <!-- This section is removed as we're managing customers, not admin roles -->
+
+    <!-- Links Modal -->
+    <div v-if="showLinksModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+        <!-- Modal Header -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div v-if="selectedUser?.profileImage" class="w-12 h-12 rounded-full overflow-hidden">
+                <img :src="selectedUser.profileImage" :alt="selectedUser.name" class="w-full h-full object-cover">
+              </div>
+              <div v-else
+                   class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                {{ selectedUser ? getUserInitials(selectedUser.name) : '' }}
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">لینک‌های {{ selectedUser?.name }}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedUser?.username }}@</p>
+              </div>
+            </div>
+            <button @click="closeLinksModal"
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+              <i class="ti ti-x text-xl text-gray-500 dark:text-gray-400"></i>
+            </button>
+          </div>
+
+          <!-- Subscription Status -->
+          <div v-if="selectedUser?.subscriptionType === 'premium'"
+               class="mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="ti ti-star-filled text-amber-500"></i>
+                <span class="font-medium text-amber-800 dark:text-amber-300">کاربر ویژه</span>
+              </div>
+              <span class="text-sm text-amber-700 dark:text-amber-400">{{ userLinks.length }}/5 لینک استفاده شده</span>
+            </div>
+          </div>
+
+          <div v-else
+               class="mt-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="ti ti-user text-gray-500 dark:text-gray-400"></i>
+                <span class="font-medium text-gray-800 dark:text-gray-300">کاربر رایگان</span>
+              </div>
+              <span class="text-sm text-gray-700 dark:text-gray-400">{{ userLinks.length }}/1 لینک استفاده شده</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 overflow-y-auto max-h-[60vh]">
+          <div v-if="userLinks.length === 0" class="text-center py-12">
+            <div
+                class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+              <i class="ti ti-link-off text-2xl text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">هیچ لینکی موجود نیست</h3>
+            <p class="text-gray-500 dark:text-gray-400">
             <span v-if="selectedUser?.subscriptionType === 'premium'">
               این کاربر ویژه هنوز از ظرفیت 5 لینک خود استفاده نکرده است.
             </span>
-            <span v-else>
+              <span v-else>
               این کاربر رایگان هنوز لینک خود را اضافه نکرده است.
             </span>
-          </p>
-        </div>
+            </p>
+          </div>
 
-        <div v-else class="space-y-4">
-          <div v-for="link in userLinks" :key="link.id"
-               class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300">
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                  <i class="ti ti-link text-blue-600 dark:text-blue-400"></i>
+          <div v-else class="space-y-4">
+            <div v-for="link in userLinks" :key="link.id"
+                 class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <i class="ti ti-link text-blue-600 dark:text-blue-400"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-900 dark:text-white">{{ link.title }}</h4>
+                    <a :href="link.url" target="_blank"
+                       class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                      {{ link.url }}
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <h4 class="font-semibold text-gray-900 dark:text-white">{{ link.title }}</h4>
-                  <a :href="link.url" target="_blank" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                    {{ link.url }}
-                  </a>
-                </div>
-              </div>
 
-              <!-- Status and Stats -->
-              <div class="flex items-center gap-4">
-                <div class="text-center">
-                  <p class="text-xs text-gray-500 dark:text-gray-400">کلیک‌ها</p>
-                  <p class="text-sm font-bold text-gray-900 dark:text-white">{{ link.clicks }}</p>
-                </div>
-                <div :class="[
+                <!-- Status and Stats -->
+                <div class="flex items-center gap-4">
+                  <div class="text-center">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">کلیک‌ها</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">{{ link.clicks }}</p>
+                  </div>
+                  <div :class="[
                           'px-3 py-1 rounded-lg text-xs font-medium',
                           link.isActive
                             ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                             : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                         ]">
-                  {{ link.isActive ? 'فعال' : 'غیرفعال' }}
+                    {{ link.isActive ? 'فعال' : 'غیرفعال' }}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>تاریخ ایجاد: {{ link.createdAt }}</span>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                <span>تاریخ ایجاد: {{ formatDate(link.createdAt) }}</span>
+                <div class="flex items-center gap-2">
                 <span class="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-1 rounded">
                   ID: {{ link.id }}
                 </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Modal Footer -->
-      <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-        <div class="flex justify-between items-center">
-          <!-- Info Section -->
-          <div class="flex items-center gap-4">
-            <div class="text-sm text-gray-600 dark:text-gray-400">
-              <span class="font-medium">{{ userLinks.length }}</span> لینک موجود
+        <!-- Modal Footer -->
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center">
+            <!-- Info Section -->
+            <div class="flex items-center gap-4">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <span class="font-medium">{{ userLinks.length }}</span> لینک موجود
+              </div>
+              <div v-if="selectedUser?.subscriptionType === 'premium'"
+                   class="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
+                {{ 5 - (userLinks.length || 0) }} ظرفیت باقی‌مانده
+              </div>
+              <div v-else
+                   class="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                کاربر رایگان
+              </div>
             </div>
-            <div v-if="selectedUser?.subscriptionType === 'premium'" class="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
-              {{ 5 - (userLinks.length || 0) }} ظرفیت باقی‌مانده
-            </div>
-            <div v-else class="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-              کاربر رایگان
-            </div>
+
+            <!-- Close Button -->
+            <button @click="closeLinksModal"
+                    class="px-6 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+              بستن
+            </button>
           </div>
-
-          <!-- Close Button -->
-          <button @click="closeLinksModal" class="px-6 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
-            بستن
-          </button>
         </div>
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAlert } from '@/composables/useAlert'
+import {ref, computed, onMounted} from 'vue'
+import {useAlert} from '@/composables/useAlert'
+import {useUserStore} from "@/stores/user.ts";
+import jalaali from "jalaali-js";
 
 defineOptions({
   name: 'UserManagement'
 })
 
-const { showSuccess, showDeleteConfirm } = useAlert()
+const {showSuccess, showDeleteConfirm} = useAlert()
 
 interface User {
   id: number
@@ -595,162 +655,8 @@ const userLinks = ref<Array<{
   clicks: number
   createdAt: string
 }>>([])
-
-// Sample links data (in real app, this would come from API)
-const generateSampleLinks = (userId: number, count: number) => {
-  const linkTypes = [
-    { title: 'اینستاگرام', url: 'https://instagram.com/user' },
-    { title: 'تلگرام', url: 'https://t.me/user' },
-    { title: 'واتساپ', url: 'https://wa.me/989123456789' },
-    { title: 'وبسایت شخصی', url: 'https://mywebsite.com' },
-    { title: 'یوتیوب', url: 'https://youtube.com/channel' },
-    { title: 'لینکدین', url: 'https://linkedin.com/in/user' },
-    { title: 'توییتر', url: 'https://twitter.com/user' },
-    { title: 'فروشگاه آنلاین', url: 'https://shop.com' }
-  ]
-
-  return Array.from({ length: count }, (_, i) => {
-    const linkType = linkTypes[i % linkTypes.length]
-    return {
-      id: i + 1,
-      title: linkType.title,
-      url: linkType.url,
-      isActive: Math.random() > 0.2, // 80% chance of being active
-      clicks: Math.floor(Math.random() * 500),
-      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fa-IR')
-    }
-  })
-}
-
-// Sample users data
-const users = ref<User[]>([
-  {
-    id: 1,
-    name: 'علی احمدی',
-    username: 'ali_ahmadi',
-    phone: '09123456789',
-    email: 'ali@example.com',
-    subscriptionType: 'premium',
-    status: 'active',
-    createdAt: '1403/04/15',
-    lastLogin: '1403/04/22',
-    profileUrl: 'https://linku.ir/ali_ahmadi',
-    linkCount: 5,
-    subscriptionMonths: 12,
-    subscriptionEndDate: '1404/04/15'
-  },
-  {
-    id: 2,
-    name: 'فاطمه محمدی',
-    username: 'fateme_m',
-    phone: '09987654321',
-    email: 'fateme@example.com',
-    subscriptionType: 'free',
-    status: 'active',
-    createdAt: '1403/04/10',
-    lastLogin: '1403/04/21',
-    profileUrl: 'https://linku.ir/fateme_m',
-    linkCount: 1
-  },
-  {
-    id: 3,
-    name: 'محمد رضایی',
-    username: 'mohammad_r',
-    phone: '09345678901',
-    email: 'mohammad@example.com',
-    subscriptionType: 'premium',
-    status: 'suspended',
-    createdAt: '1403/04/05',
-    lastLogin: '1403/04/18',
-    profileUrl: 'https://linku.ir/mohammad_r',
-    linkCount: 3,
-    subscriptionMonths: 6,
-    subscriptionEndDate: '1403/10/05'
-  },
-  {
-    id: 4,
-    name: 'مریم حسینی',
-    username: 'maryam_h',
-    phone: '09567890123',
-    email: 'maryam@example.com',
-    subscriptionType: 'free',
-    status: 'active',
-    createdAt: '1403/03/28',
-    lastLogin: '1403/04/20',
-    profileUrl: 'https://linku.ir/maryam_h',
-    linkCount: 1
-  },
-  {
-    id: 5,
-    name: 'حسن کریمی',
-    username: 'hassan_k',
-    phone: '09789012345',
-    email: 'hassan@example.com',
-    subscriptionType: 'free',
-    status: 'inactive',
-    createdAt: '1403/03/20',
-    lastLogin: '1403/04/15',
-    profileUrl: 'https://linku.ir/hassan_k',
-    linkCount: 1
-  },
-  {
-    id: 6,
-    name: 'زهرا نوری',
-    username: 'zahra_noori',
-    phone: '09198765432',
-    email: 'zahra@example.com',
-    subscriptionType: 'premium',
-    status: 'active',
-    createdAt: '1403/03/12',
-    lastLogin: '1403/04/23',
-    profileUrl: 'https://linku.ir/zahra_noori',
-    linkCount: 2,
-    subscriptionMonths: 3,
-    subscriptionEndDate: '1403/06/12'
-  },
-  {
-    id: 7,
-    name: 'امیر صادقی',
-    username: 'amir_sadeghi',
-    phone: '09321456789',
-    email: 'amir@example.com',
-    subscriptionType: 'premium',
-    status: 'active',
-    createdAt: '1403/02/25',
-    lastLogin: '1403/04/22',
-    profileUrl: 'https://linku.ir/amir_sadeghi',
-    linkCount: 4,
-    subscriptionMonths: 12,
-    subscriptionEndDate: '1404/02/25'
-  },
-  {
-    id: 8,
-    name: 'سارا احمدی',
-    username: 'sara_ahmadi',
-    phone: '09154123456',
-    email: 'sara@example.com',
-    subscriptionType: 'premium',
-    status: 'active',
-    createdAt: '1403/04/18',
-    lastLogin: '1403/04/23',
-    profileUrl: 'https://linku.ir/sara_ahmadi',
-    linkCount: 1,
-    subscriptionMonths: 1,
-    subscriptionEndDate: '1403/05/18'
-  },
-  {
-    id: 9,
-    name: 'رضا قاسمی',
-    username: 'reza_ghasemi',
-    phone: '09367891234',
-    subscriptionType: 'free',
-    status: 'active',
-    createdAt: '1403/04/20',
-    lastLogin: '1403/04/23',
-    linkCount: 0
-  }
-])
-
+const userStore = useUserStore()
+const users = computed(() => userStore.profiles)
 // Computed properties
 const filteredUsers = computed(() => {
   let filtered = [...users.value]
@@ -759,10 +665,10 @@ const filteredUsers = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(user =>
-      user.name.toLowerCase().includes(query) ||
-      user.username.toLowerCase().includes(query) ||
-      user.phone.includes(query) ||
-      (user.email && user.email.toLowerCase().includes(query))
+        user.name.toLowerCase().includes(query) ||
+        user.username.toLowerCase().includes(query) ||
+        user.phone.includes(query) ||
+        (user.email && user.email.toLowerCase().includes(query))
     )
   }
 
@@ -840,20 +746,21 @@ const toggleUserStatus = async (user: User) => {
   try {
     const newStatus = user.status === 'suspended' ? 'active' : 'suspended'
     const message = user.status === 'suspended'
-      ? `آیا از رفع تعلیق ${user.name} اطمینان دارید؟`
-      : `آیا از تعلیق ${user.name} اطمینان دارید؟`
+        ? `آیا از رفع تعلیق ${user.name} اطمینان دارید؟`
+        : `آیا از تعلیق ${user.name} اطمینان دارید؟`
 
     const confirmed = await showDeleteConfirm(
-      user.status === 'suspended' ? 'رفع تعلیق مشتری' : 'تعلیق مشتری',
-      message,
-      user.name
+        user.status === 'suspended' ? 'رفع تعلیق مشتری' : 'تعلیق مشتری',
+        message,
+        user.name
     )
 
     if (confirmed) {
       user.status = newStatus
-      showSuccess(
-        'تغییر وضعیت موفق',
-        user.status === 'suspended' ? 'پروفایل با موفقیت معلق شد' : 'تعلیق پروفایل با موفقیت رفع شد'
+      await userStore.toggleUserStatus(user.id,newStatus)
+      await showSuccess(
+          'تغییر وضعیت موفق',
+          user.status === 'suspended' ? 'پروفایل با موفقیت معلق شد' : 'تعلیق پروفایل با موفقیت رفع شد'
       )
     }
   } catch (error) {
@@ -893,6 +800,7 @@ const closeEditModal = () => {
 
 const saveUser = () => {
   if (editingUser.value) {
+
     // Update existing user
     Object.assign(editingUser.value, editForm.value)
     showSuccess('ویرایش موفق', 'پروفایل با موفقیت ویرایش شد')
@@ -903,9 +811,9 @@ const saveUser = () => {
 const deleteUser = async (user: User) => {
   try {
     const confirmed = await showDeleteConfirm(
-      'حذف مشتری',
-      `آیا از حذف ${user.name} اطمینان دارید؟`,
-      user.name
+        'حذف مشتری',
+        `آیا از حذف ${user.name} اطمینان دارید؟`,
+        user.name
     )
 
     if (confirmed) {
@@ -928,7 +836,8 @@ const viewProfile = (user: User) => {
 
 const viewUserLinks = (user: User) => {
   selectedUser.value = user
-  userLinks.value = generateSampleLinks(user.id, user.linkCount || 0)
+  userStore.selectProfile(selectedUser.value)
+  userLinks.value = userStore.userLinks
   showLinksModal.value = true
 }
 
@@ -975,7 +884,7 @@ const exportToExcel = () => {
   tableHTML += '</tbody></table>'
 
   // ایجاد Blob و دانلود
-  const blob = new Blob([tableHTML], { type: 'application/vnd.ms-excel;charset=utf-8;' })
+  const blob = new Blob([tableHTML], {type: 'application/vnd.ms-excel;charset=utf-8;'})
   const link = document.createElement('a')
   const url = URL.createObjectURL(blob)
 
@@ -987,6 +896,33 @@ const exportToExcel = () => {
   link.click()
   document.body.removeChild(link)
 }
+const toJalaali = (gregorianDate: string | Date): string => {
+  const dateStr = typeof gregorianDate === 'string'
+      ? gregorianDate
+      : gregorianDate.toISOString().split('T')[0] // "YYYY-MM-DD"
+
+  const [gy, gm, gd] = dateStr.split('-').map(Number)
+  const { jy, jm, jd } = jalaali.toJalaali(gy, gm, gd)
+  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`
+}
+const formatDate = (date: string | null | undefined): string => {
+  if (!date || typeof date !== 'string' || date.trim() === '') return ''
+
+  const normalized = normalizePersianDigits(date)
+
+  if (/^(13|14)\d{2}\/\d{1,2}\/\d{1,2}$/.test(normalized)) {
+    return date
+  }
+
+  return toJalaali(date)
+}
+const normalizePersianDigits = (str: string): string => {
+  return str.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+}
+onMounted(async () => {
+  await userStore.fetchProfiles()
+})
+
 </script>
 
 <style scoped>

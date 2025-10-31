@@ -20,6 +20,21 @@ export interface User {
     createdAt: typeof Date
     updatedAt: typeof Date
 }
+export interface Profile {
+    id: number
+    name: string
+    userName: string
+    phone: string
+    email: string
+    subscriptionType:string
+    status: string
+    profileUrl:string
+    linkCount:number
+    subscriptionMonths:number
+    subscriptionEndDate:typeof Date
+    createdAt: typeof Date
+    lastLogin: typeof Date
+}
 
 export interface Admin {
     id: number
@@ -38,6 +53,8 @@ export interface Admin {
 export const useUserStore = defineStore('userStore', () => {
     const user = ref<User>({} as User)
     const users = ref<User[]>([])
+    const profiles = ref<Profile[]>([])
+    const userLinks=ref<Array>([])
     const admins = ref<Admin[]>([])
     const fetched = ref(false)
     const router = useRouter()
@@ -56,6 +73,47 @@ export const useUserStore = defineStore('userStore', () => {
             fetched.value = true
             console.error('❌ خطا در دریافت پروفایل:', error)
             // await router.push('/auth/login') // فعال‌سازی در صورت نیاز
+        }
+    }
+    const getMaxLinks = (profile) => {
+        if (!profile) return 0
+        return profile.subscriptionType === "premium" ? 5 : 1
+    }
+    const selectProfile = (profile) => {
+        const max = getMaxLinks(profile)
+        const links = profile.cardLinks ?? []
+
+        userLinks.value = links.slice(0, max)
+    }
+
+    const fetchProfiles = async () => {
+        try {
+            const {data} = await axios.get('/user/admin/profiles')
+            profiles.value = data.data
+            fetched.value = true
+        } catch (error) {
+            fetched.value = true
+            console.error('❌ خطا در دریافت پروفایل:', error)
+            // await router.push('/auth/login') // فعال‌سازی در صورت نیاز
+        }
+    }
+
+    const editProfiles = async (id: number, payload: Partial<Profile>) => {
+        try {
+            const {data} = await axios.put(`/user/admin/profile/${id}`, payload)
+
+        } catch (error) {
+            fetched.value = true
+            console.error('❌ خطا در ویرایش پروفایل:', error)
+        }
+    }
+    const toggleUserStatus = async (id: number,status:string) => {
+        try {
+            const {data} = await axios.patch(`/user/admin/profiles/toggleStatus/${id}`,{status:status})
+            const index = users.value.findIndex(u => Number(u.id) === Number(id))
+            if (index !== -1) users.value[index].status = data.data.status
+        } catch (error) {
+            console.error('❌ خطا در تغییر وضعیت پروفایل:', error)
         }
     }
     const fetchAdminUser = async () => {
@@ -122,6 +180,8 @@ export const useUserStore = defineStore('userStore', () => {
         user,
         admins,
         users,
+        userLinks,
+        profiles,
         fetched,
 
         totalUsers,
@@ -132,11 +192,15 @@ export const useUserStore = defineStore('userStore', () => {
         activeAdmins,
 
         fetchUser,
+        fetchProfiles,
+        editProfiles,
+        toggleUserStatus,
         fetchAllUsers,
         fetchAdminUser,
         createAdminUser,
         updateAdminUser,
         deleteAdminUser,
+        selectProfile,
         clearProfile
     }
 })
