@@ -116,7 +116,7 @@
                 <i class="ti ti-list ml-2 text-gray-500 text-sm"></i>
                 <span class="text-sm">همه وضعیت‌ها</span>
               </li>
-              <li @click="selectStatus('paid')" class="px-3 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white transition-colors">
+              <li @click="selectStatus('success')" class="px-3 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer flex items-center text-gray-900 dark:text-white transition-colors">
                 <i class="ti ti-check ml-2 text-green-500 text-sm"></i>
                 <span class="text-sm">موفق</span>
               </li>
@@ -300,10 +300,10 @@
               همه
             </button>
             <button
-              @click="filterStatus = 'paid'"
+              @click="filterStatus = 'success'"
               :class="[
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1',
-                filterStatus === 'paid' ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
+                filterStatus === 'success' ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
               ]"
             >
               <i class="ti ti-check text-xs"></i>
@@ -434,7 +434,7 @@
             </div>
             <div>
               <h3 class="font-bold text-gray-900 dark:text-white text-lg">{{ transaction.transactionId }}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ transaction.userName }}</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ transaction.username }}</p>
             </div>
           </div>
           <span
@@ -503,7 +503,7 @@
               <i class="ti ti-eye text-lg"></i>
             </button>
             <button
-              v-if="transaction.status === 'paid'"
+              v-if="transaction.status === 'success'"
               @click="refundTransaction(transaction)"
               class="p-2 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all duration-300"
               title="بازگشت مبلغ"
@@ -575,7 +575,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام کاربر</label>
-              <p class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedTransaction.userName }}</p>
+              <p class="text-sm text-gray-900 dark:text-white font-medium">{{ selectedTransaction.username }}</p>
             </div>
 
             <div>
@@ -638,7 +638,7 @@
             بستن
           </button>
           <button
-            v-if="selectedTransaction && selectedTransaction.status === 'paid'"
+            v-if="selectedTransaction && selectedTransaction.status === 'success'"
             @click="refundTransaction(selectedTransaction); showDetailModal = false"
             class="px-5 py-2.5 bg-orange-600/90 hover:bg-orange-700/90 text-white rounded-xl transition-all backdrop-blur-sm shadow-lg flex items-center gap-2"
           >
@@ -708,7 +708,7 @@ const { showSuccess, showDeleteConfirm } = useAlert()
 interface Transaction {
   id: number
   transactionId: string
-  userName: string
+  username: string
   userEmail: string
   planTitle: string
   planDuration: string
@@ -717,7 +717,7 @@ interface Transaction {
   discountCode?: string
   discountAmount?: number
   paymentMethod: 'zarinpal' | 'mellat' | 'pasargad'
-  status: 'paid' | 'failed' | 'pending' | 'refunded'
+  status: 'success' | 'failed' | 'pending' | 'refunded'
   createdAt: string
 }
 
@@ -778,7 +778,7 @@ const filteredTransactions = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(t =>
       t.transactionId.toLowerCase().includes(query) ||
-      t.userName.toLowerCase().includes(query) ||
+      t.username.toLowerCase().includes(query) ||
       t.userEmail.toLowerCase().includes(query)
     )
   }
@@ -967,7 +967,7 @@ const refundTransaction = async (transaction: Transaction) => {
   try {
     const confirmed = await showDeleteConfirm(
       'بازگشت تراکنش',
-      `آیا از بازگشت مبلغ ${formatCurrency(transaction.amount)} به کاربر ${transaction.userName} اطمینان دارید؟`,
+      `آیا از بازگشت مبلغ ${formatCurrency(transaction.amount)} به کاربر ${transaction.username} اطمینان دارید؟`,
       transaction.transactionId
     )
 
@@ -985,7 +985,7 @@ const exportToExcel = () => {
     // Create export data
     const exportData = filteredTransactions.value.map(transaction => ({
       'کد تراکنش': transaction.transactionId,
-      'نام کاربر': transaction.userName,
+      'نام کاربر': transaction.username,
       'ایمیل': transaction.userEmail,
       'طرح اشتراک': transaction.planTitle,
       'مدت اشتراک': transaction.planDuration,

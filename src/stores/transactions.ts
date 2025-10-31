@@ -11,7 +11,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     interface Transaction {
         id: number
         transactionId: string
-        userName: string
+        username: string
         userEmail: string
         planTitle: string
         planDuration: string
@@ -20,7 +20,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         discountCode?: string
         discountAmount?: number
         paymentMethod: 'zarinpal' | 'mellat' | 'pasargad'
-        status: 'paid' | 'failed' | 'pending' | 'refunded'
+        status: 'success' | 'failed' | 'pending' | 'refunded'
         createdAt: string
     }
 
@@ -85,7 +85,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
     // ✅ computed و getter ها
     const totalTransactions = computed(() => transactions.value.length)
-    const successTransactions = computed(() => transactions.value.filter(t => t.status === 'paid'))
+    const successTransactions = computed(() => transactions.value.filter(t => t.status === 'success'))
     const failedTransactions = computed(() => transactions.value.filter(t => t.status === 'failed'))
     const pendingTransactions = computed(() => transactions.value.filter(t => t.status === 'pending'))
     const refundedTransactions = computed(() => transactions.value.filter(t => t.status === 'refunded'))

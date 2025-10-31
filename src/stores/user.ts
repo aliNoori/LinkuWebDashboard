@@ -5,7 +5,7 @@ import {useRouter} from 'vue-router'
 export interface User {
     id: number
     name: string
-    userName: string
+    username: string
     isPro: boolean
     email: string
     phone: string
@@ -15,25 +15,28 @@ export interface User {
     referralBy: number
     location: string
     avatar: string
-    status: string
+    profileImage?: string
+    subscriptionType: 'free' | 'premium'
+    status: 'active' | 'inactive' | 'suspended'
     removeBranding: boolean
-    createdAt: typeof Date
-    updatedAt: typeof Date
+    createdAt: string
+    updatedAt: string
 }
 export interface Profile {
     id: number
     name: string
-    userName: string
+    username: string
     phone: string
     email: string
-    subscriptionType:string
-    status: string
+    profileImage?: string
+    subscriptionType: 'free' | 'premium'
+    status: 'active' | 'inactive' | 'suspended'
     profileUrl:string
     linkCount:number
     subscriptionMonths:number
-    subscriptionEndDate:typeof Date
-    createdAt: typeof Date
-    lastLogin: typeof Date
+    subscriptionEndDate:string
+    createdAt: string
+    lastLogin: string
 }
 
 export interface Admin {
@@ -54,7 +57,7 @@ export const useUserStore = defineStore('userStore', () => {
     const user = ref<User>({} as User)
     const users = ref<User[]>([])
     const profiles = ref<Profile[]>([])
-    const userLinks=ref<Array>([])
+    const userLinks=ref([])
     const admins = ref<Admin[]>([])
     const fetched = ref(false)
     const router = useRouter()
@@ -75,11 +78,11 @@ export const useUserStore = defineStore('userStore', () => {
             // await router.push('/auth/login') // فعال‌سازی در صورت نیاز
         }
     }
-    const getMaxLinks = (profile) => {
+    const getMaxLinks = (profile:any) => {
         if (!profile) return 0
         return profile.subscriptionType === "premium" ? 5 : 1
     }
-    const selectProfile = (profile) => {
+    const selectProfile = (profile:any) => {
         const max = getMaxLinks(profile)
         const links = profile.cardLinks ?? []
 

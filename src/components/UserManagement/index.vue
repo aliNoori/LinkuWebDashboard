@@ -685,10 +685,10 @@ const filteredUsers = computed(() => {
   // Sort
   switch (sortBy.value) {
     case 'created_desc':
-      filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      filtered.sort((a, b) => new Date(String(b.createdAt)).getTime() - new Date(String(a.createdAt)).getTime())
       break
     case 'created_asc':
-      filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      filtered.sort((a, b) => new Date(String(a.createdAt)).getTime() - new Date(String(b.createdAt)).getTime())
       break
     case 'name_asc':
       filtered.sort((a, b) => a.name.localeCompare(b.name))
@@ -820,7 +820,7 @@ const deleteUser = async (user: User) => {
       const index = users.value.findIndex(u => u.id === user.id)
       if (index > -1) {
         users.value.splice(index, 1)
-        showSuccess('حذف موفق', 'پروفایل با موفقیت حذف شد')
+        await showSuccess('حذف موفق', 'پروفایل با موفقیت حذف شد')
       }
     }
   } catch (error) {
