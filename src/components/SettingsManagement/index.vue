@@ -613,7 +613,7 @@
         <i class="ti ti-refresh ml-2"></i>
         بازنشانی
       </button>
-      <button disabled
+      <button
           @click="saveSettings"
           :disabled="isSaving"
           class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
@@ -733,6 +733,8 @@ const axios = appContext.config.globalProperties.$axios as AxiosInstance
 
 // Methods
 const saveSettings = async () => {
+  //TODO:add return temperate
+  return
   try {
     isSaving.value = true
     // API call
