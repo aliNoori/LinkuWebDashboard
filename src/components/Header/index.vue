@@ -83,7 +83,7 @@
                     <p :class="['text-gray-500 dark:text-gray-500 mb-1', isMobileDetected ? 'text-sm' : 'text-xs']">{{ notification.description }}</p>
                     <div class="flex items-center justify-between">
                       <span :class="typeClasses(notification.type)">{{ getTypeName(notification.type) }}</span>
-                      <span :class="['text-gray-500 dark:text-gray-500', isMobileDetected ? 'text-sm' : 'text-xs']">{{ notification.time }}</span>
+                      <span :class="['text-gray-500 dark:text-gray-500', isMobileDetected ? 'text-sm' : 'text-xs']">{{ timeAgo(notification.time) }}</span>
                     </div>
                   </div>
                   <div :class="['rounded-full mt-1.5 flex-shrink-0', isMobileDetected ? 'w-4 h-4' : 'w-3 h-3', notification.isRead ? 'bg-gray-100 dark:bg-slate-700' : 'bg-blue-600']"></div>
@@ -171,6 +171,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useDarkMode } from '@/composables/useDarkMode'
 import {useAuthStore} from "@/stores/auth.ts";
 import {useUserStore} from "@/stores/user.ts";
+import {useNotificationStore} from "@/stores/notification.ts";
 
 
 interface Notification {
@@ -228,7 +229,7 @@ const isProfileOpen = ref(false)
 const isNotificationsOpen = ref(false)
 const activeTab = ref('all')
 const userStore=useUserStore()
-console.log('userStore',userStore.user)
+const notifyStore=useNotificationStore()
 // Tabs
 const tabs = ref([
   { id: 'all', name: 'همه', icon: 'ti ti-bell', count: 0 },
@@ -236,7 +237,7 @@ const tabs = ref([
 ])
 
 // Sample notifications
-const notifications = ref<Notification[]>([
+/*const notifications = ref<Notification[]>([
   {
     id: 1, type: 'profile', title: 'پروفایل جدید ایجاد شد', description: 'کاربر محمد احمدی با موفقیت ثبت‌نام کرد',
     time: '10 دقیقه پیش', isRead: false, date: '1403/04/22',
@@ -257,8 +258,20 @@ const notifications = ref<Notification[]>([
     time: '3 ساعت پیش', isRead: false, date: '1403/04/22',
     details: 'مدارک ارسالی بررسی و تایید شد. حساب کاربری فعال است.'
   }
-])
+])*/
+const notifications=computed(()=>notifyStore.notifications)
+const timeAgo = (dateString) => {
 
+  const date = new Date(dateString) // تبدیل رشته به Date
+
+  let diff = (Date.now() - date.getTime()) / 1000
+
+  diff -= 12600
+  if (diff < 60) return 'لحظاتی پیش'
+  if (diff < 3600) return `${Math.floor(diff / 60)} دقیقه پیش`
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ساعت پیش`
+  return `${Math.floor(diff / 86400)} روز پیش`
+}
 // Computed
 const filteredNotifications = computed(() => {
   return activeTab.value === 'all'
@@ -324,11 +337,14 @@ const markAllAsRead = () => {
   updateTabCounts()
 }
 
-const openNotification = (notification: Notification) => {
+const openNotification =async (notification: Notification) => {
+
+  await notifyStore.markAsRead(notification.id)
   notification.isRead = true
+
   updateTabCounts()
   isNotificationsOpen.value = false
-  router.push(`/notifications/${notification.id}`)
+  //router.push(`/notifications/${notification.id}`)
 }
 
 const updateTabCounts = () => {
@@ -356,8 +372,9 @@ const handleClickOutside = (event: Event) => {
   }
 }
 
-onMounted(() => {
-  userStore.fetchUser()
+onMounted(async () => {
+  await userStore.fetchUser()
+  await notifyStore.fetchNotifications()
   initDarkMode()
   checkMobile()
   updateTabCounts()

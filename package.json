@@ -16,6 +16,7 @@
     "@tinymce/tinymce-vue": "^6.2.0",
     "@types/qrcode": "^1.5.5",
     "axios": "^1.12.2",
+    "dayjs": "^1.11.19",
     "jalaali-js": "^1.2.8",
     "pinia": "^3.0.3",
     "qrcode": "^1.5.4",

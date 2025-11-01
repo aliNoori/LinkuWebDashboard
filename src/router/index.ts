@@ -17,6 +17,7 @@ import PagesView from '../views/pages/PagesView.vue'
 import CreatePageView from '../views/pages/CreatePageView.vue'
 import CreateSubscriptionView from '../views/subscriptions/CreateSubscriptionView.vue'
 import {useAuthStore} from "@/stores/auth.ts"
+import NotificationView from "@/views/notifications/NotificationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,12 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: { layout: 'auth' } // فقط برای login
+    },
+    {
+      path: '/notifications',
+      name: 'notifications',
+      component: NotificationView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/cards',
