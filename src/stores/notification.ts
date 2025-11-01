@@ -2,45 +2,45 @@
 import { defineStore } from 'pinia'
 import {ref, computed, getCurrentInstance} from 'vue'
 import type {AxiosInstance} from "axios";
-import type {NotificationApiResponse} from "~/types/notification";
-import type { Notification } from '~/types/notification'
+import type {NotificationApiResponse} from "@/types/notification";
+import type { Notification } from '@/types/notification'
 
 const getActionsByType = (type:string, rawType:string) => {
     if (type === 'subscription' && rawType === 'renewal_reminder') {
         return [
-            { label: 'تمدید اشتراک', type: 'primary', action: () => navigateTo('/dashboard/upgrade') },
+            { label: 'تمدید اشتراک', type: 'primary', action:'' },
             { label: 'بعداً یادآوری کن', type: 'secondary', action: () => {} }
         ]
     }
 
     if (type === 'subscription' && rawType === 'subscription_expired') {
         return [
-            { label: 'تمدید فوری', type: 'primary', action: () => navigateTo('/dashboard/upgrade') }
+            { label: 'تمدید فوری', type: 'primary', action: '' }
         ]
     }
 
     if (type === 'subscription' && rawType === 'welcome') {
         return [
-            { label: 'ایجاد پروفایل', type: 'primary', action: () => navigateTo('/dashboard/add-card') }
+            { label: 'ایجاد پروفایل', type: 'primary', action: '' }
         ]
     }
 
     if (type === 'payment' && rawType === 'payment_warning'||rawType === 'purchase_success') {
         return [
-            { label: 'تمدید فوری', type: 'primary', action: () => navigateTo('/dashboard/upgrade') }
+            { label: 'تمدید فوری', type: 'primary', action: '' }
         ]
     }
 
     if (type === 'security' && rawType === 'new_login') {
         return [
             { label: 'این من بودم', type: 'secondary', action: () => {} },
-            { label: 'امنیت حساب', type: 'primary', action: () => navigateTo('/dashboard/settings') }
+            { label: 'امنیت حساب', type: 'primary', action: '' }
         ]
     }
 
     if (type === 'general' && rawType === 'login') {
         return [
-            { label: 'مشاهده جزئیات', type: 'secondary', action: () => navigateTo('/dashboard/settings') }
+            { label: 'مشاهده جزئیات', type: 'secondary', action: '' }
         ]
     }
 
@@ -87,15 +87,15 @@ export const useNotificationStore = defineStore('notifications', () => {
 
     const markAsRead = async (id:any) => {
         const notif = notifications.value.find((n: Notification) => n.id === id)
-        if (notif && !notif.read) {
+        if (notif && !notif.isRead) {
             // optimistic update
-            notif.read = true
+            notif.isRead = true
 
             try {
                 await axios.post(`user/notifications/${id}/read`)
             } catch (error) {
                 // اگه خطا داد برمی‌گردونیم به حالت قبلی
-                notif.read = false
+                notif.isRead = false
                 console.error('خطا در خواندن نوتیفیکیشن:', error)
             }
         }
@@ -103,7 +103,7 @@ export const useNotificationStore = defineStore('notifications', () => {
 
 
     const markAllAsRead = async () => {
-        notifications.value.forEach(n => (n.read = true))
+        notifications.value.forEach((n:any) => (n.isRead = true))
         await axios.post(`user/notifications/readAll`)
     }
 

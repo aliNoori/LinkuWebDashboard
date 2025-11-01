@@ -260,7 +260,7 @@ const tabs = ref([
   }
 ])*/
 const notifications=computed(()=>notifyStore.notifications)
-const timeAgo = (dateString) => {
+const timeAgo = (dateString:string) => {
 
   const date = new Date(dateString) // تبدیل رشته به Date
 
@@ -276,11 +276,11 @@ const timeAgo = (dateString) => {
 const filteredNotifications = computed(() => {
   return activeTab.value === 'all'
     ? notifications.value
-    : notifications.value.filter(n => n.type === activeTab.value)
+    : notifications.value.filter((n:any) => n.type === activeTab.value)
 })
 
 const unreadCount = computed(() => {
-  return notifications.value.filter(n => !n.isRead).length
+  return notifications.value.filter((n:any) => !n.isRead).length
 })
 
 // Classes
@@ -333,7 +333,7 @@ const toggleNotifications = () => {
 }
 
 const markAllAsRead = () => {
-  notifications.value.forEach(n => n.isRead = true)
+  notifications.value.forEach((n:any) => n.isRead = true)
   updateTabCounts()
 }
 
@@ -348,8 +348,8 @@ const openNotification =async (notification: Notification) => {
 }
 
 const updateTabCounts = () => {
-  const allCount = notifications.value.filter(n => !n.isRead).length
-  const violationCount = notifications.value.filter(n => !n.isRead && n.type === 'violation').length
+  const allCount = notifications.value.filter((n:any) => !n.isRead).length
+  const violationCount = notifications.value.filter((n:any) => !n.isRead && n.type === 'violation').length
 
   tabs.value[0].count = allCount
   tabs.value[1].count = violationCount
