@@ -7,23 +7,21 @@
             v-for="filter in filters"
             :key="filter.key"
             @click="activeFilter = filter.key"
-            :class="[
-            'dark:bg-slate-700 px-4 py-2 rounded-full text-sm text-white font-medium transition-all hover:bg-gray-500',
-            activeFilter === filter.key
-              ? 'dark:bg-gray-800 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          ]"
+            :class="['px-4 py-2 rounded-full text-sm font-medium transition-all',
+            activeFilter === filter.key? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600'
+            ]"
         >
           {{ filter.label }}
         </button>
       </div>
 
       <!-- آمار نوتیفیکیشن‌ها -->
-      <div class="flex items-center justify-between text-sm text-white">
+      <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
         <span>{{ filteredNotifications.length }} نوتیفیکیشن</span>
         <button
             @click="markAllAsRead"
-            class="text-white hover:text-gray-300 transition-colors"
+            class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
         >
           علامت‌گذاری همه به عنوان خوانده شده
         </button>
@@ -35,10 +33,9 @@
       <div
           v-for="notification in filteredNotifications"
           :key="notification.id"
-          :class="[
-          'dark:bg-slate-800 rounded-xl p-4 transition-all cursor-pointer hover:bg-gray-600',
-          !notification.isRead ? 'text-gray-500 dark:text-gray-500' : ''
-        ]"
+          :class="['bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 group',
+          !notification.isRead ? 'text-gray-600 dark:text-gray-400' : 'text-gray-800 dark:text-gray-100'
+          ]"
           @click="handleMarkAsRead(notification.id)"
       >
         <div class="flex items-start gap-4">
@@ -55,7 +52,7 @@
           <!-- محتوای نوتیفیکیشن -->
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between gap-2 mb-2">
-              <h3 class="font-semibold text-white line-clamp-1">
+              <h3 class="font-semibold line-clamp-1 text-gray-800 dark:text-white">
                 {{ notification.title }}
               </h3>
               <div class="flex items-center gap-2 shrink-0">
@@ -67,7 +64,7 @@
               </div>
             </div>
 
-            <p class="text-sm text-white mb-3 line-clamp-2">
+            <p class="text-sm mb-3 line-clamp-2 text-gray-700 dark:text-gray-300">
               {{ notification.description }}
             </p>
 
@@ -77,13 +74,10 @@
                   v-for="action in notification.actions"
                   :key="action.label"
                   @click.stop="handleAction(action)"
-                  :class="[
-                  'px-3 py-1 rounded-lg text-xs font-medium transition-colors',
-                  action.type === 'primary'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                ]"
-              >
+                  :class="['px-3 py-1 rounded-lg text-xs font-medium transition-colors',
+                  action.type === 'primary'? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600'
+                  ]"              >
                 {{ action.label }}
               </button>
             </div>
@@ -96,11 +90,13 @@
           v-if="filteredNotifications.length === 0"
           class="dark:bg-gray-800 rounded-xl p-12 text-center"
       >
-        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="ti ti-bell-off text-2xl text-gray-400"></i>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-12 text-center">
+          <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="ti ti-bell-off text-2xl text-gray-400 dark:text-gray-500"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-2">نوتیفیکیشنی وجود ندارد</h3>
+          <p class="text-gray-600 dark:text-gray-300">در این دسته‌بندی نوتیفیکیشنی برای نمایش وجود ندارد.</p>
         </div>
-        <h3 class="text-lg font-semibold text-white mb-2">نوتیفیکیشنی وجود ندارد</h3>
-        <p class="text-white">در این دسته‌بندی نوتیفیکیشنی برای نمایش وجود ندارد.</p>
       </div>
     </div>
   </div>
@@ -109,19 +105,20 @@
 <script setup>
 import {ref, computed, onMounted} from 'vue'
 import {useNotificationStore} from "@/stores/notification.js";
-const notifyStore=useNotificationStore()
+
+const notifyStore = useNotificationStore()
 const activeFilter = ref('all')
 
 const filters = [
-  { key: 'all', label: 'همه' },
-  { key: 'profile', label: 'پروفایل' },
-  { key: 'violation', label: 'تخلفات' },
-  { key: 'system', label: 'سیستمی' }
+  {key: 'all', label: 'همه'},
+  {key: 'profile', label: 'پروفایل'},
+  {key: 'violation', label: 'تخلفات'},
+  {key: 'system', label: 'سیستمی'}
 ]
 
-const notifications=computed(()=>notifyStore.notifications)
+const notifications = computed(() => notifyStore.notifications)
 
-onMounted(async ()=>{
+onMounted(async () => {
   await notifyStore.fetchNotifications()
 })
 

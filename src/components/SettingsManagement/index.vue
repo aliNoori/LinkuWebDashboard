@@ -26,9 +26,9 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               واحد پول اصلی
             </label>
-            <button
-              @click="showPrimaryCurrencyDropdown = !showPrimaryCurrencyDropdown"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <button disabled
+                @click="showPrimaryCurrencyDropdown = !showPrimaryCurrencyDropdown"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-left flex items-center justify-between"
             >
@@ -39,20 +39,25 @@
               <i class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-200"
                  :class="{ 'rotate-180': showPrimaryCurrencyDropdown }"></i>
             </button>
-            <ul v-if="showPrimaryCurrencyDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
-              <li @click="selectPrimaryCurrency('IRR')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+            <ul v-if="showPrimaryCurrencyDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
+              <li @click="selectPrimaryCurrency('IRR')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-currency-rial text-green-600 dark:text-white ml-3"></i>
                 ریال ایران (IRR)
               </li>
-              <li @click="selectPrimaryCurrency('IRT')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectPrimaryCurrency('IRT')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-currency-toman text-green-600 dark:text-white ml-3"></i>
                 تومان ایران (IRT)
               </li>
-              <li @click="selectPrimaryCurrency('USD')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectPrimaryCurrency('USD')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-currency-dollar text-green-600 dark:text-white ml-3"></i>
                 دلار آمریکا (USD)
               </li>
-              <li @click="selectPrimaryCurrency('EUR')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectPrimaryCurrency('EUR')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-currency-euro text-green-600 dark:text-white ml-3"></i>
                 یورو (EUR)
               </li>
@@ -64,9 +69,9 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               موقعیت نماد ارز
             </label>
-            <button
-              @click="showCurrencyPositionDropdown = !showCurrencyPositionDropdown"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <button disabled
+                @click="showCurrencyPositionDropdown = !showCurrencyPositionDropdown"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-left flex items-center justify-between"
             >
@@ -77,12 +82,15 @@
               <i class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-200"
                  :class="{ 'rotate-180': showCurrencyPositionDropdown }"></i>
             </button>
-            <ul v-if="showCurrencyPositionDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
-              <li @click="selectCurrencyPosition('before')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+            <ul v-if="showCurrencyPositionDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
+              <li @click="selectCurrencyPosition('before')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-arrow-left text-blue-600 dark:text-white ml-3"></i>
                 قبل از قیمت ($ 100)
               </li>
-              <li @click="selectCurrencyPosition('after')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectCurrencyPosition('after')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-arrow-right text-blue-600 dark:text-white ml-3"></i>
                 بعد از قیمت (100 تومان)
               </li>
@@ -94,15 +102,15 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               تعداد رقم اعشار
             </label>
-            <input
-              v-model.number="settings.decimalPlaces"
-              type="number"
-              min="0"
-              max="4"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <input disabled
+                v-model.number="settings.decimalPlaces"
+                type="number"
+                min="0"
+                max="4"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-              placeholder="2"
+                placeholder="2"
             />
           </div>
         </div>
@@ -122,9 +130,9 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               درگاه پرداخت فعال
             </label>
-            <button
-              @click="showActiveGatewayDropdown = !showActiveGatewayDropdown"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <button disabled
+                @click="showActiveGatewayDropdown = !showActiveGatewayDropdown"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-left flex items-center justify-between"
             >
@@ -135,24 +143,30 @@
               <i class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-200"
                  :class="{ 'rotate-180': showActiveGatewayDropdown }"></i>
             </button>
-            <ul v-if="showActiveGatewayDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
-              <li @click="selectActiveGateway('zarinpal')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+            <ul v-if="showActiveGatewayDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
+              <li @click="selectActiveGateway('zarinpal')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-brand-mastercard text-yellow-600 dark:text-white ml-3"></i>
                 زرین‌پال
               </li>
-              <li @click="selectActiveGateway('mellat')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectActiveGateway('mellat')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-building-bank text-blue-600 dark:text-white ml-3"></i>
                 بانک ملت
               </li>
-              <li @click="selectActiveGateway('pasargad')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectActiveGateway('pasargad')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-building-bank text-green-600 dark:text-white ml-3"></i>
                 پاسارگاد
               </li>
-              <li @click="selectActiveGateway('saman')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectActiveGateway('saman')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-building-bank text-purple-600 dark:text-white ml-3"></i>
                 سامان
               </li>
-              <li @click="selectActiveGateway('parsian')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectActiveGateway('parsian')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-building-bank text-red-600 dark:text-white ml-3"></i>
                 پارسیان
               </li>
@@ -165,18 +179,18 @@
               کلید API درگاه
             </label>
             <div class="relative">
-              <input
-                v-model="settings.gatewayApiKey"
-                :type="showGatewayApiKey ? 'text' : 'password'"
-                class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
+              <input disabled
+                  v-model="settings.gatewayApiKey"
+                  :type="showGatewayApiKey ? 'text' : 'password'"
+                  class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                placeholder="کلید API درگاه پرداخت"
+                  placeholder="کلید API درگاه پرداخت"
               />
-              <button
-                @click="showGatewayApiKey = !showGatewayApiKey"
-                type="button"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              <button disabled
+                  @click="showGatewayApiKey = !showGatewayApiKey"
+                  type="button"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 <i :class="showGatewayApiKey ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
@@ -188,13 +202,13 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               شناسه پذیرنده
             </label>
-            <input
-              v-model="settings.merchantId"
-              type="text"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <input disabled
+                v-model="settings.merchantId"
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-              placeholder="شناسه پذیرنده درگاه"
+                placeholder="شناسه پذیرنده درگاه"
             />
           </div>
 
@@ -209,10 +223,10 @@
               </p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input
-                v-model="settings.paymentTestMode"
-                type="checkbox"
-                class="sr-only peer"
+              <input disabled
+                  v-model="settings.paymentTestMode"
+                  type="checkbox"
+                  class="sr-only peer"
               />
               <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4
                          peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer
@@ -240,9 +254,9 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               ارائه‌دهنده پیامک
             </label>
-            <button
-              @click="showSmsProviderDropdown = !showSmsProviderDropdown"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <button disabled
+                @click="showSmsProviderDropdown = !showSmsProviderDropdown"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-left flex items-center justify-between"
             >
@@ -253,20 +267,31 @@
               <i class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-200"
                  :class="{ 'rotate-180': showSmsProviderDropdown }"></i>
             </button>
-                        <ul v-if="showSmsProviderDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
-              <li @click="selectSmsProvider('kavenegar')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+            <ul v-if="showSmsProviderDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
+              <li @click="selectSmsProvider('kavenegar')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-message text-blue-600 dark:text-white ml-3"></i>
                 کاوه‌نگار
               </li>
-              <li @click="selectSmsProvider('ippanel')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectSmsProvider('ippanel')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-message text-green-600 dark:text-white ml-3"></i>
                 آی‌پی پنل
               </li>
-              <li @click="selectSmsProvider('melipayamak')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectSmsProvider('melipayamak')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-message text-purple-600 dark:text-white ml-3"></i>
                 ملی پیامک
               </li>
-              <li @click="selectSmsProvider('ghasedak')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectSmsProvider('modirpayamak')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+                <i class="ti ti-message text-purple-600 dark:text-white ml-3"></i>
+                مدیر پیامک
+              </li>
+
+              <li @click="selectSmsProvider('ghasedak')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-message text-orange-600 dark:text-white ml-3"></i>
                 قاصدک
               </li>
@@ -279,18 +304,18 @@
               کلید API پیامک
             </label>
             <div class="relative">
-              <input
-                v-model="settings.smsApiKey"
-                :type="showSmsApiKey ? 'text' : 'password'"
-                class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
+              <input disabled
+                  v-model="settings.smsApiKey"
+                  :type="showSmsApiKey ? 'text' : 'password'"
+                  class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                placeholder="کلید API سامانه پیامک"
+                  placeholder="کلید API سامانه پیامک"
               />
-              <button
-                @click="showSmsApiKey = !showSmsApiKey"
-                type="button"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              <button disabled
+                  @click="showSmsApiKey = !showSmsApiKey"
+                  type="button"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 <i :class="showSmsApiKey ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
@@ -302,13 +327,54 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               شماره ارسال‌کننده
             </label>
-            <input
-              v-model="settings.smsSender"
-              type="text"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <input disabled
+                v-model="settings.smsSender"
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-              placeholder="10004346"
+                placeholder="10004346"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              الگوی ارسال پیامک
+            </label>
+            <input disabled
+                v-model="settings.smsPatternCode"
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                     bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                placeholder="pattern"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              نام کاربری
+            </label>
+            <input disabled
+                v-model="settings.smsProviderUserName"
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                     bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                placeholder="username"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              رمز عبور
+            </label>
+            <input disabled
+                v-model="settings.smsProviderPassword"
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                     bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                placeholder="password"
             />
           </div>
 
@@ -317,13 +383,13 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               قالب پیامک خوشامدگویی
             </label>
-            <textarea
-              v-model="settings.welcomeSmsTemplate"
-              rows="3"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <textarea disabled
+                v-model="settings.welcomeSmsTemplate"
+                rows="3"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-              placeholder="خوش آمدید! برای تکمیل ثبت نام کد {code} را وارد کنید."
+                placeholder="خوش آمدید! برای تکمیل ثبت نام کد {code} را وارد کنید."
             ></textarea>
           </div>
         </div>
@@ -343,15 +409,15 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               نام کاربری
             </label>
-            <input
-              v-model="settings.newUsername"
-              type="text"
-              pattern="[a-zA-Z0-9_.-]*"
-              @input="restrictToEnglish($event, 'newUsername')"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <input disabled
+                v-model="settings.newUsername"
+                type="text"
+                pattern="[a-zA-Z0-9_.-]*"
+                @input="restrictToEnglish($event, 'newUsername')"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-              placeholder="نام کاربری خود را وارد کنید"
+                placeholder="نام کاربری خود را وارد کنید"
             />
           </div>
 
@@ -361,19 +427,19 @@
               رمز عبور فعلی
             </label>
             <div class="relative">
-              <input
-                v-model="settings.currentPassword"
-                :type="showCurrentPassword ? 'text' : 'password'"
-                @input="restrictToEnglish($event, 'currentPassword')"
-                class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
+              <input disabled
+                  v-model="settings.currentPassword"
+                  :type="showCurrentPassword ? 'text' : 'password'"
+                  @input="restrictToEnglish($event, 'currentPassword')"
+                  class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                placeholder="رمز عبور فعلی"
+                  placeholder="رمز عبور فعلی"
               />
-              <button
-                @click="showCurrentPassword = !showCurrentPassword"
-                type="button"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              <button disabled
+                  @click="showCurrentPassword = !showCurrentPassword"
+                  type="button"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 <i :class="showCurrentPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
@@ -385,19 +451,19 @@
               رمز عبور جدید
             </label>
             <div class="relative">
-              <input
-                v-model="settings.newPassword"
-                :type="showNewPassword ? 'text' : 'password'"
-                @input="restrictToEnglish($event, 'newPassword')"
-                class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
+              <input disabled
+                  v-model="settings.newPassword"
+                  :type="showNewPassword ? 'text' : 'password'"
+                  @input="restrictToEnglish($event, 'newPassword')"
+                  class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                placeholder="رمز عبور جدید"
+                  placeholder="رمز عبور جدید"
               />
-              <button
-                @click="showNewPassword = !showNewPassword"
-                type="button"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              <button disabled
+                  @click="showNewPassword = !showNewPassword"
+                  type="button"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 <i :class="showNewPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
@@ -409,19 +475,19 @@
               تکرار رمز عبور جدید
             </label>
             <div class="relative">
-              <input
-                v-model="settings.confirmPassword"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                @input="restrictToEnglish($event, 'confirmPassword')"
-                class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
+              <input disabled
+                  v-model="settings.confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  @input="restrictToEnglish($event, 'confirmPassword')"
+                  class="w-full px-4 py-3 pl-12 border border-slate-300 dark:border-slate-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                placeholder="تکرار رمز عبور جدید"
+                  placeholder="تکرار رمز عبور جدید"
               />
-              <button
-                @click="showConfirmPassword = !showConfirmPassword"
-                type="button"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              <button disabled
+                  @click="showConfirmPassword = !showConfirmPassword"
+                  type="button"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 <i :class="showConfirmPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
@@ -450,10 +516,10 @@
               </p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input
-                v-model="settings.emailNotifications"
-                type="checkbox"
-                class="sr-only peer"
+              <input disabled
+                  v-model="settings.emailNotifications"
+                  type="checkbox"
+                  class="sr-only peer"
               />
               <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4
                          peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer
@@ -476,10 +542,10 @@
               </p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input
-                v-model="settings.smsNotifications"
-                type="checkbox"
-                class="sr-only peer"
+              <input disabled
+                  v-model="settings.smsNotifications"
+                  type="checkbox"
+                  class="sr-only peer"
               />
               <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4
                          peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer
@@ -496,9 +562,9 @@
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               فرکانس اعلان‌ها
             </label>
-            <button
-              @click="showNotificationFrequencyDropdown = !showNotificationFrequencyDropdown"
-              class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
+            <button disabled
+                @click="showNotificationFrequencyDropdown = !showNotificationFrequencyDropdown"
+                class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                      bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-left flex items-center justify-between"
             >
@@ -509,20 +575,25 @@
               <i class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-200"
                  :class="{ 'rotate-180': showNotificationFrequencyDropdown }"></i>
             </button>
-                        <ul v-if="showNotificationFrequencyDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
-              <li @click="selectNotificationFrequency('instant')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+            <ul v-if="showNotificationFrequencyDropdown"
+                class="absolute top-full left-0 right-0 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg mt-1 shadow-lg z-10">
+              <li @click="selectNotificationFrequency('instant')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-bolt text-yellow-600 dark:text-white ml-3"></i>
                 فوری
               </li>
-              <li @click="selectNotificationFrequency('hourly')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectNotificationFrequency('hourly')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-clock text-blue-600 dark:text-white ml-3"></i>
                 ساعتی
               </li>
-              <li @click="selectNotificationFrequency('daily')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectNotificationFrequency('daily')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-calendar text-green-600 dark:text-white ml-3"></i>
                 روزانه
               </li>
-              <li @click="selectNotificationFrequency('weekly')" class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
+              <li @click="selectNotificationFrequency('weekly')"
+                  class="px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center text-slate-900 dark:text-white">
                 <i class="ti ti-calendar-week text-purple-600 dark:text-white ml-3"></i>
                 هفتگی
               </li>
@@ -534,18 +605,18 @@
 
     <!-- Action Buttons -->
     <div class="mt-8 flex justify-end gap-4">
-      <button
-        @click="resetSettings"
-        class="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg
+      <button disabled
+          @click="resetSettings"
+          class="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg
                transition-colors flex items-center"
       >
         <i class="ti ti-refresh ml-2"></i>
         بازنشانی
       </button>
-      <button
-        @click="saveSettings"
-        :disabled="isSaving"
-        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+      <button disabled
+          @click="saveSettings"
+          :disabled="isSaving"
+          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
                transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
       >
         <i class="ti ti-device-floppy ml-2" :class="{ 'animate-pulse': isSaving }"></i>
@@ -564,7 +635,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import {ref, reactive, computed, getCurrentInstance, onMounted} from 'vue'
+import type {AxiosInstance} from "axios";
 
 defineOptions({
   name: 'SettingsManagement'
@@ -589,8 +661,11 @@ interface Settings {
   paymentTestMode: boolean
   // SMS Settings
   smsProvider: string
+  smsPatternCode: string
   smsApiKey: string
   smsSender: string
+  smsProviderUserName: string
+  smsProviderPassword: string
   welcomeSmsTemplate: string
 }
 
@@ -632,32 +707,36 @@ const settings = reactive<Settings>({
   merchantId: '',
   paymentTestMode: false,
   // SMS Settings
-  smsProvider: 'kavenegar',
+  smsProvider: 'modirpayamak',
+  smsPatternCode: '',
   smsApiKey: '',
   smsSender: '',
+  smsProviderUserName: '',
+  smsProviderPassword: '',
   welcomeSmsTemplate: 'خوش آمدید! برای تکمیل ثبت نام کد {code} را وارد کنید.'
 })
 
 // Computed
 const messageClass = computed(() => {
   return messageType.value === 'success'
-    ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-    : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+      ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+      : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
 })
 
 const messageIcon = computed(() => {
   return messageType.value === 'success'
-    ? 'ti ti-check-circle text-green-600'
-    : 'ti ti-alert-circle text-red-600'
+      ? 'ti ti-check-circle text-green-600'
+      : 'ti ti-alert-circle text-red-600'
 })
+const {appContext} = getCurrentInstance()!
+const axios = appContext.config.globalProperties.$axios as AxiosInstance
 
 // Methods
 const saveSettings = async () => {
   try {
     isSaving.value = true
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // API call
+    await axios.post('/user/admin/settings', settings);
 
     messageType.value = 'success'
     message.value = 'تنظیمات با موفقیت ذخیره شد'
@@ -702,11 +781,16 @@ const resetSettings = () => {
 // Dropdown helper functions
 function getPrimaryCurrencyDisplayName(value: string) {
   switch (value) {
-    case 'IRR': return 'ریال ایران (IRR)'
-    case 'IRT': return 'تومان ایران (IRT)'
-    case 'USD': return 'دلار آمریکا (USD)'
-    case 'EUR': return 'یورو (EUR)'
-    default: return 'انتخاب ارز'
+    case 'IRR':
+      return 'ریال ایران (IRR)'
+    case 'IRT':
+      return 'تومان ایران (IRT)'
+    case 'USD':
+      return 'دلار آمریکا (USD)'
+    case 'EUR':
+      return 'یورو (EUR)'
+    default:
+      return 'انتخاب ارز'
   }
 }
 
@@ -717,9 +801,12 @@ function selectPrimaryCurrency(currency: string) {
 
 function getCurrencyPositionDisplayName(value: string) {
   switch (value) {
-    case 'before': return 'قبل از قیمت ($ 100)'
-    case 'after': return 'بعد از قیمت (100 تومان)'
-    default: return 'انتخاب موقعیت'
+    case 'before':
+      return 'قبل از قیمت ($ 100)'
+    case 'after':
+      return 'بعد از قیمت (100 تومان)'
+    default:
+      return 'انتخاب موقعیت'
   }
 }
 
@@ -730,12 +817,18 @@ function selectCurrencyPosition(position: string) {
 
 function getActiveGatewayDisplayName(value: string) {
   switch (value) {
-    case 'zarinpal': return 'زرین‌پال'
-    case 'mellat': return 'بانک ملت'
-    case 'pasargad': return 'پاسارگاد'
-    case 'saman': return 'سامان'
-    case 'parsian': return 'پارسیان'
-    default: return 'انتخاب درگاه'
+    case 'zarinpal':
+      return 'زرین‌پال'
+    case 'mellat':
+      return 'بانک ملت'
+    case 'pasargad':
+      return 'پاسارگاد'
+    case 'saman':
+      return 'سامان'
+    case 'parsian':
+      return 'پارسیان'
+    default:
+      return 'انتخاب درگاه'
   }
 }
 
@@ -746,11 +839,18 @@ function selectActiveGateway(gateway: string) {
 
 function getSmsProviderDisplayName(value: string) {
   switch (value) {
-    case 'kavenegar': return 'کاوه‌نگار'
-    case 'ghasedak': return 'قاصدک'
-    case 'melipayamak': return 'ملی‌پیامک'
-    case 'farapayam': return 'فراپیام'
-    default: return 'انتخاب ارائه‌دهنده'
+    case 'kavenegar':
+      return 'کاوه‌نگار'
+    case 'ghasedak':
+      return 'قاصدک'
+    case 'melipayamak':
+      return 'ملی‌پیامک'
+    case 'farazpayamak':
+      return 'فرازپیامک'
+    case 'modirpayamak':
+      return 'مدیر پیامک'
+    default:
+      return 'انتخاب ارائه‌دهنده'
   }
 }
 
@@ -761,11 +861,16 @@ function selectSmsProvider(provider: string) {
 
 function getNotificationFrequencyDisplayName(value: string) {
   switch (value) {
-    case 'realtime': return 'فوری'
-    case 'daily': return 'روزانه'
-    case 'weekly': return 'هفتگی'
-    case 'monthly': return 'ماهانه'
-    default: return 'انتخاب فرکانس'
+    case 'realtime':
+      return 'فوری'
+    case 'daily':
+      return 'روزانه'
+    case 'weekly':
+      return 'هفتگی'
+    case 'monthly':
+      return 'ماهانه'
+    default:
+      return 'انتخاب فرکانس'
   }
 }
 
@@ -786,4 +891,14 @@ function restrictToEnglish(event: Event, field: keyof Settings) {
     settings[field] = englishOnly as never
   }
 }
+
+onMounted(async () => {
+  try {
+    const res = await axios.get('/user/admin/settings')
+    Object.assign(settings, res.data)
+    console.log('set', settings)
+  } catch (error) {
+    console.error('خطا در دریافت تنظیمات:', error)
+  }
+})
 </script>

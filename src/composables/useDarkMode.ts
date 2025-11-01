@@ -26,7 +26,6 @@ if (typeof window !== 'undefined') {
 export function useDarkMode() {
   const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value
-
     if (isDarkMode.value) {
       document.documentElement.classList.add('dark')
       localStorage.setItem('darkMode', 'true')
