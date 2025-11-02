@@ -46,7 +46,7 @@
     </div>
 
     <!-- Products Management -->
-    <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-8">
+    <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-2">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white">لیست محصولات</h2>
         <button
