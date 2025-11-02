@@ -134,7 +134,7 @@
                class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 group">
 
             <!-- List Layout - Horizontal -->
-            <div class="flex items-center gap-6">
+            <div class="flex flex-wrap items-center gap-6">
               <!-- User Info Section -->
               <div class="flex items-center gap-4 flex-1">
                 <!-- Avatar -->
