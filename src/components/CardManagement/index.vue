@@ -65,15 +65,15 @@
         <p class="text-gray-500 dark:text-gray-400">اولین محصول خود را اضافه کنید</p>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         <div
             v-for="product in products"
             :key="product.id"
-            class="border border-gray-200 dark:border-slate-700 rounded-2xl p-6 hover:shadow-lg transition-all group"
+            class="border border-gray-200 dark:border-slate-700 rounded-2xl hover:shadow-lg transition-all group p-4 sm:p-6 flex flex-col"
         >
           <!-- Product Image -->
           <div class="relative mb-4">
-            <div class="w-full h-40 bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden">
+            <div class="w-full h-32 sm:h-40 bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden">
               <img
                   v-if="product.image"
                   :src="product.image"
@@ -106,17 +106,17 @@
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <button
                 @click="editProduct(product)"
-                class="flex-1 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors text-sm flex items-center justify-center gap-1"
+                class="w-full sm:w-auto flex-1 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors text-sm flex items-center justify-center gap-1"
             >
               <i class="ti ti-edit text-sm"></i>
               ویرایش
             </button>
             <button
                 @click="toggleStatus(product.id)"
-                class="flex-1 px-3 py-2 transition-colors text-sm flex items-center justify-center gap-1"
+                class="w-full sm:w-auto flex-1 px-3 py-2 transition-colors text-sm flex items-center justify-center gap-1"
                 :class="product.status === 'active'
                 ? 'bg-orange-100 hover:bg-orange-200 text-orange-700'
                 : 'bg-green-100 hover:bg-green-200 text-green-700'"
@@ -126,7 +126,7 @@
             </button>
             <button
                 @click="deleteProduct(product.id)"
-                class="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors text-sm"
+                class="w-full sm:w-auto px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors text-sm"
             >
               <i class="ti ti-trash text-sm"></i>
             </button>

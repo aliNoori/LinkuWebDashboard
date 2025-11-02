@@ -176,7 +176,7 @@
               </div>
 
               <!-- Links Summary for Premium Users -->
-              <div v-if="user.subscriptionType === 'premium'" class="flex-shrink-0 w-48">
+              <div v-if="user.subscriptionType === 'premium'" class="flex-shrink-0 w-full sm:w-48">
                 <div
                     class="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
                   <div class="flex items-center justify-between mb-2">
@@ -198,7 +198,7 @@
               </div>
 
               <!-- Non-Premium Users Link Count -->
-              <div v-else class="flex-shrink-0 w-48">
+              <div v-else class="flex-shrink-0 w-full sm:w-48">
                 <div
                     class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                   <div class="flex items-center justify-between mb-2">
@@ -227,11 +227,11 @@
               </div>
 
               <!-- Action Buttons -->
-              <div class="flex gap-2 flex-shrink-0 justify-center w-full sm:w-auto min-w-0">
+              <div class="flex flex-wrap gap-2 justify-center w-full">
                 <!-- View Links Button for All Users -->
                 <button @click.stop="viewUserLinks(user)"
                         :class="[
-                        'px-4 py-2 text-white rounded-lg transition-all duration-300 text-sm font-medium flex items-center gap-2',
+                        'w-full sm:w-auto px-4 py-2 text-white rounded-lg transition-all duration-300 text-sm font-medium flex justify-center items-center gap-2',
                         user.subscriptionType === 'premium'
                           ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
                           : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
@@ -243,14 +243,14 @@
 
                 <!-- View Profile Button -->
                 <button @click.stop="viewProfile(user)" v-if="user.profileUrl"
-                        class="px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-sm font-medium"
+                        class="w-full sm:w-auto px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-sm font-medium"
                         title="مشاهده پروفایل">
                   <i class="ti ti-external-link text-sm"></i>
                 </button>
 
                 <!-- Edit Button -->
                 <button :disabled="true" @click.stop="editUser(user)"
-                        class="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                        class="w-full sm:w-auto px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
                         bg-green-100 text-green-700 hover:bg-green-200
                         disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
                         title="ویرایش">
@@ -259,7 +259,7 @@
 
                 <!-- Status Toggle Button -->
                 <button @click.stop="toggleUserStatus(user)"
-                        class="px-3 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-all duration-300 text-sm font-medium"
+                        class="w-full sm:w-auto px-3 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-all duration-300 text-sm font-medium"
                         :title="user.status === 'suspended' ? 'رفع تعلیق' : 'تعلیق کردن'">
                   <i class="ti ti-ban text-sm" v-if="user.status !== 'suspended'"></i>
                   <i class="ti ti-check text-sm" v-else></i>
@@ -269,7 +269,7 @@
                 <button
                     :disabled="true"
                     @click.stop="deleteUser(user)"
-                    class="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                    class="w-full sm:w-auto px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
                     bg-red-100 text-red-700 hover:bg-red-200
                     disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
                     title="حذف"
