@@ -162,7 +162,7 @@
                   </span>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ user.username }}@</p>
-                  <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                     <div class="flex items-center gap-1">
                       <i class="ti ti-phone text-xs"></i>
                       <span>{{ user.phone }}</span>
@@ -227,7 +227,7 @@
               </div>
 
               <!-- Action Buttons -->
-              <div class="flex gap-2 flex-shrink-0">
+              <div class="flex gap-2 flex-shrink-0 justify-center w-full sm:w-auto min-w-0">
                 <!-- View Links Button for All Users -->
                 <button @click.stop="viewUserLinks(user)"
                         :class="[
