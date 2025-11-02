@@ -175,7 +175,7 @@
       </div>
 
       <!-- Discount Codes List -->
-      <div class="p-6">
+      <div class="p-2">
         <!-- Desktop Table View -->
         <div class="hidden lg:block overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -319,17 +319,17 @@
             <!-- Actions -->
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
               <button @click="editDiscount(discount)"
-                      class="w-full max-auto flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                      class="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
                 <i class="ti ti-edit"></i>
                 <span>ویرایش</span>
               </button>
               <button @click="toggleDiscountStatus(discount)"
-                      class="w-full max-auto flex items-center gap-1 px-3 py-2 text-sm text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
+                      class="flex items-center gap-1 px-3 py-2 text-sm text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
                 <i class="ti ti-power"></i>
                 <span>{{ discount.active ? 'غیرفعال' : 'فعال' }}</span>
               </button>
               <button @click="deleteDiscount(discount)"
-                      class="w-full max-auto flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                      class="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                 <i class="ti ti-trash"></i>
                 <span>حذف</span>
               </button>

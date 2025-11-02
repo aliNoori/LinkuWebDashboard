@@ -128,7 +128,7 @@
       </div>
 
       <!-- Modern Users List -->
-      <div class="p-6">
+      <div class="p-2">
         <div class="space-y-4">
           <div v-for="user in paginatedUsers" :key="user.id"
                class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 group">
@@ -162,7 +162,7 @@
                   </span>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ user.username }}@</p>
-                  <div class="w-full max-auto flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                     <div class="flex items-center gap-1">
                       <i class="ti ti-phone text-xs"></i>
                       <span>{{ user.phone }}</span>
