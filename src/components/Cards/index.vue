@@ -476,6 +476,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import QRCode from 'qrcode'
 import {useCardsStore} from "@/stores/cards.ts";
+import jsPDF from 'jspdf';
 defineOptions({
   name: 'CardsManagement'
 })
@@ -699,11 +700,8 @@ const viewQR = async (card: Card) => {
   selectedCard.value = card
 
   try {
-    // Create QR code canvas
     const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-console.log('card.qrLink,',card.qrLink)
-    // Generate basic QR code with higher resolution for modal
+
     await QRCode.toCanvas(canvas, card.qrLink, {
       width: 512,
       margin: 2,
@@ -713,40 +711,10 @@ console.log('card.qrLink,',card.qrLink)
       }
     })
 
-    // Add logo in center
-    const logo = new Image()
-    logo.crossOrigin = 'anonymous'
-
-    logo.onload = () => {
-      // Calculate logo size (about 15% of QR code size)
-      const logoSize = canvas.width * 0.15
-      const x = (canvas.width - logoSize) / 2
-      const y = (canvas.height - logoSize) / 2
-
-      // Create white background circle for logo
-      ctx!.fillStyle = 'white'
-      ctx!.beginPath()
-      ctx!.arc(canvas.width / 2, canvas.height / 2, logoSize / 2 + 8, 0, 2 * Math.PI)
-      ctx!.fill()
-
-      // Draw logo
-      ctx!.drawImage(logo, x, y, logoSize, logoSize)
-
-      // Convert to data URL
-      selectedQRCode.value = canvas.toDataURL()
-    }
-
-    logo.onerror = () => {
-      // If logo fails to load, use QR without logo
-      selectedQRCode.value = canvas.toDataURL()
-    }
-
-    // Try to load logo
-    logo.src = new URL('/src/assets/images/logo20.png', import.meta.url).href
-
+    selectedQRCode.value = canvas.toDataURL()
   } catch (error) {
     console.error('Error generating QR code:', error)
-    // Fallback to simple QR code
+
     try {
       const qrCodeUrl = await QRCode.toDataURL(card.qrLink, {
         width: 512,
@@ -765,14 +733,23 @@ console.log('card.qrLink,',card.qrLink)
   showQRModal.value = true
 }
 
+
 const downloadQRCode = () => {
   if (!selectedQRCode.value || !selectedCard.value) return
 
-  const link = document.createElement('a')
-  link.download = `qr-code-${selectedCard.value.id}.png`
-  link.href = selectedQRCode.value
-  link.click()
+  const doc = new jsPDF()
+
+  // اضافه کردن تصویر QR به PDF
+  doc.addImage(
+      selectedQRCode.value, // داده base64 تصویر QR
+      'PNG',                // فرمت تصویر
+      50, 20,               // موقعیت X, Y
+      100, 100              // عرض و ارتفاع در mm
+  )
+
+  doc.save(`qr-code-${selectedCard.value.id}.pdf`)
 }
+
 
 const copyToClipboard = async (text: string) => {
   console.log(text);
