@@ -303,6 +303,16 @@
               >
                 {{ card.status === 'active' ? 'فعال' : 'غیرفعال' }}
               </span>
+              <span
+                  class="inline-flex items-center px-3 py-1 mx-4 rounded-full text-xs font-bold shadow-lg"
+                  :class="[
+                  card.isUsed
+                    ? 'bg-green-500 text-white'
+                    : 'bg-red-500 text-white'
+                ]"
+              >
+                {{ card.isUsed ? 'استفاده شده' : 'استفاده نشده' }}
+              </span>
             </div>
             <div class="text-xs text-gray-500 dark:text-gray-400">
               {{ card.createdAt }}
@@ -471,7 +481,6 @@ defineOptions({
 })
 interface Card {
   id: string
-
   ownerName: string
   mobile?: string
   description?: string
@@ -480,6 +489,7 @@ interface Card {
   qrLink: string
   image?: string | null
   status: 'active' | 'inactive'
+  isUsed:boolean
   createdAt: string
   identifier:string
 }

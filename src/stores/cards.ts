@@ -19,6 +19,7 @@ export const useCardsStore = defineStore('card', () => {
         qrLink: string
         image?: string | null
         status: 'active' | 'inactive'
+        isUsed:boolean
         createdAt: string
     }
 
