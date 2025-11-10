@@ -66,8 +66,8 @@ export const usePlanStore = defineStore('plan', () => {
             const newPlan = res.data?.data || res.data
             plans.value.unshift(newPlan)
             return newPlan
-        } catch (err) {
-            console.error('❌ خطا در ایجاد پلن:', err)
+        } catch (err:any) {
+            console.error('❌ خطا در ایجاد پلن:', err.response?.data||err.message)
             throw err
         }
     }
