@@ -182,7 +182,7 @@
                   <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-1">
                       <i class="ti ti-link text-amber-600 dark:text-amber-400 text-sm"></i>
-                      <span class="text-sm font-medium text-amber-800 dark:text-amber-300">لینک‌ها</span>
+                      <span class="text-sm font-medium text-amber-800 dark:text-amber-300">پروفایل ها</span>
                     </div>
                     <span class="text-sm font-bold text-amber-700 dark:text-amber-300">{{
                         (user.cardCount > 5 ? 5 : user.cardCount) || 0
@@ -204,7 +204,7 @@
                   <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-1">
                       <i class="ti ti-link text-gray-600 dark:text-gray-400 text-sm"></i>
-                      <span class="text-sm font-medium text-gray-800 dark:text-gray-300">لینک‌ها</span>
+                      <span class="text-sm font-medium text-gray-800 dark:text-gray-300">پروفایل ها</span>
                     </div>
                     <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ (user.cardCount > 1 ? 1 : user.cardCount) || 0 }}/1</span>
                   </div>
@@ -236,9 +236,9 @@
                           ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
                           : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
                       ]"
-                        title="مشاهده لینک‌ها">
+                        title="مشاهده پروفایل ها">
                   <i class="ti ti-link text-sm"></i>
-                  لینک‌ها
+                  پروفایل ‌ها
                 </button>
 
                 <!-- View Profile Button -->
@@ -457,7 +457,7 @@
                 {{ selectedUser ? getUserInitials(selectedUser.name) : '' }}
               </div>
               <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">لینک‌های {{ selectedUser?.name }}</h3>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">پروفایل‌های {{ selectedUser?.name }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedUser?.username }}@</p>
               </div>
             </div>
@@ -475,7 +475,7 @@
                 <i class="ti ti-star-filled text-amber-500"></i>
                 <span class="font-medium text-amber-800 dark:text-amber-300">کاربر ویژه</span>
               </div>
-              <span class="text-sm text-amber-700 dark:text-amber-400">{{ userCards.length }}/5 لینک استفاده شده</span>
+              <span class="text-sm text-amber-700 dark:text-amber-400">{{ userCards.length }}/5 پروفایل استفاده شده</span>
             </div>
           </div>
 
@@ -486,7 +486,7 @@
                 <i class="ti ti-user text-gray-500 dark:text-gray-400"></i>
                 <span class="font-medium text-gray-800 dark:text-gray-300">کاربر رایگان</span>
               </div>
-              <span class="text-sm text-gray-700 dark:text-gray-400">{{ userCards.length }}/1 لینک استفاده شده</span>
+              <span class="text-sm text-gray-700 dark:text-gray-400">{{ userCards.length }}/1 پروفایل استفاده شده</span>
             </div>
           </div>
         </div>
@@ -498,13 +498,13 @@
                 class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
               <i class="ti ti-link-off text-2xl text-gray-400"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">هیچ لینکی موجود نیست</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">هیچ پروفایل موجود نیست</h3>
             <p class="text-gray-500 dark:text-gray-400">
             <span v-if="selectedUser?.subscriptionType === 'premium'">
-              این کاربر ویژه هنوز از ظرفیت 5 لینک خود استفاده نکرده است.
+              این کاربر ویژه هنوز از ظرفیت 5 پروفایل خود استفاده نکرده است.
             </span>
               <span v-else>
-              این کاربر رایگان هنوز لینک خود را اضافه نکرده است.
+              این کاربر رایگان هنوز پروفایل خود را اضافه نکرده است.
             </span>
             </p>
           </div>
@@ -562,7 +562,7 @@
             <!-- Info Section -->
             <div class="flex items-center gap-4">
               <div class="text-sm text-gray-600 dark:text-gray-400">
-                <span class="font-medium">{{ userCards.length }}</span> لینک موجود
+                <span class="font-medium">{{ userCards.length }}</span> پروفایل موجود
               </div>
               <div v-if="selectedUser?.subscriptionType === 'premium'"
                    class="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
