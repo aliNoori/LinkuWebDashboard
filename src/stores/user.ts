@@ -33,6 +33,7 @@ export interface Profile {
     status: 'active' | 'inactive' | 'suspended'
     profileUrl:string
     linkCount:number
+    cardCount:number
     subscriptionMonths:number
     subscriptionEndDate:string
     createdAt: string
@@ -57,7 +58,8 @@ export const useUserStore = defineStore('userStore', () => {
     const user = ref<User>({} as User)
     const users = ref<User[]>([])
     const profiles = ref<Profile[]>([])
-    const userLinks=ref([])
+    //const userLinks=ref([])
+    const userCards = ref([])
     const admins = ref<Admin[]>([])
     const fetched = ref(false)
     const router = useRouter()
@@ -78,28 +80,37 @@ export const useUserStore = defineStore('userStore', () => {
             // await router.push('/auth/login') // فعال‌سازی در صورت نیاز
         }
     }
-    const getMaxLinks = (profile:any) => {
+    const getMaxCards = (profile:any) => {
         if (!profile) return 0
         return profile.subscriptionType === "premium" ? 5 : 1
     }
     const selectProfile = (profile:any) => {
-        const max = getMaxLinks(profile)
-        const links = profile.cardLinks ?? []
+        const max = getMaxCards(profile)
+        const cards = profile.cards ?? []
 
-        userLinks.value = links.slice(0, max)
+        //userLinks.value = links.slice(0, max)
+        userCards.value=cards.slice(0,max)
     }
 
     const fetchProfiles = async () => {
         try {
-            const {data} = await axios.get('/user/admin/profiles')
-            profiles.value = data.data
+            const { data } = await axios.get('/user/admin/profiles')
+
+            // اضافه کردن cardCount به هر پروفایل
+            profiles.value = data.data.map((profile: any) => ({
+                ...profile,
+                cardCount: profile.cards ? profile.cards.length : 0,
+            }))
+
+            console.log('cc',profiles)
+
             fetched.value = true
         } catch (error) {
             fetched.value = true
             console.error('❌ خطا در دریافت پروفایل:', error)
-            // await router.push('/auth/login') // فعال‌سازی در صورت نیاز
         }
     }
+
 
     const editProfiles = async (id: number, payload: Partial<Profile>) => {
         try {
@@ -183,7 +194,7 @@ export const useUserStore = defineStore('userStore', () => {
         user,
         admins,
         users,
-        userLinks,
+        userCards,
         profiles,
         fetched,
 

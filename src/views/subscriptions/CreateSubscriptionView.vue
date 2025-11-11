@@ -332,10 +332,10 @@ const savePlan = async () => {
     return
   }
 
-  if (planStore.features.length === 0) {
+  /*if (planStore.features.length === 0) {
     await showAlert({title: 'خطا', message: 'لطفا حداقل یک ویژگی اضافه کنید', type: 'error'})
     return
-  }
+  }*/
 
   // Save logic here...
   const action = isEdit.value ? 'بروزرسانی' : 'ایجاد'
@@ -471,7 +471,8 @@ const preview = () => {
 const finalPrice = computed(() => {
   const base = plan.value?.price || 0
   const discount = plan.value?.discount || 0
-  return Math.max(base - discount, 0)
+  const discountAmount = (base * discount) / 100
+  return Math.max(base - discountAmount, 0)
 })
 
 // 💸 فرمت نمایش تومان

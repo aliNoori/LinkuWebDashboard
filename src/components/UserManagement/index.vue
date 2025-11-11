@@ -185,14 +185,14 @@
                       <span class="text-sm font-medium text-amber-800 dark:text-amber-300">لینک‌ها</span>
                     </div>
                     <span class="text-sm font-bold text-amber-700 dark:text-amber-300">{{
-                        (user.linkCount > 5 ? 5 : user.linkCount) || 0
+                        (user.cardCount > 5 ? 5 : user.cardCount) || 0
                       }}/5</span>
                   </div>
 
                   <!-- Progress Bar -->
                   <div class="w-full bg-amber-200 dark:bg-amber-800/50 rounded-full h-1.5">
                     <div class="bg-amber-500 dark:bg-amber-400 h-1.5 rounded-full transition-all duration-300"
-                         :style="{ width: Math.min(((user.linkCount > 5 ? 5 : user.linkCount || 0) / 5) * 100, 100) + '%' }"></div>
+                         :style="{ width: Math.min(((user.cardCount > 5 ? 5 : user.cardCount || 0) / 5) * 100, 100) + '%' }"></div>
                   </div>
                 </div>
               </div>
@@ -206,19 +206,19 @@
                       <i class="ti ti-link text-gray-600 dark:text-gray-400 text-sm"></i>
                       <span class="text-sm font-medium text-gray-800 dark:text-gray-300">لینک‌ها</span>
                     </div>
-                    <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ (user.linkCount > 1 ? 1 : user.linkCount) || 0 }}/1</span>
+                    <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ (user.cardCount > 1 ? 1 : user.cardCount) || 0 }}/1</span>
                   </div>
 
                   <!-- Progress Bar -->
                   <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mb-1">
                     <div class="bg-gray-500 dark:bg-gray-400 h-1.5 rounded-full transition-all duration-300"
-                         :style="{ width: Math.min(((user.linkCount > 1 ? 1 : user.linkCount || 0)) * 100, 100) + '%' }"></div>
+                         :style="{ width: Math.min(((user.cardCount > 1 ? 1 : user.cardCount || 0)) * 100, 100) + '%' }"></div>
                   </div>
 
                   <div class="flex items-center justify-between">
                     <p class="text-xs text-gray-600 dark:text-gray-400">
-                      <span v-if="(user.linkCount || 0) === 0">می‌توانید 1 لینک اضافه کنید</span>
-                      <span v-else class="font-medium">لینک شما استفاده شده</span>
+                      <span v-if="(user.cardCount || 0) === 0">می‌توانید 1 پروفایل اضافه کنید</span>
+                      <span v-else class="font-medium">پروفایل شما استفاده شده</span>
                     </p>
                     <span
                         class="text-xs px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400 rounded">رایگان</span>
@@ -229,7 +229,7 @@
               <!-- Action Buttons -->
               <div class="flex flex-wrap gap-2 justify-center w-full">
                 <!-- View Links Button for All Users -->
-                <button @click.stop="viewUserLinks(user)"
+                <button @click.stop="viewUserCards(user)"
                         :class="[
                         'w-full sm:w-auto px-4 py-2 text-white rounded-lg transition-all duration-300 text-sm font-medium flex justify-center items-center gap-2',
                         user.subscriptionType === 'premium'
@@ -442,8 +442,8 @@
     <!-- Role Management Modal - Not needed for customers -->
     <!-- This section is removed as we're managing customers, not admin roles -->
 
-    <!-- Links Modal -->
-    <div v-if="showLinksModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <!-- Cards Modal -->
+    <div v-if="showCardsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
         <!-- Modal Header -->
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -461,7 +461,7 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedUser?.username }}@</p>
               </div>
             </div>
-            <button @click="closeLinksModal"
+            <button @click="closeCardsModal"
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <i class="ti ti-x text-xl text-gray-500 dark:text-gray-400"></i>
             </button>
@@ -475,7 +475,7 @@
                 <i class="ti ti-star-filled text-amber-500"></i>
                 <span class="font-medium text-amber-800 dark:text-amber-300">کاربر ویژه</span>
               </div>
-              <span class="text-sm text-amber-700 dark:text-amber-400">{{ userLinks.length }}/5 لینک استفاده شده</span>
+              <span class="text-sm text-amber-700 dark:text-amber-400">{{ userCards.length }}/5 لینک استفاده شده</span>
             </div>
           </div>
 
@@ -486,14 +486,14 @@
                 <i class="ti ti-user text-gray-500 dark:text-gray-400"></i>
                 <span class="font-medium text-gray-800 dark:text-gray-300">کاربر رایگان</span>
               </div>
-              <span class="text-sm text-gray-700 dark:text-gray-400">{{ userLinks.length }}/1 لینک استفاده شده</span>
+              <span class="text-sm text-gray-700 dark:text-gray-400">{{ userCards.length }}/1 لینک استفاده شده</span>
             </div>
           </div>
         </div>
 
         <!-- Modal Body -->
         <div class="p-6 overflow-y-auto max-h-[60vh]">
-          <div v-if="userLinks.length === 0" class="text-center py-12">
+          <div v-if="userCards.length === 0" class="text-center py-12">
             <div
                 class="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
               <i class="ti ti-link-off text-2xl text-gray-400"></i>
@@ -510,18 +510,19 @@
           </div>
 
           <div v-else class="space-y-4">
-            <div v-for="link in userLinks" :key="link.id"
+            <div v-for="card in userCards" :key="card.id"
                  class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                    <i class="ti ti-link text-blue-600 dark:text-blue-400"></i>
+                    <img :src="card.avatar" alt="avatar" class="w-10 h-10 rounded-lg object-cover" />
+
                   </div>
                   <div>
-                    <h4 class="font-semibold text-gray-900 dark:text-white">{{ link.title }}</h4>
-                    <a :href="link.url" target="_blank"
+                    <h4 class="font-semibold text-gray-900 dark:text-white">{{ card.userName }}</h4>
+                    <a :href="card.url" target="_blank"
                        class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                      {{ link.url }}
+                      {{ card.url }}
                     </a>
                   </div>
                 </div>
@@ -530,24 +531,24 @@
                 <div class="flex items-center gap-4">
                   <div class="text-center">
                     <p class="text-xs text-gray-500 dark:text-gray-400">کلیک‌ها</p>
-                    <p class="text-sm font-bold text-gray-900 dark:text-white">{{ link.clicks }}</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">{{ card.views }}</p>
                   </div>
                   <div :class="[
                           'px-3 py-1 rounded-lg text-xs font-medium',
-                          link.isActive
+                          card.isActive
                             ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                             : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                         ]">
-                    {{ link.isActive ? 'فعال' : 'غیرفعال' }}
+                    {{ card.isActive ? 'فعال' : 'غیرفعال' }}
                   </div>
                 </div>
               </div>
 
               <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                <span>تاریخ ایجاد: {{ formatDate(link.createdAt) }}</span>
+                <span>تاریخ ایجاد: {{ formatDate(card.createdAt) }}</span>
                 <div class="flex items-center gap-2">
                 <span class="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-1 rounded">
-                  ID: {{ link.id }}
+                  ID: {{ card.id }}
                 </span>
                 </div>
               </div>
@@ -561,11 +562,11 @@
             <!-- Info Section -->
             <div class="flex items-center gap-4">
               <div class="text-sm text-gray-600 dark:text-gray-400">
-                <span class="font-medium">{{ userLinks.length }}</span> لینک موجود
+                <span class="font-medium">{{ userCards.length }}</span> لینک موجود
               </div>
               <div v-if="selectedUser?.subscriptionType === 'premium'"
                    class="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
-                {{ 5 - (userLinks.length || 0) }} ظرفیت باقی‌مانده
+                {{ 5 - (userCards.length || 0) }} ظرفیت باقی‌مانده
               </div>
               <div v-else
                    class="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
@@ -574,7 +575,7 @@
             </div>
 
             <!-- Close Button -->
-            <button @click="closeLinksModal"
+            <button @click="closeCardsModal"
                     class="px-6 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
               بستن
             </button>
@@ -610,6 +611,7 @@ interface User {
   lastLogin: string
   profileUrl?: string
   linkCount?: number
+  cardCount?:number
   subscriptionMonths?: number
   subscriptionEndDate?: string
 }
@@ -644,15 +646,16 @@ const editForm = ref({
   status: 'active' as 'active' | 'inactive' | 'suspended'
 })
 
-// Links modal state
-const showLinksModal = ref(false)
+// Cards modal state
+const showCardsModal = ref(false)
 const selectedUser = ref<User | null>(null)
-const userLinks = ref<Array<{
+const userCards = ref<Array<{
   id: number
-  title: string
+  userName: string
+  avatar:string
   url: string
   isActive: boolean
-  clicks: number
+  views: number
   createdAt: string
 }>>([])
 const userStore = useUserStore()
@@ -834,17 +837,17 @@ const viewProfile = (user: User) => {
   }
 }
 
-const viewUserLinks = (user: User) => {
+const viewUserCards = (user: User) => {
   selectedUser.value = user
   userStore.selectProfile(selectedUser.value)
-  userLinks.value = userStore.userLinks
-  showLinksModal.value = true
+  userCards.value = userStore.userCards
+  showCardsModal.value = true
 }
 
-const closeLinksModal = () => {
-  showLinksModal.value = false
+const closeCardsModal = () => {
+  showCardsModal.value = false
   selectedUser.value = null
-  userLinks.value = []
+  userCards.value = []
 }
 
 const exportToExcel = () => {
@@ -858,7 +861,8 @@ const exportToExcel = () => {
     'وضعیت': statusNames[user.status],
     'تاریخ عضویت': user.createdAt,
     'آخرین ورود': user.lastLogin,
-    'تعداد لینک‌ها': user.linkCount || 0,
+    /*'تعداد لینک‌ها': user.linkCount || 0,*/
+    'تعداد پروفایل ها': user.cardCount || 0,
     'مدت اشتراک (ماه)': user.subscriptionMonths || '-',
     'پایان اشتراک': user.subscriptionEndDate || '-'
   }))
