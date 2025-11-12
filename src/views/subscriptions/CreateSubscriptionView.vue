@@ -232,7 +232,7 @@
             >
               <option value="normal">عادی</option>
               <option value="recommended">پیشنهادی</option>
-              <option value="popular">محبوب</option>
+              <option value="highlighted">محبوب</option>
             </select>
           </div>
         </div>
