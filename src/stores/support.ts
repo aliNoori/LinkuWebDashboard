@@ -10,7 +10,7 @@ export interface SupportInfo {
 }
 
 export const useSupportStore = defineStore('support', () => {
-    const support = ref<SupportInfo>({ email: '', phone: '', telegram: '' })
+    const support = ref<SupportInfo>({ email: '', phone: '', socialMediaLink: '' })
     const loading = ref(false)
     const error = ref<string | null>(null)
     const { appContext } = getCurrentInstance()!

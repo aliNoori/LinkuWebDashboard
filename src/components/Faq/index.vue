@@ -27,7 +27,7 @@
           :key="faq.id"
           class="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden"
       >
-        <div class="flex justify-between items-center p-4 cursor-pointer" @click="toggle(index)">
+        <div class="flex justify-between items-center p-4 cursor-pointer" @click="toggle(faq.id)">
           <div class="flex items-center gap-2">
             <i class="ti ti-help text-yellow-500"></i>
             <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
@@ -36,13 +36,13 @@
           </div>
           <i
               class="ti ti-chevron-down text-slate-500 dark:text-slate-400 transition-transform duration-300"
-              :class="{ 'rotate-180': faq.open }"
+              :class="{ 'rotate-180': faqOpenMap[faq.id] }"
           ></i>
         </div>
 
         <transition name="faq-slide">
           <div
-              v-show="faq.open"
+              v-show="faqOpenMap[faq.id]"
               class="border-t border-slate-200 dark:border-slate-700 p-4 space-y-3"
           >
             <p class="text-slate-700 dark:text-slate-300">{{ faq.answer }}</p>
@@ -129,8 +129,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useFaqStore} from "@/stores/faq.ts";
-
+import {type FAQ, useFaqStore} from "@/stores/faq.ts";
+const faqOpenMap = ref<Record<number, boolean>>({})
 const faqStore = useFaqStore()
 
 // صفحه‌بندی
@@ -144,8 +144,7 @@ const paginatedFaqs = computed(() =>
 // حالت فرم
 const showForm = ref(false)
 const editingFaq = ref(false)
-const form = ref({
-  id: null,
+const form = ref<Partial<FAQ>>({
   question: '',
   answer: '',
   active: true
@@ -154,17 +153,21 @@ const form = ref({
 // ✅ بارگذاری اولیه FAQها
 onMounted(async () => {
   await faqStore.fetchFaqs()
+  faqStore.faqs.forEach(f => {
+    faqOpenMap.value[f.id] = false
+  })
 })
 
 // باز و بسته کردن سوال
-const toggle = (index: number) => {
-  paginatedFaqs.value[index].open = !paginatedFaqs.value[index].open
+const toggle = (id: number) => {
+  faqOpenMap.value[id] = !faqOpenMap.value[id]
 }
+
 
 // باز کردن فرم ایجاد
 const openCreateForm = () => {
   editingFaq.value = false
-  form.value = { id: null, question: '', answer: '', active: true }
+  form.value = { question: '', answer: '', active: true } // بدون id
   showForm.value = true
 }
 
@@ -184,9 +187,10 @@ const deleteFaq = async (id: number) => {
 
 // ذخیره (افزودن یا ویرایش)
 const saveFaq = async () => {
-  if (!form.value.question || !form.value.answer) return alert('لطفاً تمام فیلدها را پر کنید.')
+  if (!form.value.question || !form.value.answer)
+    return alert('لطفاً تمام فیلدها را پر کنید.')
 
-  if (editingFaq.value && form.value.id) {
+  if (editingFaq.value && form.value.id !== undefined) {
     await faqStore.updateFaq(form.value.id, form.value)
   } else {
     await faqStore.createFaq(form.value)
@@ -195,6 +199,7 @@ const saveFaq = async () => {
   await faqStore.fetchFaqs()
   closeForm()
 }
+
 
 // بستن فرم
 const closeForm = () => {

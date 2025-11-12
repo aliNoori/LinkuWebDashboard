@@ -89,13 +89,13 @@ export const useFaqStore = defineStore('faq', () => {
             id: Number(`${Math.floor(Math.random() * 100000)}`),
             question: '',
             answer: '',
-            active: 'draft'
+            active: false
         }
     }
 
     // 📊 تعداد سوالات فعال
     const activeFaqCount = computed(() => {
-        return faqs.value.filter(f => f.active === 'active').length
+        return faqs.value.filter(f => f.active === true).length
     })
 
     return {
