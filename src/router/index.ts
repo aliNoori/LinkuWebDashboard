@@ -18,6 +18,7 @@ import CreatePageView from '../views/pages/CreatePageView.vue'
 import CreateSubscriptionView from '../views/subscriptions/CreateSubscriptionView.vue'
 import {useAuthStore} from "@/stores/auth.ts"
 import NotificationView from "@/views/notifications/NotificationView.vue";
+import FAQView from "@/views/faqs/FAQView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -91,6 +92,12 @@ const router = createRouter({
       path: '/guide',
       name: 'guide',
       component: GuideView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/faqs',
+      name: 'faqs',
+      component: FAQView,
       meta: { requiresAuth: true }
     },
     {

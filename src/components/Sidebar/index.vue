@@ -187,6 +187,7 @@ watch(() => route.path, (newPath) => {
       ]"></div>
       <div :class="[itemCollapsed ? 'space-y-1' : 'space-y-2']">
         <SidebarItem icon="ti ti-settings" text="تنظیمات سیستم" :collapsed="itemCollapsed" to="/settings" @itemClicked="handleItemClick" />
+        <SidebarItem icon="ti ti-question-mark" text="پرسش‌های متداول" :collapsed="itemCollapsed" to="/faqs" @itemClicked="handleItemClick"/>
         <SidebarItem icon="ti ti-help" text="راهنما" :collapsed="itemCollapsed" to="/guide" @itemClicked="handleItemClick" />
       </div>
     </div>
