@@ -197,6 +197,55 @@
             </div>
           </div>
         </div>
+        <!-- used filter -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">استفاده شده/نشده</label>
+          <div class="relative">
+            <button
+                @click="toggleUsedDropdown"
+                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 flex items-center justify-between"
+                type="button"
+            >
+              <span>{{ getUsedLabel(usedFilter) }}</span>
+              <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'rotate-180': showUsedDropdown }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+
+            <div v-if="showUsedDropdown" class="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl z-10">
+              <ul class="py-2">
+                <li>
+                  <button
+                      @click="selectUsed('')"
+                      class="w-full px-4 py-2 text-right hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150 text-gray-700 dark:text-gray-300"
+                      :class="{ 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400': usedFilter === '' }"
+                  >
+                    همه
+                  </button>
+                </li>
+                <li>
+                  <button
+                      @click="selectUsed('used')"
+                      class="w-full px-4 py-2 text-right hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150 flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                      :class="{ 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400': usedFilter === 'used' }"
+                  >
+                    استفاده شده
+                  </button>
+                </li>
+                <li>
+                  <button
+                      @click="selectUsed('unused')"
+                      class="w-full px-4 py-2 text-right hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150 flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                      :class="{ 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400': usedFilter === 'unused' }"
+                  >
+                    استفاده نشده
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -503,8 +552,9 @@ const profileIdSearch = ref('')
 const foundCard = ref<null | Card>(null)
 const searchQuery = ref('')
 const statusFilter = ref('')
+const usedFilter = ref('')
 const showStatusDropdown = ref(false)
-
+const showUsedDropdown = ref(false)
 // Pagination State
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
@@ -541,7 +591,11 @@ const filteredCards = computed(() => {
 
     const matchesStatus = !statusFilter.value || card.status === statusFilter.value
 
-    return matchesSearch && matchesStatus
+    const matchesUsed = !usedFilter.value
+        ? true
+        : (usedFilter.value === 'used' ? !!card.isUsed : !card.isUsed)
+
+    return matchesSearch && matchesStatus && matchesUsed
   })
 })
 
@@ -615,6 +669,24 @@ const getStatusLabel = (status: string) => {
     default: return 'همه وضعیت‌ها'
   }
 }
+// toggle for used dropdown
+const toggleUsedDropdown = () => {
+  showUsedDropdown.value = !showUsedDropdown.value
+  // close status dropdown if open (optional UX consistency)
+  if (showUsedDropdown.value) showStatusDropdown.value = false
+}
+const selectUsed = (used: string) => {
+  usedFilter.value = used
+  showUsedDropdown.value = false
+  currentPage.value = 1
+}
+const getUsedLabel = (used: string) => {
+  switch (used) {
+    case 'used': return 'استفاده شده'
+    case 'unused': return 'استفاده نشده'
+    default: return 'همه وضعیت‌ها'
+  }
+}
 
 const getInitials = (name: string) => {
   return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
@@ -628,7 +700,7 @@ const goToPage = (page: number) => {
 
 // Watch for qrLink changes to auto-generate QR code
 // Reset pagination when filters change
-watch([searchQuery, statusFilter], () => {
+watch([searchQuery, statusFilter, usedFilter], () => {
   currentPage.value = 1
 })
 
@@ -773,6 +845,7 @@ onMounted(() => {
     const target = e.target as HTMLElement
     if (!target?.closest('.relative')) {
       showStatusDropdown.value = false
+      showUsedDropdown.value = false
     }
   })
 
